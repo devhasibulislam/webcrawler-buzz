@@ -27,13 +27,13 @@ export const exportService = {
   },
 
   /**
-   * Get the latest active (non-expired) export for a job.
-   * Active = created within the last 5 minutes.
+   * Get the latest active (still processing) export for a job.
+   * Only 'processing' status blocks the export button.
    */
   async getActiveExportForJob(jobId: string): Promise<CsvExport | null> {
     const result = await pool.query(
       `SELECT * FROM csv_exports
-       WHERE job_id = $1 AND created_at > NOW() - INTERVAL '5 minutes'
+       WHERE job_id = $1 AND status = 'processing'
        ORDER BY created_at DESC
        LIMIT 1`,
       [jobId]

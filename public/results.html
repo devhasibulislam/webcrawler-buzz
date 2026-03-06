@@ -442,6 +442,7 @@
         if (res.ok) {
           exportModal.classList.add('hidden');
           disableExportBtn(email, 'processing');
+          pollExportUntilDone();
         } else {
           exportModalError.textContent = data.error || 'Something went wrong.';
           exportModalError.classList.remove('hidden');
@@ -454,6 +455,22 @@
       exportSubmitBtn.disabled = false;
       exportSubmitBtn.textContent = 'Send Download Link';
     });
+
+    // Poll export status every 3s until it's no longer processing, then re-enable button
+    function pollExportUntilDone() {
+      const pollInterval = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/crawl/${jobId}/export/status`);
+          const data = await res.json();
+          if (!data.active) {
+            clearInterval(pollInterval);
+            enableExportBtn();
+          }
+        } catch (err) {
+          console.error('Export poll error:', err);
+        }
+      }, 3000);
+    }
   </script>
 </body>
 </html>

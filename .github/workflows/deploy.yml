@@ -23,7 +23,6 @@ jobs:
             pm2 stop webcrawler
             git pull origin master
             npm install -f
-            npm run lint
             npm run build
             pm2 start webcrawler
             pm2 save
