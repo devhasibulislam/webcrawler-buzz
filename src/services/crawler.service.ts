@@ -9,15 +9,12 @@ import {
   resolveUrl,
 } from '../utils/url.utils';
 
-// Max pages to crawl per job — prevents infinite crawling on large sites
-const MAX_PAGES = 200;
-
 export const crawlerService = {
   /**
    * BFS crawl starting from startUrl, scoped to the given domain.
    */
   async crawl(jobId: string, startUrl: string, domain: string): Promise<void> {
-    console.log(`[Crawler] Starting crawl for job ${jobId} — domain: ${domain} (max ${MAX_PAGES} pages)`);
+    console.log(`[Crawler] Starting crawl for job ${jobId} — domain: ${domain}`);
 
     // 1. Reset counters and old data (safe for BullMQ retries)
     await jobService.resetJobForCrawl(jobId);
@@ -34,12 +31,6 @@ export const crawlerService = {
 
     try {
       while (queue.length > 0) {
-        // Stop if we've hit the max pages limit
-        if (visited.size >= MAX_PAGES) {
-          console.log(`[Crawler] Job ${jobId} — reached max ${MAX_PAGES} pages limit.`);
-          break;
-        }
-
         const currentUrl = queue.shift()!;
 
         // Skip if already visited
