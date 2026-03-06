@@ -1,8 +1,12 @@
 import { Request, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
 import { jobService } from '../services/job.service';
+import { exportService } from '../services/export.service';
 import { crawlerQueue } from '../queue/crawler.queue';
+import { exportQueue } from '../queue/export.queue';
 import { extractRootDomain, isValidUrl } from '../utils/url.utils';
-import { StartCrawlRequest, DecideRequest, NotifyRequest } from '../types';
+import { StartCrawlRequest, DecideRequest, NotifyRequest, ExportRequest } from '../types';
 
 export const crawlerController = {
   /**
@@ -248,28 +252,117 @@ export const crawlerController = {
   },
 
   /**
-   * GET /api/crawl/:job_id/export — All pages (for CSV download).
+   * POST /api/crawl/:job_id/export — Request a CSV export (sends download link via email).
    */
-  async exportResults(req: Request, res: Response): Promise<void> {
+  async requestExport(req: Request, res: Response): Promise<void> {
     try {
       const job_id = req.params.job_id as string;
-      const job = await jobService.getJobById(job_id);
+      const { email } = req.body as ExportRequest;
 
+      if (!email || typeof email !== 'string' || !email.includes('@')) {
+        res.status(400).json({ error: 'A valid email address is required.' });
+        return;
+      }
+
+      const job = await jobService.getJobById(job_id);
       if (!job) {
         res.status(404).json({ error: 'Job not found.' });
         return;
       }
 
-      const pages = await jobService.getAllPagesByJobId(job_id);
+      // Check if there's already an active (non-expired) export
+      const existing = await exportService.getActiveExportForJob(job_id);
+      if (existing) {
+        res.status(200).json({
+          status: 'already_processing',
+          export_id: existing.id,
+          message: 'An export is already in progress or was recently sent. Please wait for it to expire.',
+        });
+        return;
+      }
 
-      res.status(200).json({
-        job_id: job.id,
-        domain: job.domain,
-        total_pages_found: job.total_pages_found,
-        pages,
+      // Create export record
+      const csvExport = await exportService.createExport(job_id, email);
+
+      // Push to BullMQ export queue
+      await exportQueue.add(
+        'export-csv',
+        {
+          exportId: csvExport.id,
+          jobId: job_id,
+        },
+        {
+          attempts: 2,
+          backoff: { type: 'exponential', delay: 3000 },
+          removeOnComplete: true,
+          removeOnFail: false,
+        }
+      );
+
+      res.status(202).json({
+        status: 'processing',
+        export_id: csvExport.id,
+        message: `CSV export started. Download link will be sent to ${email}.`,
       });
     } catch (err: any) {
-      console.error('[Controller] exportResults error:', err.message);
+      console.error('[Controller] requestExport error:', err.message);
+      res.status(500).json({ error: 'Internal server error.' });
+    }
+  },
+
+  /**
+   * GET /api/crawl/:job_id/export/status — Check export status (for button state).
+   */
+  async getExportStatus(req: Request, res: Response): Promise<void> {
+    try {
+      const job_id = req.params.job_id as string;
+
+      const activeExport = await exportService.getActiveExportForJob(job_id);
+
+      if (activeExport) {
+        res.status(200).json({
+          active: true,
+          export_id: activeExport.id,
+          status: activeExport.status,
+          email: activeExport.email,
+          created_at: activeExport.created_at,
+        });
+      } else {
+        res.status(200).json({ active: false });
+      }
+    } catch (err: any) {
+      console.error('[Controller] getExportStatus error:', err.message);
+      res.status(500).json({ error: 'Internal server error.' });
+    }
+  },
+
+  /**
+   * GET /api/crawl/:job_id/download/:export_id — Serve the CSV file.
+   */
+  async downloadExport(req: Request, res: Response): Promise<void> {
+    try {
+      const export_id = req.params.export_id as string;
+
+      const csvExport = await exportService.getExportById(export_id);
+
+      if (!csvExport) {
+        res.status(404).json({ error: 'Export not found or link has expired.' });
+        return;
+      }
+
+      if (!csvExport.file_path || !fs.existsSync(csvExport.file_path)) {
+        res.status(410).json({ error: 'This download link has expired. Please request a new export.' });
+        return;
+      }
+
+      const fileName = path.basename(csvExport.file_path);
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+
+      const fileStream = fs.createReadStream(csvExport.file_path);
+      fileStream.pipe(res);
+    } catch (err: any) {
+      console.error('[Controller] downloadExport error:', err.message);
       res.status(500).json({ error: 'Internal server error.' });
     }
   },

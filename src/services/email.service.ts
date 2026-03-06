@@ -51,4 +51,46 @@ export const emailService = {
 
     console.log(`[Email] Notification sent to ${toEmail} for job ${jobId}`);
   },
+
+  /**
+   * Send a CSV export ready email with download link.
+   */
+  async sendExportReadyEmail(
+    toEmail: string,
+    domain: string,
+    totalPages: number,
+    downloadUrl: string
+  ): Promise<void> {
+    const htmlBody = `
+      <div style="font-family: 'Google Sans', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
+        <h1 style="color: #1a73e8;">📥 Your CSV export for <em>${domain}</em> is ready!</h1>
+        <p style="font-size: 16px; color: #333;">
+          We've generated a CSV file with <strong>${totalPages}</strong> crawled page${totalPages !== 1 ? 's' : ''} for <strong>${domain}</strong>.
+        </p>
+        <div style="margin: 32px 0; text-align: center;">
+          <a href="${downloadUrl}"
+             style="background-color: #16a34a; color: #fff; text-decoration: none;
+                    padding: 14px 28px; border-radius: 8px; font-size: 16px; font-weight: 600;">
+            Download CSV →
+          </a>
+        </div>
+        <p style="font-size: 13px; color: #e53e3e; font-weight: 600;">
+          ⚠️ This link expires in 5 minutes.
+        </p>
+        <p style="font-size: 13px; color: #888;">
+          You can also paste this link into your browser:<br/>
+          <a href="${downloadUrl}">${downloadUrl}</a>
+        </p>
+      </div>
+    `;
+
+    await transporter.sendMail({
+      from: `"Domain Crawler" <${process.env.GMAIL_USER}>`,
+      to: toEmail,
+      subject: `📥 Your CSV export for ${domain} is ready!`,
+      html: htmlBody,
+    });
+
+    console.log(`[Email] Export download link sent to ${toEmail}`);
+  },
 };

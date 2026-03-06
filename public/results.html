@@ -68,8 +68,8 @@
             <option value="500">500</option>
             <option value="1000">1000</option>
           </select>
-          <button id="download-csv" class="bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-xl transition-colors text-sm">
-            📥 Download CSV
+          <button id="export-csv-btn" class="bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-xl transition-colors text-sm">
+            📥 Export CSV
           </button>
           <a href="/" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium px-5 py-2 rounded-xl transition-colors text-sm">
             ← New Crawl
@@ -104,6 +104,25 @@
       <div id="pagination-section" class="flex items-center justify-center gap-2 mt-6">
       </div>
     </div>
+
+    <!-- Export Modal -->
+    <div id="export-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+      <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md mx-4">
+        <h3 class="text-lg font-bold text-gray-800 mb-2">📥 Export CSV</h3>
+        <p class="text-sm text-gray-500 mb-4">Enter your email. We'll send you a download link (valid for 5 minutes).</p>
+        <input id="export-email" type="email" placeholder="you@example.com"
+          class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" />
+        <div class="flex gap-3">
+          <button id="export-submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-xl transition-colors text-sm">
+            Send Download Link
+          </button>
+          <button id="export-cancel" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-xl transition-colors text-sm">
+            Cancel
+          </button>
+        </div>
+        <p id="export-modal-error" class="text-red-500 text-xs mt-3 hidden"></p>
+      </div>
+    </div>
   </main>
 
   <!-- Footer -->
@@ -129,16 +148,21 @@
     const resultsDomain = document.getElementById('results-domain');
     const resultsSummary = document.getElementById('results-summary');
     const resultsTbody = document.getElementById('results-tbody');
-    const downloadCsvBtn = document.getElementById('download-csv');
     const limitSelect = document.getElementById('limit-select');
     const paginationSection = document.getElementById('pagination-section');
+
+    // Export elements
+    const exportCsvBtn = document.getElementById('export-csv-btn');
+    const exportModal = document.getElementById('export-modal');
+    const exportEmailInput = document.getElementById('export-email');
+    const exportSubmitBtn = document.getElementById('export-submit');
+    const exportCancelBtn = document.getElementById('export-cancel');
+    const exportModalError = document.getElementById('export-modal-error');
 
     let currentPage = 1;
     let currentLimit = 50;
     let totalPages = 1;
     let totalCount = 0;
-    let jobDomain = '';
-    let jobStatus = '';
 
     if (!jobId) {
       showError('No job ID provided. Go back to home and start a crawl.');
@@ -164,6 +188,7 @@
 
         if (data.status === 'completed') {
           loadResults(1, currentLimit);
+          checkExportStatus();
         } else if (data.status === 'failed') {
           showError('This crawl failed. Please try again from the home page.');
         } else {
@@ -200,6 +225,7 @@
             clearInterval(interval);
             progressSection.classList.add('hidden');
             loadResults(1, currentLimit);
+            checkExportStatus();
           }
           if (d.status === 'failed') {
             clearInterval(interval);
@@ -220,8 +246,6 @@
         loadingEl.classList.add('hidden');
         resultsSection.classList.remove('hidden');
 
-        jobDomain = data.domain;
-        jobStatus = data.status;
         currentPage = data.pagination.page;
         currentLimit = data.pagination.limit;
         totalPages = data.pagination.total_pages;
@@ -276,7 +300,6 @@
       const disabledClass = 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed';
       const dotsClass = 'px-2 py-1.5 text-sm text-gray-400';
 
-      // Previous button
       const prevBtn = document.createElement('button');
       prevBtn.textContent = '«';
       prevBtn.className = `${btnClass} ${currentPage === 1 ? disabledClass : normalClass}`;
@@ -284,28 +307,13 @@
       prevBtn.addEventListener('click', () => goToPage(currentPage - 1));
       paginationSection.appendChild(prevBtn);
 
-      // Page buttons: ... prev current next ...
       const pagesToShow = [];
-
-      // Always show first page
       pagesToShow.push(1);
-
-      // Left ellipsis
       if (currentPage > 3) pagesToShow.push('...');
-
-      // Previous page
       if (currentPage > 2) pagesToShow.push(currentPage - 1);
-
-      // Current page (if not 1 or last)
       if (currentPage !== 1 && currentPage !== totalPages) pagesToShow.push(currentPage);
-
-      // Next page
       if (currentPage < totalPages - 1) pagesToShow.push(currentPage + 1);
-
-      // Right ellipsis
       if (currentPage < totalPages - 2) pagesToShow.push('...');
-
-      // Always show last page
       if (totalPages > 1) pagesToShow.push(totalPages);
 
       pagesToShow.forEach(p => {
@@ -323,7 +331,6 @@
         }
       });
 
-      // Next button
       const nextBtn = document.createElement('button');
       nextBtn.textContent = '»';
       nextBtn.className = `${btnClass} ${currentPage === totalPages ? disabledClass : normalClass}`;
@@ -335,7 +342,6 @@
     function goToPage(page) {
       if (page < 1 || page > totalPages || page === currentPage) return;
       loadResults(page, currentLimit);
-      // Scroll to top of table
       resultsSection.scrollIntoView({ behavior: 'smooth' });
     }
 
@@ -357,54 +363,96 @@
       return str.length > max ? str.slice(0, max) + '…' : str;
     }
 
-    // Download CSV — fetches ALL pages from /export endpoint
-    downloadCsvBtn.addEventListener('click', async () => {
-      downloadCsvBtn.disabled = true;
-      downloadCsvBtn.textContent = '⏳ Exporting...';
+    // ========== EXPORT LOGIC ==========
 
+    // Check export status on page load (persists across refresh)
+    async function checkExportStatus() {
       try {
-        const res = await fetch(`/api/crawl/${jobId}/export`);
+        const res = await fetch(`/api/crawl/${jobId}/export/status`);
         const data = await res.json();
-        const allPages = data.pages || [];
-
-        if (!allPages.length) {
-          downloadCsvBtn.textContent = '📥 Download CSV';
-          downloadCsvBtn.disabled = false;
-          return;
+        if (data.active) {
+          disableExportBtn(data.email, data.status);
+        } else {
+          enableExportBtn();
         }
-
-        const headers = ['URL', 'Page Title', 'Meta Description', 'HTTP Status', 'Response Time (ms)', 'Content Type', 'Page Size (bytes)', 'Internal Links', 'External Links', 'Redirect URL', 'Is Indexable', 'Discovered At'];
-        const rows = allPages.map(p => [
-          p.url,
-          p.page_title || '',
-          p.meta_description || '',
-          p.status_code || '',
-          p.response_time_ms || '',
-          p.content_type || '',
-          p.page_size_bytes || '',
-          p.internal_links_count || 0,
-          p.external_links_count || 0,
-          p.redirect_url || '',
-          p.is_indexable ? 'Yes' : 'No',
-          p.discovered_at || '',
-        ]);
-
-        let csv = headers.map(h => `"${h}"`).join(',') + '\n';
-        rows.forEach(row => {
-          csv += row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',') + '\n';
-        });
-
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `crawl-results-${jobId}.csv`;
-        link.click();
       } catch (err) {
-        console.error('CSV export error:', err);
+        console.error('Export status check error:', err);
+      }
+    }
+
+    function disableExportBtn(email, status) {
+      exportCsvBtn.disabled = true;
+      exportCsvBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+      exportCsvBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+      if (status === 'processing') {
+        exportCsvBtn.textContent = '⏳ Exporting...';
+      } else {
+        exportCsvBtn.textContent = `✅ Sent to ${email}`;
+      }
+    }
+
+    function enableExportBtn() {
+      exportCsvBtn.disabled = false;
+      exportCsvBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+      exportCsvBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+      exportCsvBtn.textContent = '📥 Export CSV';
+    }
+
+    // Open modal
+    exportCsvBtn.addEventListener('click', () => {
+      if (exportCsvBtn.disabled) return;
+      exportModal.classList.remove('hidden');
+      exportEmailInput.value = '';
+      exportModalError.classList.add('hidden');
+    });
+
+    // Cancel modal
+    exportCancelBtn.addEventListener('click', () => {
+      exportModal.classList.add('hidden');
+    });
+
+    // Close modal on backdrop click
+    exportModal.addEventListener('click', (e) => {
+      if (e.target === exportModal) {
+        exportModal.classList.add('hidden');
+      }
+    });
+
+    // Submit export
+    exportSubmitBtn.addEventListener('click', async () => {
+      const email = exportEmailInput.value.trim();
+      if (!email || !email.includes('@')) {
+        exportModalError.textContent = 'Please enter a valid email address.';
+        exportModalError.classList.remove('hidden');
+        return;
       }
 
-      downloadCsvBtn.textContent = '📥 Download CSV';
-      downloadCsvBtn.disabled = false;
+      exportSubmitBtn.disabled = true;
+      exportSubmitBtn.textContent = '⏳ Sending...';
+      exportModalError.classList.add('hidden');
+
+      try {
+        const res = await fetch(`/api/crawl/${jobId}/export`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          exportModal.classList.add('hidden');
+          disableExportBtn(email, 'processing');
+        } else {
+          exportModalError.textContent = data.error || 'Something went wrong.';
+          exportModalError.classList.remove('hidden');
+        }
+      } catch (err) {
+        exportModalError.textContent = 'Network error. Please try again.';
+        exportModalError.classList.remove('hidden');
+      }
+
+      exportSubmitBtn.disabled = false;
+      exportSubmitBtn.textContent = 'Send Download Link';
     });
   </script>
 </body>

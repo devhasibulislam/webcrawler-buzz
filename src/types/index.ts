@@ -43,6 +43,21 @@ export interface NotifyRequest {
   email: string;
 }
 
+export interface ExportRequest {
+  email: string;
+}
+
+export type ExportStatus = 'processing' | 'completed' | 'sent';
+
+export interface CsvExport {
+  id: string;
+  job_id: string;
+  email: string;
+  file_path?: string;
+  status: ExportStatus;
+  created_at: Date;
+}
+
 export interface ProgressResponse {
   job_id: string;
   status: JobStatus;

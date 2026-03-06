@@ -104,8 +104,37 @@ router.get('/:job_id/progress', crawlerController.getProgress);
 /**
  * @swagger
  * /api/crawl/{job_id}/export:
+ *   post:
+ *     summary: Request a CSV export (sends download link via email)
+ *     parameters:
+ *       - in: path
+ *         name: job_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email]
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       202:
+ *         description: Export started
+ *       200:
+ *         description: Export already in progress
+ */
+router.post('/:job_id/export', crawlerController.requestExport);
+
+/**
+ * @swagger
+ * /api/crawl/{job_id}/export/status:
  *   get:
- *     summary: Export all crawled pages (for CSV download)
+ *     summary: Check export status (for button state)
  *     parameters:
  *       - in: path
  *         name: job_id
@@ -114,9 +143,35 @@ router.get('/:job_id/progress', crawlerController.getProgress);
  *           type: string
  *     responses:
  *       200:
- *         description: All crawled pages
+ *         description: Export status
  */
-router.get('/:job_id/export', crawlerController.exportResults);
+router.get('/:job_id/export/status', crawlerController.getExportStatus);
+
+/**
+ * @swagger
+ * /api/crawl/{job_id}/download/{export_id}:
+ *   get:
+ *     summary: Download the exported CSV file
+ *     parameters:
+ *       - in: path
+ *         name: job_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: export_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: CSV file download
+ *       404:
+ *         description: Export not found
+ *       410:
+ *         description: Link expired
+ */
+router.get('/:job_id/download/:export_id', crawlerController.downloadExport);
 
 /**
  * @swagger

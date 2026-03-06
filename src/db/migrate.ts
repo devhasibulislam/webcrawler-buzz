@@ -37,6 +37,17 @@ async function migrate() {
     );
   `);
 
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS csv_exports (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      job_id UUID NOT NULL REFERENCES crawl_jobs(id) ON DELETE CASCADE,
+      email VARCHAR(255) NOT NULL,
+      file_path TEXT,
+      status VARCHAR(20) NOT NULL DEFAULT 'processing',
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+  `);
+
   console.log('Migrations complete.');
   await pool.end();
 }

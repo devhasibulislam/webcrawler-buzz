@@ -1,0 +1,30 @@
+name: Deploy Crawler
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+            source ~/.bashrc || source ~/.profile || true
+            cd /home/ubuntu/webcrawler
+            pm2 stop webcrawler
+            git pull origin master
+            npm install -f
+            npm run lint
+            npm run build
+            pm2 start webcrawler
+            pm2 save
+            echo "WebCrawler deployment completed!"

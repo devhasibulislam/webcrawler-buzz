@@ -11,8 +11,11 @@ import { swaggerSpec } from './swagger/swagger';
 import crawlerRoutes from './routes/crawler.routes';
 import viewRoutes from './routes/view.routes';
 
-// Import worker to start processing jobs
+// Import workers to start processing jobs
 import './queue/crawler.worker';
+import './queue/export.worker';
+
+import { startExportCleanupCron } from './cron/export-cleanup';
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '5005', 10);
@@ -48,6 +51,7 @@ process.on('unhandledRejection', (reason) => {
 const server = app.listen(PORT, () => {
   console.log(`🕷️  Domain Crawler running on http://localhost:${PORT}`);
   console.log(`📖  Swagger docs: http://localhost:${PORT}/api-docs`);
+  startExportCleanupCron();
 });
 
 server.on('error', (err) => {
