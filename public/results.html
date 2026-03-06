@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crawl Results — Domain Crawler</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Google Sans', sans-serif; }
+    .progress-bar { transition: width 0.4s ease; }
+    table { border-collapse: collapse; }
+    th, td { white-space: nowrap; }
+    th { position: sticky; top: 0; z-index: 10; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/"><img src="/webcrawler-logo.png" alt="WebCrawler" class="h-10" /></a>
+      <nav class="text-sm text-gray-500 space-x-4">
+        <a href="/" class="hover:text-gray-700">Home</a>
+        <a href="/privacy-policy" class="hover:text-gray-700">Privacy</a>
+        <a href="/terms-of-service" class="hover:text-gray-700">Terms</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
+    <!-- Loading / Error -->
+    <div id="loading" class="text-center py-20">
+      <p class="text-gray-500 text-lg">Loading results...</p>
+    </div>
+
+    <div id="error-section" class="hidden text-center py-20">
+      <p class="text-red-500 text-lg" id="error-text"></p>
+      <a href="/" class="mt-4 inline-block text-blue-600 hover:underline">← Back to Home</a>
+    </div>
+
+    <!-- Progress Section (if crawl not done yet) -->
+    <div id="progress-section" class="hidden text-center py-10">
+      <h2 class="text-2xl font-bold text-gray-800 mb-2" id="progress-domain"></h2>
+      <p class="text-gray-500 mb-6">Crawl is still in progress...</p>
+      <div class="max-w-lg mx-auto">
+        <div class="bg-gray-200 rounded-full h-4 overflow-hidden mb-3">
+          <div id="progress-bar" class="progress-bar bg-blue-600 h-full rounded-full" style="width: 0%"></div>
+        </div>
+        <p id="progress-text" class="text-gray-600 text-sm"></p>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results-section" class="hidden">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800" id="results-domain"></h2>
+          <p class="text-gray-500 text-sm" id="results-summary"></p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <button id="download-csv" class="bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-xl transition-colors text-sm">
+            📥 Download CSV
+          </button>
+          <a href="/" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium px-5 py-2 rounded-xl transition-colors text-sm">
+            ← New Crawl
+          </a>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto bg-white rounded-2xl shadow border border-gray-200" style="max-width: 100%;">
+        <table class="text-sm text-left" style="min-width: 1400px;">
+          <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+            <tr>
+              <th class="px-4 py-3">#</th>
+              <th class="px-4 py-3">URL</th>
+              <th class="px-4 py-3">Page Title</th>
+              <th class="px-4 py-3">Meta Description</th>
+              <th class="px-4 py-3">HTTP Status</th>
+              <th class="px-4 py-3">Response Time</th>
+              <th class="px-4 py-3">Content Type</th>
+              <th class="px-4 py-3">Page Size</th>
+              <th class="px-4 py-3">Internal Links</th>
+              <th class="px-4 py-3">External Links</th>
+              <th class="px-4 py-3">Redirect URL</th>
+              <th class="px-4 py-3">Indexable</th>
+              <th class="px-4 py-3">Discovered At</th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-gray-400 text-xs py-6">
+    &copy; 2025 Domain Crawler &middot;
+    <a href="/privacy-policy" class="hover:text-gray-600">Privacy Policy</a> &middot;
+    <a href="/terms-of-service" class="hover:text-gray-600">Terms of Service</a> &middot;
+    <a href="/cookie-policy" class="hover:text-gray-600">Cookie Policy</a>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const jobId = params.get('job_id');
+
+    const loadingEl = document.getElementById('loading');
+    const errorSection = document.getElementById('error-section');
+    const errorText = document.getElementById('error-text');
+    const progressSection = document.getElementById('progress-section');
+    const progressDomain = document.getElementById('progress-domain');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const resultsSection = document.getElementById('results-section');
+    const resultsDomain = document.getElementById('results-domain');
+    const resultsSummary = document.getElementById('results-summary');
+    const resultsTbody = document.getElementById('results-tbody');
+    const downloadCsvBtn = document.getElementById('download-csv');
+
+    let pagesData = [];
+
+    if (!jobId) {
+      showError('No job ID provided. Go back to home and start a crawl.');
+    } else {
+      checkStatus();
+    }
+
+    async function checkStatus() {
+      try {
+        const res = await fetch(`/api/crawl/${jobId}/progress`);
+        if (!res.ok) {
+          showError('Job not found. It may have been deleted.');
+          return;
+        }
+        const data = await res.json();
+
+        if (data.status === 'completed') {
+          loadResults();
+        } else if (data.status === 'failed') {
+          showError('This crawl failed. Please try again from the home page.');
+        } else {
+          // Still running — show progress
+          showProgress(data);
+        }
+      } catch (err) {
+        showError('Failed to load job status.');
+      }
+    }
+
+    function showError(msg) {
+      loadingEl.classList.add('hidden');
+      errorText.textContent = msg;
+      errorSection.classList.remove('hidden');
+    }
+
+    function showProgress(data) {
+      loadingEl.classList.add('hidden');
+      progressSection.classList.remove('hidden');
+      progressDomain.textContent = `Crawling in progress...`;
+      progressBar.style.width = data.progress_percent + '%';
+      progressText.textContent = `${data.total_pages_found} of ${data.total_pages_queued} pages crawled (${data.progress_percent}%)`;
+
+      // Poll every 2s
+      const interval = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/crawl/${jobId}/progress`);
+          const d = await res.json();
+          progressBar.style.width = d.progress_percent + '%';
+          progressText.textContent = `${d.total_pages_found} of ${d.total_pages_queued} pages crawled (${d.progress_percent}%)`;
+
+          if (d.status === 'completed') {
+            clearInterval(interval);
+            progressSection.classList.add('hidden');
+            loadResults();
+          }
+          if (d.status === 'failed') {
+            clearInterval(interval);
+            progressSection.classList.add('hidden');
+            showError('Crawl failed.');
+          }
+        } catch (e) {
+          console.error('Poll error:', e);
+        }
+      }, 2000);
+    }
+
+    async function loadResults() {
+      try {
+        const res = await fetch(`/api/crawl/${jobId}`);
+        const data = await res.json();
+
+        loadingEl.classList.add('hidden');
+        resultsSection.classList.remove('hidden');
+
+        resultsDomain.textContent = data.domain;
+        resultsSummary.textContent = `${data.total_pages_found} pages crawled • Status: ${data.status}`;
+
+        pagesData = data.pages || [];
+        renderTable(pagesData);
+      } catch (err) {
+        showError('Failed to load results.');
+      }
+    }
+
+    function renderTable(pages) {
+      resultsTbody.innerHTML = '';
+      pages.forEach((page, idx) => {
+        const sizeKB = page.page_size_bytes ? (page.page_size_bytes / 1024).toFixed(1) + ' KB' : '—';
+        const statusClass = getStatusClass(page.status_code);
+        const indexableIcon = page.is_indexable ? '✅' : '❌';
+        const discoveredAt = page.discovered_at ? new Date(page.discovered_at).toLocaleString() : '—';
+
+        const tr = document.createElement('tr');
+        tr.className = 'border-t border-gray-100 hover:bg-gray-50';
+        tr.innerHTML = `
+          <td class="px-4 py-3 text-gray-400">${idx + 1}</td>
+          <td class="px-4 py-3"><a href="${escHtml(page.url)}" target="_blank" class="text-blue-600 hover:underline text-xs">${truncate(page.url, 60)}</a></td>
+          <td class="px-4 py-3" title="${escHtml(page.page_title || '')}">${escHtml(truncate(page.page_title || '—', 40))}</td>
+          <td class="px-4 py-3" title="${escHtml(page.meta_description || '')}">${escHtml(truncate(page.meta_description || '—', 50))}</td>
+          <td class="px-4 py-3"><span class="${statusClass} font-semibold">${page.status_code || '—'}</span></td>
+          <td class="px-4 py-3">${page.response_time_ms != null ? page.response_time_ms + ' ms' : '—'}</td>
+          <td class="px-4 py-3 text-xs">${escHtml(page.content_type || '—')}</td>
+          <td class="px-4 py-3">${sizeKB}</td>
+          <td class="px-4 py-3 text-center">${page.internal_links_count ?? 0}</td>
+          <td class="px-4 py-3 text-center">${page.external_links_count ?? 0}</td>
+          <td class="px-4 py-3 text-xs">${page.redirect_url ? `<a href="${escHtml(page.redirect_url)}" target="_blank" class="text-blue-500 hover:underline">${truncate(page.redirect_url, 40)}</a>` : '—'}</td>
+          <td class="px-4 py-3 text-center">${indexableIcon}</td>
+          <td class="px-4 py-3 text-xs text-gray-500">${discoveredAt}</td>
+        `;
+        resultsTbody.appendChild(tr);
+      });
+    }
+
+    function getStatusClass(code) {
+      if (!code) return 'text-gray-400';
+      if (code >= 200 && code < 300) return 'text-green-600';
+      if (code >= 300 && code < 400) return 'text-yellow-600';
+      if (code >= 400) return 'text-red-600';
+      return 'text-gray-600';
+    }
+
+    function escHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function truncate(str, max) {
+      if (!str) return '';
+      return str.length > max ? str.slice(0, max) + '…' : str;
+    }
+
+    // Download CSV
+    downloadCsvBtn.addEventListener('click', () => {
+      if (!pagesData.length) return;
+
+      const headers = ['URL', 'Page Title', 'Meta Description', 'HTTP Status', 'Response Time (ms)', 'Content Type', 'Page Size (bytes)', 'Internal Links', 'External Links', 'Redirect URL', 'Is Indexable', 'Discovered At'];
+      const rows = pagesData.map(p => [
+        p.url,
+        p.page_title || '',
+        p.meta_description || '',
+        p.status_code || '',
+        p.response_time_ms || '',
+        p.content_type || '',
+        p.page_size_bytes || '',
+        p.internal_links_count || 0,
+        p.external_links_count || 0,
+        p.redirect_url || '',
+        p.is_indexable ? 'Yes' : 'No',
+        p.discovered_at || '',
+      ]);
+
+      let csv = headers.map(h => `"${h}"`).join(',') + '\n';
+      rows.forEach(row => {
+        csv += row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `crawl-results-${jobId}.csv`;
+      link.click();
+    });
+  </script>
+</body>
+</html>

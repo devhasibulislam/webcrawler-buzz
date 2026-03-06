@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Domain Crawler — Scan Any Website</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Google Sans', sans-serif; }
+    .progress-bar { transition: width 0.4s ease; }
+    .slide-in { animation: slideIn 0.5s ease forwards; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/"><img src="/webcrawler-logo.png" alt="WebCrawler" class="h-10" /></a>
+      <nav class="text-sm text-gray-500 space-x-4">
+        <a href="/privacy-policy" class="hover:text-gray-700">Privacy</a>
+        <a href="/terms-of-service" class="hover:text-gray-700">Terms</a>
+        <a href="/cookie-policy" class="hover:text-gray-700">Cookies</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex items-center justify-center px-4">
+    <div class="w-full max-w-2xl">
+      <!-- Crawl Form -->
+      <div id="crawl-form-section" class="text-center">
+        <h1 class="text-4xl font-bold text-gray-800 mb-3">Crawl Any Domain</h1>
+        <p class="text-gray-500 mb-8">Paste a URL below to start a full site crawl. Get page titles, meta data, status codes, response times, and more.</p>
+
+        <form id="crawl-form" class="flex flex-col md:flex-row gap-3">
+          <input
+            type="url"
+            id="url-input"
+            placeholder="https://example.com"
+            required
+            class="flex-1 px-5 py-3 border border-gray-300 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <button
+            type="submit"
+            id="submit-btn"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl text-lg transition-colors w-full md:w-auto"
+          >
+            Start Crawl
+          </button>
+        </form>
+        <p id="error-msg" class="text-red-500 mt-3 hidden"></p>
+      </div>
+
+      <!-- Duplicate Domain Modal -->
+      <div id="duplicate-modal" class="hidden mt-8 bg-yellow-50 border border-yellow-200 rounded-2xl p-6 text-center">
+        <h2 class="text-xl font-semibold text-yellow-800 mb-2">⚠️ Already Crawled!</h2>
+        <p class="text-gray-600 mb-1">Domain: <strong id="dup-domain"></strong></p>
+        <p class="text-gray-600 mb-4">Total pages found: <strong id="dup-pages"></strong></p>
+        <div class="flex gap-3 justify-center">
+          <button id="btn-use-existing" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-6 py-2 rounded-xl transition-colors">
+            View Existing Results
+          </button>
+          <button id="btn-re-crawl" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-xl transition-colors">
+            Re-crawl Fresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Section -->
+      <div id="progress-section" class="hidden mt-8">
+        <!-- Tracking URL Box -->
+        <div id="tracking-box" class="bg-blue-50 border border-blue-200 rounded-2xl p-5 mb-6 text-center">
+          <p class="text-blue-800 font-medium mb-1">🔗 Your tracking link:</p>
+          <a id="tracking-url" href="#" target="_blank" class="text-blue-600 underline font-mono text-sm break-all"></a>
+          <p class="text-gray-500 text-xs mt-2">Bookmark this! You can come back anytime even if you close the tab.</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="bg-gray-200 rounded-full h-4 overflow-hidden mb-3">
+          <div id="progress-bar" class="progress-bar bg-blue-600 h-full rounded-full" style="width: 0%"></div>
+        </div>
+        <p id="progress-text" class="text-gray-600 text-center text-sm">Starting crawl...</p>
+
+        <!-- Email Notification Card (slides in after 5-10s) -->
+        <div id="notify-card" class="hidden slide-in mt-6 bg-white border border-gray-200 rounded-2xl p-6 shadow-md text-center">
+          <p class="text-lg font-semibold text-gray-700 mb-2">⏳ This might take a while</p>
+          <p class="text-gray-500 mb-4">Want an email when it's done?</p>
+          <form id="notify-form" class="flex gap-3 justify-center">
+            <input
+              type="email"
+              id="email-input"
+              placeholder="you@example.com"
+              required
+              class="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+            />
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-xl transition-colors">
+              Notify Me
+            </button>
+          </form>
+          <p id="notify-msg" class="text-green-600 mt-2 hidden text-sm"></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-gray-400 text-xs py-6">
+    &copy; 2025 Domain Crawler &middot;
+    <a href="/privacy-policy" class="hover:text-gray-600">Privacy Policy</a> &middot;
+    <a href="/terms-of-service" class="hover:text-gray-600">Terms of Service</a> &middot;
+    <a href="/cookie-policy" class="hover:text-gray-600">Cookie Policy</a>
+  </footer>
+
+  <script>
+    const form = document.getElementById('crawl-form');
+    const urlInput = document.getElementById('url-input');
+    const submitBtn = document.getElementById('submit-btn');
+    const errorMsg = document.getElementById('error-msg');
+    const progressSection = document.getElementById('progress-section');
+    const crawlFormSection = document.getElementById('crawl-form-section');
+    const trackingUrl = document.getElementById('tracking-url');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const notifyCard = document.getElementById('notify-card');
+    const notifyForm = document.getElementById('notify-form');
+    const emailInput = document.getElementById('email-input');
+    const notifyMsg = document.getElementById('notify-msg');
+    const duplicateModal = document.getElementById('duplicate-modal');
+    const dupDomain = document.getElementById('dup-domain');
+    const dupPages = document.getElementById('dup-pages');
+    const btnUseExisting = document.getElementById('btn-use-existing');
+    const btnReCrawl = document.getElementById('btn-re-crawl');
+
+    let currentJobId = null;
+    let pollInterval = null;
+    let notifyTimeout = null;
+
+    // Start Crawl
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.classList.add('hidden');
+      duplicateModal.classList.add('hidden');
+
+      const url = urlInput.value.trim();
+      if (!url) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Starting...';
+
+      try {
+        const res = await fetch('/api/crawl', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url }),
+        });
+        const data = await res.json();
+
+        if (res.status === 400) {
+          errorMsg.textContent = data.error;
+          errorMsg.classList.remove('hidden');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Start Crawl';
+          return;
+        }
+
+        if (data.status === 'exists') {
+          // Show duplicate modal
+          dupDomain.textContent = data.domain;
+          dupPages.textContent = data.total_pages;
+          duplicateModal.classList.remove('hidden');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Start Crawl';
+
+          // Wire up buttons
+          btnUseExisting.onclick = () => {
+            window.location.href = '/results?job_id=' + data.job_id;
+          };
+          btnReCrawl.onclick = async () => {
+            duplicateModal.classList.add('hidden');
+            const decideRes = await fetch('/api/crawl/decide', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ domain: data.domain, action: 're-crawl' }),
+            });
+            const decideData = await decideRes.json();
+            startTracking(decideData.job_id, decideData.tracking_url);
+          };
+          return;
+        }
+
+        // New crawl started
+        startTracking(data.job_id, data.tracking_url);
+      } catch (err) {
+        errorMsg.textContent = 'Something went wrong. Please try again.';
+        errorMsg.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Start Crawl';
+      }
+    });
+
+    function startTracking(jobId, trackUrl) {
+      currentJobId = jobId;
+
+      // Show progress UI
+      crawlFormSection.querySelector('form').classList.add('hidden');
+      progressSection.classList.remove('hidden');
+      trackingUrl.href = trackUrl;
+      trackingUrl.textContent = trackUrl;
+
+      // Start polling
+      pollInterval = setInterval(pollProgress, 2000);
+
+      // Start email notification timer (random 5–10s)
+      const delay = Math.floor(Math.random() * 5000) + 5000;
+      notifyTimeout = setTimeout(() => {
+        // Only show if still running
+        if (progressBar.style.width !== '100%') {
+          notifyCard.classList.remove('hidden');
+        }
+      }, delay);
+    }
+
+    async function pollProgress() {
+      if (!currentJobId) return;
+      try {
+        const res = await fetch(`/api/crawl/${currentJobId}/progress`);
+        const data = await res.json();
+
+        progressBar.style.width = data.progress_percent + '%';
+        progressText.textContent = `${data.total_pages_found} of ${data.total_pages_queued} pages crawled (${data.progress_percent}%)`;
+
+        if (data.status === 'completed') {
+          clearInterval(pollInterval);
+          clearTimeout(notifyTimeout);
+          progressText.textContent = `✅ Crawl complete! ${data.total_pages_found} pages found. Redirecting...`;
+          setTimeout(() => {
+            window.location.href = `/results?job_id=${currentJobId}`;
+          }, 1500);
+        }
+
+        if (data.status === 'failed') {
+          clearInterval(pollInterval);
+          clearTimeout(notifyTimeout);
+          progressText.textContent = '❌ Crawl failed. Please try again.';
+          progressBar.classList.remove('bg-blue-600');
+          progressBar.classList.add('bg-red-500');
+        }
+      } catch (err) {
+        console.error('Poll error:', err);
+      }
+    }
+
+    // Email notification form
+    notifyForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      if (!email || !currentJobId) return;
+
+      const notifyBtn = notifyForm.querySelector('button');
+      notifyBtn.disabled = true;
+      notifyBtn.textContent = 'Sending...';
+      notifyBtn.classList.add('opacity-60', 'cursor-not-allowed');
+      emailInput.disabled = true;
+
+      try {
+        const res = await fetch(`/api/crawl/${currentJobId}/notify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+        notifyMsg.textContent = data.message;
+        notifyMsg.classList.remove('hidden');
+        // Remove the form entirely so no other email can be submitted
+        notifyForm.remove();
+      } catch (err) {
+        notifyMsg.textContent = 'Failed to register email. Try again.';
+        notifyMsg.classList.remove('hidden');
+        notifyMsg.classList.remove('text-green-600');
+        notifyMsg.classList.add('text-red-500');
+        // Re-enable on failure so user can retry
+        notifyBtn.disabled = false;
+        notifyBtn.textContent = 'Notify Me';
+        notifyBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+        emailInput.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
