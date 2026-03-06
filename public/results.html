@@ -166,7 +166,9 @@
       const interval = setInterval(async () => {
         try {
           const res = await fetch(`/api/crawl/${jobId}/progress`);
+          if (!res.ok) return;
           const d = await res.json();
+          if (d.progress_percent == null) return;
           progressBar.style.width = d.progress_percent + '%';
           progressText.textContent = `${d.total_pages_found} of ${d.total_pages_queued} pages crawled (${d.progress_percent}%)`;
 
@@ -183,7 +185,7 @@
         } catch (e) {
           console.error('Poll error:', e);
         }
-      }, 2000);
+      }, 5000);
     }
 
     async function loadResults() {

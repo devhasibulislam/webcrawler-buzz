@@ -215,7 +215,7 @@
       trackingUrl.textContent = trackUrl;
 
       // Start polling
-      pollInterval = setInterval(pollProgress, 2000);
+      pollInterval = setInterval(pollProgress, 5000);
 
       // Start email notification timer (random 5–10s)
       const delay = Math.floor(Math.random() * 5000) + 5000;
@@ -231,7 +231,9 @@
       if (!currentJobId) return;
       try {
         const res = await fetch(`/api/crawl/${currentJobId}/progress`);
+        if (!res.ok) return; // skip this poll on error
         const data = await res.json();
+        if (data.progress_percent == null) return; // skip malformed response
 
         progressBar.style.width = data.progress_percent + '%';
         progressText.textContent = `${data.total_pages_found} of ${data.total_pages_queued} pages crawled (${data.progress_percent}%)`;
