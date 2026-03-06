@@ -206,9 +206,51 @@ export const crawlerController = {
   },
 
   /**
-   * GET /api/crawl/:job_id — Full results.
+   * GET /api/crawl/:job_id — Paginated results.
    */
   async getResults(req: Request, res: Response): Promise<void> {
+    try {
+      const job_id = req.params.job_id as string;
+      const page = Math.max(1, parseInt(req.query.page as string) || 1);
+      const allowedLimits = [50, 100, 500, 1000];
+      let limit = parseInt(req.query.limit as string) || 50;
+      if (!allowedLimits.includes(limit)) limit = 50;
+
+      const job = await jobService.getJobById(job_id);
+
+      if (!job) {
+        res.status(404).json({ error: 'Job not found.' });
+        return;
+      }
+
+      const totalCount = await jobService.countPagesByJobId(job_id);
+      const totalPages = Math.ceil(totalCount / limit) || 1;
+      const safePage = Math.min(page, totalPages);
+      const pages = await jobService.getPagesByJobId(job_id, safePage, limit);
+
+      res.status(200).json({
+        job_id: job.id,
+        domain: job.domain,
+        status: job.status,
+        total_pages_found: job.total_pages_found,
+        pagination: {
+          page: safePage,
+          limit,
+          total_count: totalCount,
+          total_pages: totalPages,
+        },
+        pages,
+      });
+    } catch (err: any) {
+      console.error('[Controller] getResults error:', err.message);
+      res.status(500).json({ error: 'Internal server error.' });
+    }
+  },
+
+  /**
+   * GET /api/crawl/:job_id/export — All pages (for CSV download).
+   */
+  async exportResults(req: Request, res: Response): Promise<void> {
     try {
       const job_id = req.params.job_id as string;
       const job = await jobService.getJobById(job_id);
@@ -218,17 +260,16 @@ export const crawlerController = {
         return;
       }
 
-      const pages = await jobService.getPagesByJobId(job_id);
+      const pages = await jobService.getAllPagesByJobId(job_id);
 
       res.status(200).json({
         job_id: job.id,
         domain: job.domain,
-        status: job.status,
         total_pages_found: job.total_pages_found,
         pages,
       });
     } catch (err: any) {
-      console.error('[Controller] getResults error:', err.message);
+      console.error('[Controller] exportResults error:', err.message);
       res.status(500).json({ error: 'Internal server error.' });
     }
   },

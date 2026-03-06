@@ -103,9 +103,9 @@ router.get('/:job_id/progress', crawlerController.getProgress);
 
 /**
  * @swagger
- * /api/crawl/{job_id}:
+ * /api/crawl/{job_id}/export:
  *   get:
- *     summary: Get full crawl results
+ *     summary: Export all crawled pages (for CSV download)
  *     parameters:
  *       - in: path
  *         name: job_id
@@ -114,7 +114,35 @@ router.get('/:job_id/progress', crawlerController.getProgress);
  *           type: string
  *     responses:
  *       200:
- *         description: Full results with crawled pages
+ *         description: All crawled pages
+ */
+router.get('/:job_id/export', crawlerController.exportResults);
+
+/**
+ * @swagger
+ * /api/crawl/{job_id}:
+ *   get:
+ *     summary: Get paginated crawl results
+ *     parameters:
+ *       - in: path
+ *         name: job_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           enum: [50, 100, 500, 1000]
+ *           default: 50
+ *     responses:
+ *       200:
+ *         description: Paginated results with crawled pages
  */
 router.get('/:job_id', crawlerController.getResults);
 

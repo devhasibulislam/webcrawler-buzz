@@ -147,9 +147,32 @@ export const jobService = {
   },
 
   /**
-   * Get all crawled pages for a job.
+   * Get paginated crawled pages for a job.
    */
-  async getPagesByJobId(jobId: string): Promise<CrawledPage[]> {
+  async getPagesByJobId(jobId: string, page: number = 1, limit: number = 50): Promise<CrawledPage[]> {
+    const offset = (page - 1) * limit;
+    const result = await pool.query(
+      `SELECT * FROM crawled_pages WHERE job_id = $1 ORDER BY discovered_at ASC LIMIT $2 OFFSET $3`,
+      [jobId, limit, offset]
+    );
+    return result.rows;
+  },
+
+  /**
+   * Count total crawled pages for a job.
+   */
+  async countPagesByJobId(jobId: string): Promise<number> {
+    const result = await pool.query(
+      `SELECT COUNT(*)::int AS total FROM crawled_pages WHERE job_id = $1`,
+      [jobId]
+    );
+    return result.rows[0].total;
+  },
+
+  /**
+   * Get ALL crawled pages for a job (for CSV download).
+   */
+  async getAllPagesByJobId(jobId: string): Promise<CrawledPage[]> {
     const result = await pool.query(
       `SELECT * FROM crawled_pages WHERE job_id = $1 ORDER BY discovered_at ASC`,
       [jobId]

@@ -60,7 +60,14 @@
           <h2 class="text-2xl font-bold text-gray-800" id="results-domain"></h2>
           <p class="text-gray-500 text-sm" id="results-summary"></p>
         </div>
-        <div class="flex flex-wrap gap-3">
+        <div class="flex flex-wrap gap-3 items-center">
+          <label class="text-sm text-gray-500">Show:</label>
+          <select id="limit-select" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="50" selected>50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+          </select>
           <button id="download-csv" class="bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-xl transition-colors text-sm">
             📥 Download CSV
           </button>
@@ -92,6 +99,10 @@
           <tbody id="results-tbody"></tbody>
         </table>
       </div>
+
+      <!-- Pagination -->
+      <div id="pagination-section" class="flex items-center justify-center gap-2 mt-6">
+      </div>
     </div>
   </main>
 
@@ -119,14 +130,28 @@
     const resultsSummary = document.getElementById('results-summary');
     const resultsTbody = document.getElementById('results-tbody');
     const downloadCsvBtn = document.getElementById('download-csv');
+    const limitSelect = document.getElementById('limit-select');
+    const paginationSection = document.getElementById('pagination-section');
 
-    let pagesData = [];
+    let currentPage = 1;
+    let currentLimit = 50;
+    let totalPages = 1;
+    let totalCount = 0;
+    let jobDomain = '';
+    let jobStatus = '';
 
     if (!jobId) {
       showError('No job ID provided. Go back to home and start a crawl.');
     } else {
       checkStatus();
     }
+
+    // Limit selector change
+    limitSelect.addEventListener('change', () => {
+      currentLimit = parseInt(limitSelect.value);
+      currentPage = 1;
+      loadResults(currentPage, currentLimit);
+    });
 
     async function checkStatus() {
       try {
@@ -138,11 +163,10 @@
         const data = await res.json();
 
         if (data.status === 'completed') {
-          loadResults();
+          loadResults(1, currentLimit);
         } else if (data.status === 'failed') {
           showError('This crawl failed. Please try again from the home page.');
         } else {
-          // Still running — show progress
           showProgress(data);
         }
       } catch (err) {
@@ -159,11 +183,10 @@
     function showProgress(data) {
       loadingEl.classList.add('hidden');
       progressSection.classList.remove('hidden');
-      progressDomain.textContent = `Crawling in progress...`;
+      progressDomain.textContent = 'Crawling in progress...';
       progressBar.style.width = data.progress_percent + '%';
       progressText.textContent = `${data.total_pages_found} of ${data.total_pages_queued} pages crawled (${data.progress_percent}%)`;
 
-      // Poll every 2s
       const interval = setInterval(async () => {
         try {
           const res = await fetch(`/api/crawl/${jobId}/progress`);
@@ -176,7 +199,7 @@
           if (d.status === 'completed') {
             clearInterval(interval);
             progressSection.classList.add('hidden');
-            loadResults();
+            loadResults(1, currentLimit);
           }
           if (d.status === 'failed') {
             clearInterval(interval);
@@ -189,25 +212,32 @@
       }, 5000);
     }
 
-    async function loadResults() {
+    async function loadResults(page, limit) {
       try {
-        const res = await fetch(`/api/crawl/${jobId}`);
+        const res = await fetch(`/api/crawl/${jobId}?page=${page}&limit=${limit}`);
         const data = await res.json();
 
         loadingEl.classList.add('hidden');
         resultsSection.classList.remove('hidden');
 
-        resultsDomain.textContent = data.domain;
-        resultsSummary.textContent = `${data.total_pages_found} pages crawled • Status: ${data.status}`;
+        jobDomain = data.domain;
+        jobStatus = data.status;
+        currentPage = data.pagination.page;
+        currentLimit = data.pagination.limit;
+        totalPages = data.pagination.total_pages;
+        totalCount = data.pagination.total_count;
 
-        pagesData = data.pages || [];
-        renderTable(pagesData);
+        resultsDomain.textContent = data.domain;
+        resultsSummary.textContent = `${totalCount} pages crawled • Status: ${data.status} • Page ${currentPage} of ${totalPages}`;
+
+        renderTable(data.pages, (currentPage - 1) * currentLimit);
+        renderPagination();
       } catch (err) {
         showError('Failed to load results.');
       }
     }
 
-    function renderTable(pages) {
+    function renderTable(pages, startIndex) {
       resultsTbody.innerHTML = '';
       pages.forEach((page, idx) => {
         const sizeKB = page.page_size_bytes ? (page.page_size_bytes / 1024).toFixed(1) + ' KB' : '—';
@@ -218,7 +248,7 @@
         const tr = document.createElement('tr');
         tr.className = 'border-t border-gray-100 hover:bg-gray-50';
         tr.innerHTML = `
-          <td class="px-4 py-3 text-gray-400">${idx + 1}</td>
+          <td class="px-4 py-3 text-gray-400">${startIndex + idx + 1}</td>
           <td class="px-4 py-3"><a href="${escHtml(page.url)}" target="_blank" class="text-blue-600 hover:underline text-xs">${truncate(page.url, 60)}</a></td>
           <td class="px-4 py-3" title="${escHtml(page.page_title || '')}">${escHtml(truncate(page.page_title || '—', 40))}</td>
           <td class="px-4 py-3" title="${escHtml(page.meta_description || '')}">${escHtml(truncate(page.meta_description || '—', 50))}</td>
@@ -234,6 +264,79 @@
         `;
         resultsTbody.appendChild(tr);
       });
+    }
+
+    function renderPagination() {
+      paginationSection.innerHTML = '';
+      if (totalPages <= 1) return;
+
+      const btnClass = 'px-3 py-1.5 text-sm rounded-lg border transition-colors';
+      const activeClass = 'bg-blue-600 text-white border-blue-600';
+      const normalClass = 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100 cursor-pointer';
+      const disabledClass = 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed';
+      const dotsClass = 'px-2 py-1.5 text-sm text-gray-400';
+
+      // Previous button
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = '«';
+      prevBtn.className = `${btnClass} ${currentPage === 1 ? disabledClass : normalClass}`;
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.addEventListener('click', () => goToPage(currentPage - 1));
+      paginationSection.appendChild(prevBtn);
+
+      // Page buttons: ... prev current next ...
+      const pagesToShow = [];
+
+      // Always show first page
+      pagesToShow.push(1);
+
+      // Left ellipsis
+      if (currentPage > 3) pagesToShow.push('...');
+
+      // Previous page
+      if (currentPage > 2) pagesToShow.push(currentPage - 1);
+
+      // Current page (if not 1 or last)
+      if (currentPage !== 1 && currentPage !== totalPages) pagesToShow.push(currentPage);
+
+      // Next page
+      if (currentPage < totalPages - 1) pagesToShow.push(currentPage + 1);
+
+      // Right ellipsis
+      if (currentPage < totalPages - 2) pagesToShow.push('...');
+
+      // Always show last page
+      if (totalPages > 1) pagesToShow.push(totalPages);
+
+      pagesToShow.forEach(p => {
+        if (p === '...') {
+          const dots = document.createElement('span');
+          dots.textContent = '...';
+          dots.className = dotsClass;
+          paginationSection.appendChild(dots);
+        } else {
+          const btn = document.createElement('button');
+          btn.textContent = p;
+          btn.className = `${btnClass} ${p === currentPage ? activeClass : normalClass}`;
+          btn.addEventListener('click', () => goToPage(p));
+          paginationSection.appendChild(btn);
+        }
+      });
+
+      // Next button
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = '»';
+      nextBtn.className = `${btnClass} ${currentPage === totalPages ? disabledClass : normalClass}`;
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.addEventListener('click', () => goToPage(currentPage + 1));
+      paginationSection.appendChild(nextBtn);
+    }
+
+    function goToPage(page) {
+      if (page < 1 || page > totalPages || page === currentPage) return;
+      loadResults(page, currentLimit);
+      // Scroll to top of table
+      resultsSection.scrollIntoView({ behavior: 'smooth' });
     }
 
     function getStatusClass(code) {
@@ -254,36 +357,54 @@
       return str.length > max ? str.slice(0, max) + '…' : str;
     }
 
-    // Download CSV
-    downloadCsvBtn.addEventListener('click', () => {
-      if (!pagesData.length) return;
+    // Download CSV — fetches ALL pages from /export endpoint
+    downloadCsvBtn.addEventListener('click', async () => {
+      downloadCsvBtn.disabled = true;
+      downloadCsvBtn.textContent = '⏳ Exporting...';
 
-      const headers = ['URL', 'Page Title', 'Meta Description', 'HTTP Status', 'Response Time (ms)', 'Content Type', 'Page Size (bytes)', 'Internal Links', 'External Links', 'Redirect URL', 'Is Indexable', 'Discovered At'];
-      const rows = pagesData.map(p => [
-        p.url,
-        p.page_title || '',
-        p.meta_description || '',
-        p.status_code || '',
-        p.response_time_ms || '',
-        p.content_type || '',
-        p.page_size_bytes || '',
-        p.internal_links_count || 0,
-        p.external_links_count || 0,
-        p.redirect_url || '',
-        p.is_indexable ? 'Yes' : 'No',
-        p.discovered_at || '',
-      ]);
+      try {
+        const res = await fetch(`/api/crawl/${jobId}/export`);
+        const data = await res.json();
+        const allPages = data.pages || [];
 
-      let csv = headers.map(h => `"${h}"`).join(',') + '\n';
-      rows.forEach(row => {
-        csv += row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',') + '\n';
-      });
+        if (!allPages.length) {
+          downloadCsvBtn.textContent = '📥 Download CSV';
+          downloadCsvBtn.disabled = false;
+          return;
+        }
 
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `crawl-results-${jobId}.csv`;
-      link.click();
+        const headers = ['URL', 'Page Title', 'Meta Description', 'HTTP Status', 'Response Time (ms)', 'Content Type', 'Page Size (bytes)', 'Internal Links', 'External Links', 'Redirect URL', 'Is Indexable', 'Discovered At'];
+        const rows = allPages.map(p => [
+          p.url,
+          p.page_title || '',
+          p.meta_description || '',
+          p.status_code || '',
+          p.response_time_ms || '',
+          p.content_type || '',
+          p.page_size_bytes || '',
+          p.internal_links_count || 0,
+          p.external_links_count || 0,
+          p.redirect_url || '',
+          p.is_indexable ? 'Yes' : 'No',
+          p.discovered_at || '',
+        ]);
+
+        let csv = headers.map(h => `"${h}"`).join(',') + '\n';
+        rows.forEach(row => {
+          csv += row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',') + '\n';
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `crawl-results-${jobId}.csv`;
+        link.click();
+      } catch (err) {
+        console.error('CSV export error:', err);
+      }
+
+      downloadCsvBtn.textContent = '📥 Download CSV';
+      downloadCsvBtn.disabled = false;
     });
   </script>
 </body>
