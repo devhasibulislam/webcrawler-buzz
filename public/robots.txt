@@ -2,10 +2,6 @@
 
 User-agent: *
 Allow: /
-Allow: /privacy-policy.html
-Allow: /terms-of-service.html
-Allow: /cookie-policy.html
-Allow: /results.html
 
 # Block API routes
 Disallow: /api/
