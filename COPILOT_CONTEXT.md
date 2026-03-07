@@ -12,6 +12,7 @@ Serves both the **REST API** and **pure HTML/CSS frontend** from the same server
 Backed by **Neon PostgreSQL** for storage and **Redis + BullMQ** for persistent job queueing.
 
 ### Core User Flow
+
 1. User pastes any URL on the homepage and clicks "Start Crawl"
 2. Server immediately creates a job and returns a **tracking URL** (e.g. `/results?job_id=abc-123`)
 3. That tracking URL is shown on screen right away — user can copy/bookmark it immediately
@@ -26,22 +27,22 @@ Backed by **Neon PostgreSQL** for storage and **Redis + BullMQ** for persistent 
 
 ## 🧱 Tech Stack
 
-| Layer          | Technology                                          |
-|----------------|-----------------------------------------------------|
-| Runtime        | Node.js (v20+)                                      |
-| Language       | TypeScript (strict mode)                            |
-| Framework      | Express.js v5 (API + static HTML)                   |
-| Styling        | Tailwind CSS (CDN) + Google Sans (Google Fonts CDN) |
-| Database       | PostgreSQL via Neon (serverless)                    |
-| DB Client      | `pg` (node-postgres) — raw parameterized queries    |
-| Job Queue      | BullMQ + Redis (RedisLabs)                          |
-| Crawling       | `axios` + `cheerio`                                 |
-| Email          | Nodemailer + Gmail SMTP (App Password)              |
-| API Docs       | Swagger UI — protected by HTTP Basic Auth           |
-| Security       | `helmet`, `express-rate-limit`, `cors`, input validation |
-| CSV Export     | BullMQ export queue + worker, `node-cron` cleanup   |
-| Linting        | ESLint + `@typescript-eslint`                       |
-| Env Config     | `dotenv`                                            |
+| Layer      | Technology                                               |
+| ---------- | -------------------------------------------------------- |
+| Runtime    | Node.js (v20+)                                           |
+| Language   | TypeScript (strict mode)                                 |
+| Framework  | Express.js v5 (API + static HTML)                        |
+| Styling    | Tailwind CSS (CDN) + Google Sans (Google Fonts CDN)      |
+| Database   | PostgreSQL via Neon (serverless)                         |
+| DB Client  | `pg` (node-postgres) — raw parameterized queries         |
+| Job Queue  | BullMQ + Redis (RedisLabs)                               |
+| Crawling   | `axios` + `cheerio`                                      |
+| Email      | Nodemailer + Gmail SMTP (App Password)                   |
+| API Docs   | Swagger UI — protected by HTTP Basic Auth                |
+| Security   | `helmet`, `express-rate-limit`, `cors`, input validation |
+| CSV Export | BullMQ export queue + worker, `node-cron` cleanup        |
+| Linting    | ESLint + `@typescript-eslint`                            |
+| Env Config | `dotenv`                                                 |
 
 ---
 
@@ -193,14 +194,17 @@ domain-crawler/
 ## 🌐 API Endpoints
 
 ### `POST /api/crawl`
+
 Validates URL, creates job in DB, pushes to BullMQ queue, returns tracking URL immediately.
 
 **Request:**
+
 ```json
 { "url": "https://amplifying.ai/research/some-page" }
 ```
 
 **Response — new domain (HTTP 201):**
+
 ```json
 {
   "status": "started",
@@ -211,6 +215,7 @@ Validates URL, creates job in DB, pushes to BullMQ queue, returns tracking URL i
 ```
 
 **Response — domain already crawled (HTTP 200):**
+
 ```json
 {
   "status": "exists",
@@ -226,26 +231,32 @@ Validates URL, creates job in DB, pushes to BullMQ queue, returns tracking URL i
 ---
 
 ### `POST /api/crawl/decide`
+
 User decision for duplicate domain.
 
 **Request:**
+
 ```json
 { "domain": "amplifying.ai", "action": "re-crawl" }
 ```
+
 - `use-existing` → returns existing tracking URL immediately
 - `re-crawl` → creates new job, pushes to BullMQ, returns new tracking URL
 
 ---
 
 ### `POST /api/crawl/:job_id/notify`
+
 Saves email to `crawl_jobs.notify_email`. Called after 5–10s threshold on frontend.
 
 **Request:**
+
 ```json
 { "email": "user@example.com" }
 ```
 
 **Response:**
+
 ```json
 { "message": "Got it! We'll send results to user@example.com when done." }
 ```
@@ -253,9 +264,11 @@ Saves email to `crawl_jobs.notify_email`. Called after 5–10s threshold on fron
 ---
 
 ### `GET /api/crawl/:job_id/progress`
+
 Lightweight polling endpoint — called every 5 seconds by frontend.
 
 **Response (running):**
+
 ```json
 {
   "job_id": "abc-123-xyz",
@@ -267,6 +280,7 @@ Lightweight polling endpoint — called every 5 seconds by frontend.
 ```
 
 **Response (completed):**
+
 ```json
 {
   "job_id": "abc-123-xyz",
@@ -283,13 +297,16 @@ Lightweight polling endpoint — called every 5 seconds by frontend.
 ---
 
 ### `GET /api/crawl/:job_id`
+
 Full paginated results — called once crawl is complete to load results table.
 
 **Query Parameters:**
+
 - `page` — page number (default: 1)
 - `limit` — rows per page: `50` | `100` | `500` | `1000` (default: 50)
 
 **Response:**
+
 ```json
 {
   "job_id": "abc-123-xyz",
@@ -302,21 +319,24 @@ Full paginated results — called once crawl is complete to load results table.
     "total_count": 54,
     "total_pages": 2
   },
-  "pages": [ "...array of crawled_pages rows..." ]
+  "pages": ["...array of crawled_pages rows..."]
 }
 ```
 
 ---
 
 ### `POST /api/crawl/:job_id/export`
+
 Request a CSV export — generates CSV in background, emails download link to user.
 
 **Request:**
+
 ```json
 { "email": "user@example.com" }
 ```
 
 **Response (HTTP 202):**
+
 ```json
 {
   "status": "processing",
@@ -326,6 +346,7 @@ Request a CSV export — generates CSV in background, emails download link to us
 ```
 
 **Response — already in progress (HTTP 200):**
+
 ```json
 {
   "status": "already_processing",
@@ -337,9 +358,11 @@ Request a CSV export — generates CSV in background, emails download link to us
 ---
 
 ### `GET /api/crawl/:job_id/export/status`
+
 Check export status — used by frontend to control export button state.
 
 **Response (active):**
+
 ```json
 {
   "active": true,
@@ -351,6 +374,7 @@ Check export status — used by frontend to control export button state.
 ```
 
 **Response (no active export):**
+
 ```json
 { "active": false }
 ```
@@ -358,6 +382,7 @@ Check export status — used by frontend to control export button state.
 ---
 
 ### `GET /api/crawl/:job_id/download/:export_id`
+
 Download the generated CSV file. Returns `404` if not found, `410` if expired/deleted.
 
 ---
@@ -365,6 +390,7 @@ Download the generated CSV file. Returns `404` if not found, `410` if expired/de
 ## 🖥️ Frontend Pages (Pure HTML — served by Express)
 
 ### `/` → `public/index.html` — Home Page
+
 - Google Sans + Tailwind CSS via CDN
 - Large centered URL input box
 - "Start Crawl" button
@@ -382,6 +408,7 @@ Download the generated CSV file. Returns `404` if not found, `410` if expired/de
 - Footer: links to Privacy Policy, Terms of Service, Cookie Policy
 
 ### `/results` → `public/results.html` — Results / Tracking Page
+
 - Reads `?job_id=xxx` from URL query string
 - **Works at any time** — if crawl is still running, shows live progress bar (polls every 5s)
 - When complete → renders full 12-column **paginated** results table
@@ -393,8 +420,11 @@ Download the generated CSV file. Returns `404` if not found, `410` if expired/de
 - This is the page the tracking URL points to AND what the email links to
 
 ### `/privacy-policy` → `public/privacy-policy.html`
+
 ### `/terms-of-service` → `public/terms-of-service.html`
+
 ### `/cookie-policy` → `public/cookie-policy.html`
+
 - All three have dummy placeholder content — user replaces later
 - Cookie Policy is for future Google AdSense compliance
 - Consistent header/footer with Home page
@@ -403,49 +433,53 @@ Download the generated CSV file. Returns `404` if not found, `410` if expired/de
 
 ## 📊 Results Table — 12 Columns
 
-| # | Column           | Source                                          |
-|---|------------------|-------------------------------------------------|
-| 1 | URL              | Full crawled URL (clickable link)               |
-| 2 | Page Title       | `<title>` tag                                   |
-| 3 | Meta Description | `<meta name="description">` content             |
-| 4 | HTTP Status      | Response status code (200, 301, 404, 500...)    |
-| 5 | Response Time    | Milliseconds taken to fetch the page            |
-| 6 | Content Type     | From `Content-Type` response header             |
-| 7 | Page Size        | Response body size in KB                        |
-| 8 | Internal Links   | Count of same-domain `<a>` links on the page    |
-| 9 | External Links   | Count of links going to other domains           |
-| 10 | Redirect URL    | Final destination URL if 301/302 redirect       |
-| 11 | Is Indexable    | ✅ / ❌ based on `noindex` in meta robots tag    |
-| 12 | Discovered At   | Timestamp when the page was crawled             |
+| #   | Column           | Source                                        |
+| --- | ---------------- | --------------------------------------------- |
+| 1   | URL              | Full crawled URL (clickable link)             |
+| 2   | Page Title       | `<title>` tag                                 |
+| 3   | Meta Description | `<meta name="description">` content           |
+| 4   | HTTP Status      | Response status code (200, 301, 404, 500...)  |
+| 5   | Response Time    | Milliseconds taken to fetch the page          |
+| 6   | Content Type     | From `Content-Type` response header           |
+| 7   | Page Size        | Response body size in KB                      |
+| 8   | Internal Links   | Count of same-domain `<a>` links on the page  |
+| 9   | External Links   | Count of links going to other domains         |
+| 10  | Redirect URL     | Final destination URL if 301/302 redirect     |
+| 11  | Is Indexable     | ✅ / ❌ based on `noindex` in meta robots tag |
+| 12  | Discovered At    | Timestamp when the page was crawled           |
 
 ---
 
 ## ⚙️ BullMQ + Redis — Job Queue Architecture
 
 ### Why BullMQ?
+
 - Crawl jobs survive VPS restarts — they live in Redis, not memory
 - If worker crashes mid-crawl, BullMQ automatically retries the job
 - Jobs are processed one at a time per domain (no duplicate crawls)
 
 ### Redis Connection (`src/queue/crawler.queue.ts`)
-Redis URL is manually parsed with `new URL()` and passed as `{host, port, password}` config to BullMQ's built-in connection (no `ioredis` dependency).
-```typescript
-import { Queue } from 'bullmq';
 
-export const crawlerQueue = new Queue('crawler', {
+Redis URL is manually parsed with `new URL()` and passed as `{host, port, password}` config to BullMQ's built-in connection (no `ioredis` dependency).
+
+```typescript
+import { Queue } from "bullmq";
+
+export const crawlerQueue = new Queue("crawler", {
   connection: {
     host: new URL(process.env.REDIS_URL!).hostname,
     port: parseInt(new URL(process.env.REDIS_URL!).port, 10) || 6379,
     password: new URL(process.env.REDIS_URL!).password || undefined,
-    maxRetriesPerRequest: null,  // required by BullMQ
+    maxRetriesPerRequest: null, // required by BullMQ
   },
 });
 ```
 
 ### Crawler Worker (`src/queue/crawler.worker.ts`)
+
 ```typescript
-import { Worker } from 'bullmq';
-import { crawlerService } from '../services/crawler.service';
+import { Worker } from "bullmq";
+import { crawlerService } from "../services/crawler.service";
 
 function getRedisConfig() {
   const url = new URL(process.env.REDIS_URL!);
@@ -458,7 +492,7 @@ function getRedisConfig() {
 }
 
 export const crawlerWorker = new Worker(
-  'crawler',
+  "crawler",
   async (job) => {
     const { jobId, startUrl, domain } = job.data;
     await crawlerService.crawl(jobId, startUrl, domain);
@@ -466,25 +500,31 @@ export const crawlerWorker = new Worker(
   {
     connection: getRedisConfig(),
     concurrency: 5, // max 5 crawl jobs running at same time
-  }
+  },
 );
 ```
 
 ### Export Queue + Worker (`src/queue/export.queue.ts` + `export.worker.ts`)
+
 Separate BullMQ queue `csv-export` with concurrency 2. Worker generates CSV from all crawled pages, saves to `tmp/exports/`, emails download link via `emailService.sendExportReadyEmail()`, marks export as `sent`.
 
 ### Adding a Job (inside `crawler.controller.ts`)
+
 ```typescript
-await crawlerQueue.add('crawl-job', {
-  jobId: newJob.id,
-  startUrl: inputUrl,
-  domain: rootDomain,
-}, {
-  attempts: 3,           // retry up to 3 times on failure
-  backoff: { type: 'exponential', delay: 5000 },
-  removeOnComplete: true,
-  removeOnFail: false,   // keep failed jobs in Redis for debugging
-});
+await crawlerQueue.add(
+  "crawl-job",
+  {
+    jobId: newJob.id,
+    startUrl: inputUrl,
+    domain: rootDomain,
+  },
+  {
+    attempts: 3, // retry up to 3 times on failure
+    backoff: { type: "exponential", delay: 5000 },
+    removeOnComplete: true,
+    removeOnFail: false, // keep failed jobs in Redis for debugging
+  },
+);
 ```
 
 ---
@@ -492,29 +532,35 @@ await crawlerQueue.add('crawl-job', {
 ## 📈 Progress Bar — Accurate Calculation
 
 **Formula:**
+
 ```
 progress_percent = Math.round((total_pages_found / total_pages_queued) * 100)
 ```
 
 **How `total_pages_queued` is updated during crawl:**
+
 - Every time the crawler discovers NEW URLs and adds them to the BFS queue,
   it also increments `crawl_jobs.total_pages_queued` in the DB by that count
 - Every time a URL is fully processed and saved, `total_pages_found` increments
 
 **Edge cases:**
+
 - Job just created, nothing queued yet → return `0`
 - `total_pages_queued` is 0 (divide by zero guard) → return `0`
 - Job completed → always return `100` regardless of math
 
 **Frontend polling:**
+
 ```javascript
 // Poll every 5 seconds
 const interval = setInterval(async () => {
   const res = await fetch(`/api/crawl/${jobId}/progress`);
   const data = await res.json();
   updateProgressBar(data.progress_percent);
-  updateCounter(`${data.total_pages_found} of ${data.total_pages_queued} pages crawled`);
-  if (data.status === 'completed') {
+  updateCounter(
+    `${data.total_pages_found} of ${data.total_pages_queued} pages crawled`,
+  );
+  if (data.status === "completed") {
     clearInterval(interval);
     window.location.href = `/results?job_id=${jobId}`;
   }
@@ -555,11 +601,12 @@ const interval = setInterval(async () => {
 ```
 
 ### Nodemailer Setup (`src/services/email.service.ts`)
+
 ```typescript
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD, // App Password only — NOT real Gmail password
@@ -605,31 +652,40 @@ crawl(jobId, startUrl, domain):
 ## 🔐 API Security — 4 Layers
 
 ### 1. Helmet.js — HTTP Security Headers
+
 ```typescript
-import helmet from 'helmet';
-app.use(helmet({
-  contentSecurityPolicy: false,  // Disabled to allow CDN scripts (Tailwind, Google Fonts)
-}));
+import helmet from "helmet";
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // Disabled to allow CDN scripts (Tailwind, Google Fonts)
+  }),
+);
 ```
 
 ### 2. CORS — Restrict to Own Domain
+
 ```typescript
-import cors from 'cors';
+import cors from "cors";
 app.use(cors({ origin: process.env.ALLOWED_ORIGIN }));
 ```
 
 ### 3. Rate Limiting — 200 POST requests / 15 min / IP
+
 ```typescript
-import rateLimit from 'express-rate-limit';
-app.use('/api/', rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 200,
-  message: { error: 'Too many requests, please try again later.' },
-  skip: (req) => req.method === 'GET',  // Skip rate limit for GET (progress polling)
-}));
+import rateLimit from "express-rate-limit";
+app.use(
+  "/api/",
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 200,
+    message: { error: "Too many requests, please try again later." },
+    skip: (req) => req.method === "GET", // Skip rate limit for GET (progress polling)
+  }),
+);
 ```
 
 ### 4. Input Validation — on `POST /api/crawl`
+
 - Must be a non-empty string
 - Must start with `http://` or `https://`
 - Must parse with `new URL()` without throwing
@@ -645,28 +701,39 @@ app.use('/api/', rateLimit({
 - Credentials stored in `.env` as `SWAGGER_USERNAME` and `SWAGGER_PASSWORD`
 
 ### Middleware (`src/middleware/swagger-auth.middleware.ts`)
+
 ```typescript
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 
 export function swaggerAuth(req: Request, res: Response, next: NextFunction) {
-  const authHeader = req.headers['authorization'];
-  if (!authHeader?.startsWith('Basic ')) {
-    res.setHeader('WWW-Authenticate', 'Basic realm="Swagger Docs"');
-    return res.status(401).send('Authentication required.');
+  const authHeader = req.headers["authorization"];
+  if (!authHeader?.startsWith("Basic ")) {
+    res.setHeader("WWW-Authenticate", 'Basic realm="Swagger Docs"');
+    return res.status(401).send("Authentication required.");
   }
-  const [user, pass] = Buffer.from(authHeader.split(' ')[1], 'base64')
-    .toString().split(':');
-  if (user === process.env.SWAGGER_USERNAME && pass === process.env.SWAGGER_PASSWORD) {
+  const [user, pass] = Buffer.from(authHeader.split(" ")[1], "base64")
+    .toString()
+    .split(":");
+  if (
+    user === process.env.SWAGGER_USERNAME &&
+    pass === process.env.SWAGGER_PASSWORD
+  ) {
     return next();
   }
-  res.setHeader('WWW-Authenticate', 'Basic realm="Swagger Docs"');
-  return res.status(401).send('Invalid credentials.');
+  res.setHeader("WWW-Authenticate", 'Basic realm="Swagger Docs"');
+  return res.status(401).send("Invalid credentials.");
 }
 ```
 
 ### Register in `src/index.ts`
+
 ```typescript
-app.use('/api-docs', swaggerAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  "/api-docs",
+  swaggerAuth,
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec),
+);
 ```
 
 ---
@@ -685,7 +752,7 @@ app.use('/api-docs', swaggerAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 ## 🔧 TypeScript Types (`src/types/index.ts`)
 
 ```typescript
-export type JobStatus = 'pending' | 'running' | 'completed' | 'failed';
+export type JobStatus = "pending" | "running" | "completed" | "failed";
 
 export interface CrawlJob {
   id: string;
@@ -717,12 +784,21 @@ export interface CrawledPage {
   discovered_at: Date;
 }
 
-export interface StartCrawlRequest { url: string; }
-export interface DecideRequest { domain: string; action: 're-crawl' | 'use-existing'; }
-export interface NotifyRequest { email: string; }
-export interface ExportRequest { email: string; }
+export interface StartCrawlRequest {
+  url: string;
+}
+export interface DecideRequest {
+  domain: string;
+  action: "re-crawl" | "use-existing";
+}
+export interface NotifyRequest {
+  email: string;
+}
+export interface ExportRequest {
+  email: string;
+}
 
-export type ExportStatus = 'processing' | 'completed' | 'sent';
+export type ExportStatus = "processing" | "completed" | "sent";
 
 export interface CsvExport {
   id: string;
@@ -818,7 +894,9 @@ export interface ProgressResponse {
 ## 🖥️ VS Code Setup Guide — Start to End
 
 ### Step 1 — Install VS Code Extensions
+
 Open Extensions panel (`Ctrl+Shift+X`) and install:
+
 - **GitHub Copilot** — AI inline code suggestions
 - **GitHub Copilot Chat** — chat with Copilot (`Ctrl+Shift+I`)
 - **ESLint** — catches TypeScript errors while typing
@@ -828,6 +906,7 @@ Open Extensions panel (`Ctrl+Shift+X`) and install:
 ---
 
 ### Step 2 — Create Your Project
+
 ```bash
 mkdir domain-crawler && cd domain-crawler
 git init
@@ -839,23 +918,28 @@ npm init -y
 ### Step 3 — Give Copilot Your Context
 
 **Option A — Automatic (recommended):**
+
 ```bash
 mkdir .github
 cp COPILOT_CONTEXT.md .github/copilot-instructions.md
 ```
+
 Copilot reads this file automatically for every suggestion in the project. No extra steps.
 
 **Option B — Manual via Copilot Chat:**
+
 - Open Copilot Chat (`Ctrl+Shift+I`)
 - Click paperclip 📎 → attach `COPILOT_CONTEXT.md`
-- Ask: *"Based on this context file, generate `src/index.ts`"*
+- Ask: _"Based on this context file, generate `src/index.ts`"_
 
 ---
 
 ### Step 4 — Set Up Neon MCP Server in VS Code
+
 The Neon MCP lets Copilot Chat **talk to your database directly** — run queries, check schema, debug issues without leaving VS Code.
 
 **4a. Create `.vscode/mcp.json` in your project root:**
+
 ```json
 {
   "servers": {
@@ -871,15 +955,18 @@ The Neon MCP lets Copilot Chat **talk to your database directly** — run querie
 ```
 
 **4b. Get your Neon API Key:**
+
 - Go to [console.neon.tech](https://console.neon.tech)
 - Top right → Account Settings → API Keys → **Create new key**
 - Paste it in `mcp.json` above
 
 **4c. Enable MCP in VS Code:**
+
 - Open Settings (`Ctrl+,`) → search `mcp`
 - Turn ON: `Chat > MCP: Enabled`
 
 **4d. Restart VS Code**, then open Copilot Chat and try:
+
 > "Using Neon MCP, show me all tables in my database"
 > "Create the crawl_jobs table in my Neon database"
 > "How many completed jobs are there?"
@@ -887,6 +974,7 @@ The Neon MCP lets Copilot Chat **talk to your database directly** — run querie
 ---
 
 ### Step 5 — Install All Dependencies
+
 ```bash
 npm install axios bullmq cheerio cors dotenv express express-rate-limit helmet node-cron nodemailer pg swagger-jsdoc swagger-ui-express uuid
 
@@ -896,6 +984,7 @@ npm install -D @types/cors @types/express @types/node @types/node-cron @types/no
 ---
 
 ### Step 6 — Configure `.env`
+
 ```bash
 cp .env.example .env
 # Fill in all values — see Environment Variables section above
@@ -904,6 +993,7 @@ cp .env.example .env
 ---
 
 ### Step 7 — Run DB Migration
+
 ```bash
 npm run migrate
 # Creates crawl_jobs and crawled_pages tables in Neon
@@ -912,6 +1002,7 @@ npm run migrate
 ---
 
 ### Step 8 — Start Dev Server
+
 ```bash
 npm run dev
 # App: http://localhost:5005
@@ -921,7 +1012,9 @@ npm run dev
 ---
 
 ### Step 9 — Test APIs with REST Client
+
 Create `test.http` in project root:
+
 ```http
 ### Start a crawl
 POST http://localhost:5005/api/crawl
@@ -951,6 +1044,7 @@ Content-Type: application/json
 ### Get full results
 GET http://localhost:5005/api/crawl/JOB_ID
 ```
+
 Click **"Send Request"** above each block to test directly in VS Code.
 
 ---
@@ -984,3 +1078,14 @@ Click **"Send Request"** above each block to test directly in VS Code.
 25. **Results are paginated** — `GET /api/crawl/:job_id` accepts `?page=` and `?limit=` (50/100/500/1000)
 26. **ESLint configured** — `eslint.config.cjs` (flat config) with `@typescript-eslint`, run via `npm run lint`
 27. **Express v5** — project uses Express `^5.2.1`, not v4
+
+---
+
+## 🐛 Known Minor Deviations (Code vs. This Spec)
+
+| #   | Area                              | Spec Says                                                                                                                                                         | Code Does                                                                                                                                                                                                                                                                                             | Severity                         |
+| --- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| 1   | **Crawler worker `removeOnFail`** | `removeOnFail: false` on the `.add()` call (keep failed jobs in Redis for debugging)                                                                              | The `.add()` call correctly uses `removeOnFail: false`, but the **Worker constructor** in `src/queue/crawler.worker.ts` sets `removeOnFail: true` — this overrides the per-job setting and **deletes failed jobs from Redis**, defeating debug retention. Same issue in `src/queue/export.worker.ts`. | **Medium**                       |
+| 2   | **`getActiveExportForJob` scope** | Export button should disable while processing **and re-enable after 5-min expiry** (implying both `'processing'` and `'sent'` statuses should block a new export) | `src/services/export.service.ts` → `getActiveExportForJob()` only checks `status = 'processing'` — once marked `'sent'`, the button immediately re-enables (before the 5-min file expiry).                                                                                                            | **Low**                          |
+| 3   | **Extra content not in spec**     | Spec doesn't mention Google Analytics, SEO meta tags, Open Graph, Twitter Cards, JSON-LD, or favicon                                                              | All HTML pages include GA4 tracking (`G-PLBX971LYL`), comprehensive SEO meta, Open Graph, Twitter Cards, structured data, and references to `/webcrawler-logo.png`, `/favicon.ico`, `/og-image.png`.                                                                                                  | **Info** — additive enhancements |
+| 4   | **Missing static assets**         | HTML pages reference `/webcrawler-logo.png`, `/favicon.ico`, `/og-image.png`                                                                                      | These files do not exist in `public/` — will return 404.                                                                                                                                                                                                                                              | **Low**                          |
