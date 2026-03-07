@@ -33,7 +33,8 @@ export const exportService = {
   async getActiveExportForJob(jobId: string): Promise<CsvExport | null> {
     const result = await pool.query(
       `SELECT * FROM csv_exports
-       WHERE job_id = $1 AND status = 'processing'
+       WHERE job_id = $1
+         AND (status = 'processing' OR (status IN ('completed', 'sent') AND created_at > NOW() - INTERVAL '5 minutes'))
        ORDER BY created_at DESC
        LIMIT 1`,
       [jobId]

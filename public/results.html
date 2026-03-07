@@ -48,12 +48,12 @@
   <!-- Header -->
   <header class="bg-white shadow-sm">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/"><img src="/webcrawler-logo.png" alt="WebCrawler" class="h-10" /></a>
-      <nav class="text-sm text-gray-500 space-x-4">
-        <a href="/" class="hover:text-gray-700">Home</a>
-        <a href="/privacy-policy" class="hover:text-gray-700">Privacy</a>
-        <a href="/terms-of-service" class="hover:text-gray-700">Terms</a>
-        <a href="/cookie-policy" class="hover:text-gray-700">Cookies</a>
+      <a href="/"><img src="/webcrawler-logo.png" alt="WebCrawler" class="h-10" width="120" height="40" /></a>
+      <nav class="text-sm text-gray-600 space-x-4">
+        <a href="/" class="hover:text-gray-800">Home</a>
+        <a href="/privacy-policy" class="hover:text-gray-800">Privacy</a>
+        <a href="/terms-of-service" class="hover:text-gray-800">Terms</a>
+        <a href="/cookie-policy" class="hover:text-gray-800">Cookies</a>
       </nav>
     </div>
   </header>
@@ -61,7 +61,7 @@
   <main class="flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
     <!-- Loading / Error -->
     <div id="loading" class="text-center py-20">
-      <p class="text-gray-500 text-lg">Loading results...</p>
+      <p class="text-gray-600 text-lg">Loading results...</p>
     </div>
 
     <div id="error-section" class="hidden text-center py-20">
@@ -72,7 +72,7 @@
     <!-- Progress Section (if crawl not done yet) -->
     <div id="progress-section" class="hidden text-center py-10">
       <h2 class="text-2xl font-bold text-gray-800 mb-2" id="progress-domain"></h2>
-      <p class="text-gray-500 mb-6">Crawl is still in progress...</p>
+      <p class="text-gray-600 mb-6">Crawl is still in progress...</p>
       <div class="max-w-lg mx-auto">
         <div class="bg-gray-200 rounded-full h-4 overflow-hidden mb-3">
           <div id="progress-bar" class="progress-bar bg-blue-600 h-full rounded-full" style="width: 0%"></div>
@@ -86,10 +86,10 @@
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
           <h2 class="text-2xl font-bold text-gray-800" id="results-domain"></h2>
-          <p class="text-gray-500 text-sm" id="results-summary"></p>
+          <p class="text-gray-600 text-sm" id="results-summary"></p>
         </div>
         <div class="flex flex-wrap gap-3 items-center">
-          <label class="text-sm text-gray-500">Show:</label>
+          <label class="text-sm text-gray-600">Show:</label>
           <select id="limit-select" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="50" selected>50</option>
             <option value="100">100</option>
@@ -154,12 +154,12 @@
   </main>
 
   <!-- Footer -->
-  <footer class="text-center text-gray-400 text-xs py-6">
+  <footer class="text-center text-gray-600 text-xs py-6">
     &copy; 2026 Domain Crawler &middot;
-    <a href="/" class="hover:text-gray-600">Home</a> &middot;
-    <a href="/privacy-policy" class="hover:text-gray-600">Privacy Policy</a> &middot;
-    <a href="/terms-of-service" class="hover:text-gray-600">Terms of Service</a> &middot;
-    <a href="/cookie-policy" class="hover:text-gray-600">Cookie Policy</a>
+    <a href="/" class="hover:text-gray-800">Home</a> &middot;
+    <a href="/privacy-policy" class="hover:text-gray-800">Privacy Policy</a> &middot;
+    <a href="/terms-of-service" class="hover:text-gray-800">Terms of Service</a> &middot;
+    <a href="/cookie-policy" class="hover:text-gray-800">Cookie Policy</a>
   </footer>
 
   <script>
@@ -301,7 +301,7 @@
         const tr = document.createElement('tr');
         tr.className = 'border-t border-gray-100 hover:bg-gray-50';
         tr.innerHTML = `
-          <td class="px-4 py-3 text-gray-400">${startIndex + idx + 1}</td>
+          <td class="px-4 py-3 text-gray-500">${startIndex + idx + 1}</td>
           <td class="px-4 py-3"><a href="${escHtml(page.url)}" target="_blank" class="text-blue-600 hover:underline text-xs">${truncate(page.url, 60)}</a></td>
           <td class="px-4 py-3" title="${escHtml(page.page_title || '')}">${escHtml(truncate(page.page_title || '—', 40))}</td>
           <td class="px-4 py-3" title="${escHtml(page.meta_description || '')}">${escHtml(truncate(page.meta_description || '—', 50))}</td>
@@ -375,7 +375,7 @@
     }
 
     function getStatusClass(code) {
-      if (!code) return 'text-gray-400';
+      if (!code) return 'text-gray-500';
       if (code >= 200 && code < 300) return 'text-green-600';
       if (code >= 300 && code < 400) return 'text-yellow-600';
       if (code >= 400) return 'text-red-600';

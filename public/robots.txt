@@ -12,6 +12,3 @@ Disallow: /api/
 
 # Sitemap
 Sitemap: https://webcrawler.buzz/sitemap.xml
-
-# LLMs
-Sitemap: https://webcrawler.buzz/llms.txt
