@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://webcrawler.example.com/</loc>
+    <loc>https://webcrawler.buzz/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://webcrawler.example.com/privacy-policy.html</loc>
+    <loc>https://webcrawler.buzz/results</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://webcrawler.buzz/privacy-policy.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://webcrawler.example.com/terms-of-service.html</loc>
+    <loc>https://webcrawler.buzz/terms-of-service.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://webcrawler.example.com/cookie-policy.html</loc>
+    <loc>https://webcrawler.buzz/cookie-policy.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

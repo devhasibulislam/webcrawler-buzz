@@ -1,0 +1,51 @@
+# Domain Crawler
+
+> A free online tool to crawl any website and generate a comprehensive SEO audit report.
+
+## Overview
+
+Domain Crawler (webcrawler.buzz) is a web-based domain crawling tool that scans entire websites using breadth-first search (BFS) and extracts page-level SEO data. It is completely free to use with no sign-up required.
+
+## What It Does
+
+Paste any URL and Domain Crawler will:
+- Crawl every discoverable page on the domain
+- Extract page titles, meta descriptions, HTTP status codes, response times, content types, page sizes
+- Count internal and external links on each page
+- Detect redirect chains and final redirect URLs
+- Check indexability status of each page
+- Generate a paginated, searchable results table
+- Export results as CSV with email delivery
+
+## Key Features
+
+- Free website crawler — no registration, no limits on pages
+- Real-time progress tracking with percentage updates
+- Duplicate domain detection with option to re-crawl or view existing results
+- Paginated results view (50, 100, 500, or 1000 results per page)
+- CSV export with download link sent via email
+- Email notifications when crawl completes
+- Shareable tracking URLs — bookmark or share your crawl progress
+- Mobile-friendly responsive design
+
+## Use Cases
+
+- SEO audits and website health checks
+- Broken link detection (find 4xx and 5xx status codes)
+- Site structure analysis via internal/external link counts
+- Page speed analysis via response times
+- Indexability verification across an entire domain
+- Meta data auditing (missing titles, duplicate descriptions)
+- Content type and page size analysis
+- Website migration validation
+
+## Target Keywords
+
+domain crawler, website crawler, site crawler, SEO crawler, free SEO tool, web scraper, URL scanner, bulk URL checker, website audit tool, crawl website, link checker, site analyzer, broken link checker, SEO audit tool, website analysis tool, HTTP status checker, meta tag checker, page speed analyzer
+
+## Links
+
+- Website: https://webcrawler.buzz
+- Privacy Policy: https://webcrawler.buzz/privacy-policy
+- Terms of Service: https://webcrawler.buzz/terms-of-service
+- Cookie Policy: https://webcrawler.buzz/cookie-policy

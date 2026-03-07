@@ -1,0 +1,218 @@
+# Domain Crawler — Full Documentation
+
+> A free online tool to crawl any website and generate a comprehensive SEO audit report.
+> Website: https://webcrawler.buzz
+
+## Product Overview
+
+Domain Crawler is a production-grade web crawler built for SEO professionals, developers, and website owners who want to audit their websites quickly and for free. It performs breadth-first search (BFS) crawling scoped to a root domain and extracts detailed page-level data.
+
+No registration is required. No API key is needed. Just paste a URL, click "Start Crawl," and view your results.
+
+## How It Works
+
+1. **Submit a URL** — Enter any website URL on the homepage
+2. **Duplicate Detection** — If the domain was already crawled, you can view existing results or start a fresh re-crawl
+3. **BFS Crawling** — The crawler visits every discoverable page on the domain using breadth-first search, staying within the root domain scope
+4. **Real-Time Progress** — Watch a live progress bar with percentage updates (polls every 5 seconds)
+5. **Tracking URL** — Get a shareable bookmark link to check progress or results anytime
+6. **Email Notification** — Optionally enter your email to get notified when the crawl completes
+7. **View Results** — Browse a paginated table with all crawled pages and SEO data
+8. **Export CSV** — Export your full results as a CSV file, delivered via email
+
+## Data Extracted Per Page
+
+For every page crawled, Domain Crawler collects:
+
+| Field | Description |
+|-------|-------------|
+| URL | The full URL of the crawled page |
+| Page Title | The content of the `<title>` tag |
+| Meta Description | The content of the `<meta name="description">` tag |
+| HTTP Status Code | The HTTP response status (200, 301, 404, 500, etc.) |
+| Response Time | Time to receive the response in milliseconds |
+| Content Type | The MIME type of the response (text/html, application/json, etc.) |
+| Page Size | The size of the response body in bytes |
+| Internal Links Count | Number of links pointing to pages on the same domain |
+| External Links Count | Number of links pointing to other domains |
+| Redirect URL | If the page redirected, the final destination URL |
+| Indexable | Whether the page is indexable by search engines |
+| Discovered At | Timestamp when the page was first discovered |
+
+## Features in Detail
+
+### Free & No Registration
+Domain Crawler is completely free. No account creation, no API keys, no usage limits on the number of pages crawled per domain.
+
+### Real-Time Progress Tracking
+After starting a crawl, you see a live progress bar that updates every 5 seconds showing how many pages have been crawled out of the total discovered.
+
+### Shareable Tracking URLs
+Each crawl generates a unique tracking URL that you can bookmark or share. Come back anytime to check progress or view results, even after closing the browser.
+
+### Duplicate Domain Detection
+If you try to crawl a domain that was already crawled, Domain Crawler shows you the existing results count and gives you two options:
+- **View Existing Results** — Jump straight to the previous crawl data
+- **Re-crawl Fresh** — Start a completely new crawl of the domain
+
+### Email Notifications
+During a crawl, an email notification card slides in after a few seconds. Enter your email address to receive a notification when the crawl completes, including a direct link to your results.
+
+### Paginated Results
+Results are displayed in a clean, sortable table with pagination. Choose to view 50, 100, 500, or 1000 results per page.
+
+### CSV Export
+Click the "Export CSV" button, enter your email, and receive a download link within minutes. The CSV contains all crawled page data. Download links are valid for 5 minutes.
+
+## Technical Architecture
+
+- **Backend**: Express.js v5 with TypeScript (strict mode)
+- **Database**: Neon PostgreSQL with SSL
+- **Queue System**: BullMQ with Redis for job processing
+- **Crawling**: axios for HTTP requests + cheerio for HTML parsing
+- **Email**: Nodemailer with Gmail SMTP
+- **Frontend**: Static HTML with Tailwind CSS and vanilla JavaScript
+
+### Concurrency & Rate Limiting
+- Crawler queue concurrency: 5 simultaneous crawl jobs
+- CSV export queue concurrency: 2 simultaneous exports
+- API rate limit: 200 POST requests per 15-minute window per IP
+- GET requests are exempt from rate limiting
+
+## API Endpoints
+
+Domain Crawler exposes the following REST API endpoints:
+
+### Start a Crawl
+```
+POST /api/crawl
+Body: { "url": "https://example.com" }
+Response: { "job_id": "uuid", "tracking_url": "/results?job_id=uuid" }
+```
+
+### Handle Duplicate Domain Decision
+```
+POST /api/crawl/decide
+Body: { "domain": "example.com", "action": "re-crawl" | "use-existing" }
+```
+
+### Get Crawl Progress
+```
+GET /api/crawl/:jobId/progress
+Response: { "status": "running", "progress_percent": 45, "total_pages_found": 23, "total_pages_queued": 51 }
+```
+
+### Get Crawl Results (Paginated)
+```
+GET /api/crawl/:jobId?page=1&limit=50
+Response: { "domain": "example.com", "status": "completed", "pages": [...], "pagination": {...} }
+```
+
+### Register Email Notification
+```
+POST /api/crawl/:jobId/notify
+Body: { "email": "user@example.com" }
+```
+
+### Request CSV Export
+```
+POST /api/crawl/:jobId/export
+Body: { "email": "user@example.com" }
+```
+
+### Check Export Status
+```
+GET /api/crawl/:jobId/export/status
+Response: { "active": true, "status": "processing", "email": "user@example.com" }
+```
+
+### Download Exported CSV
+```
+GET /api/crawl/:jobId/export/download/:exportId
+Response: CSV file download (valid for 5 minutes after generation)
+```
+
+## Database Schema
+
+### crawl_jobs
+Stores metadata about each crawl job.
+- id (UUID, primary key)
+- url (TEXT) — the submitted URL
+- domain (TEXT) — extracted root domain
+- status (TEXT) — pending, running, completed, failed
+- total_pages_found (INTEGER)
+- total_pages_queued (INTEGER)
+- email (TEXT, nullable) — notification email
+- created_at (TIMESTAMP)
+- updated_at (TIMESTAMP)
+
+### crawled_pages
+Stores data for each crawled page.
+- id (SERIAL, primary key)
+- job_id (UUID, foreign key → crawl_jobs.id)
+- url (TEXT)
+- page_title (TEXT)
+- meta_description (TEXT)
+- status_code (INTEGER)
+- response_time_ms (INTEGER)
+- content_type (TEXT)
+- page_size_bytes (INTEGER)
+- internal_links_count (INTEGER)
+- external_links_count (INTEGER)
+- redirect_url (TEXT)
+- is_indexable (BOOLEAN)
+- discovered_at (TIMESTAMP)
+
+### csv_exports
+Tracks CSV export requests and their lifecycle.
+- id (UUID, primary key)
+- job_id (UUID, foreign key → crawl_jobs.id)
+- email (TEXT)
+- status (TEXT) — processing, completed, expired
+- file_path (TEXT)
+- created_at (TIMESTAMP)
+- expires_at (TIMESTAMP)
+
+## Comparison with Alternatives
+
+| Feature | Domain Crawler | Screaming Frog | Sitebulb | Ahrefs Site Audit |
+|---------|:-:|:-:|:-:|:-:|
+| Free | ✅ Completely free | Free up to 500 URLs | Paid only | Paid only |
+| No install needed | ✅ Web-based | Desktop app required | Desktop app required | Web-based but paid |
+| No registration | ✅ | ✅ | ❌ | ❌ |
+| Real-time progress | ✅ | ✅ | ✅ | ✅ |
+| CSV export | ✅ | ✅ | ✅ | ✅ |
+| Email notifications | ✅ | ❌ | ❌ | ✅ |
+| Shareable results | ✅ via tracking URL | ❌ | ❌ | ✅ |
+| API access | ✅ REST API | ❌ | ❌ | ✅ (paid) |
+
+## Frequently Asked Questions
+
+**Q: Is Domain Crawler really free?**
+A: Yes, completely free with no hidden costs, no registration required, and no limits on the number of pages crawled.
+
+**Q: How long does a crawl take?**
+A: It depends on the size of the website. Small sites (under 100 pages) typically complete in under a minute. Larger sites may take several minutes. You can bookmark the tracking URL and come back later.
+
+**Q: Can I crawl any website?**
+A: You can crawl any publicly accessible website. The crawler respects the domain boundary and only crawls pages within the root domain you submit.
+
+**Q: How do I export my results?**
+A: Click the "Export CSV" button on the results page, enter your email, and you'll receive a download link within minutes.
+
+**Q: How long are export files available?**
+A: CSV download links are valid for 5 minutes after generation. After that, you can request a new export.
+
+**Q: Can I crawl a website I don't own?**
+A: Domain Crawler accesses only publicly available pages, similar to how Google's crawler works. However, please use the tool responsibly and only crawl sites you have permission to analyze.
+
+## Keywords
+
+domain crawler, website crawler, site crawler, SEO crawler, free SEO tool, web scraper, URL scanner, bulk URL checker, website audit tool, crawl website, link checker, site analyzer, broken link checker, SEO audit tool, website analysis tool, HTTP status checker, meta tag checker, page speed analyzer, website health check, site structure analyzer, SEO report generator, free website audit, online crawler tool, web page analyzer, internal link checker, external link finder, redirect checker, indexability checker
+
+## Contact & Legal
+
+- Website: https://webcrawler.buzz
+- Privacy Policy: https://webcrawler.buzz/privacy-policy
+- Terms of Service: https://webcrawler.buzz/terms-of-service
+- Cookie Policy: https://webcrawler.buzz/cookie-policy

@@ -99,6 +99,8 @@ export const exportWorker = new Worker(
   {
     connection: getRedisConfig(),
     concurrency: 2,
+    removeOnComplete: { count: 0 },
+    removeOnFail: true,
   }
 );
 

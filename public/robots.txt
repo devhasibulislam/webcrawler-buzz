@@ -5,12 +5,13 @@ Allow: /
 Allow: /privacy-policy.html
 Allow: /terms-of-service.html
 Allow: /cookie-policy.html
-
-# Block results pages (contain private/temporary crawl data)
-Disallow: /results.html
+Allow: /results.html
 
 # Block API routes
 Disallow: /api/
 
 # Sitemap
-Sitemap: https://webcrawler.example.com/sitemap.xml
+Sitemap: https://webcrawler.buzz/sitemap.xml
+
+# LLMs
+Sitemap: https://webcrawler.buzz/llms.txt
