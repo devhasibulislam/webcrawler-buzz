@@ -16,7 +16,7 @@ Backed by **Neon PostgreSQL** for storage and **Redis + BullMQ** for persistent 
 2. Server immediately creates a job and returns a **tracking URL** (e.g. `/results?job_id=abc-123`)
 3. That tracking URL is shown on screen right away — user can copy/bookmark it immediately
 4. BullMQ pushes the crawl job into Redis queue — crawl starts in background
-5. Frontend polls for progress every 2 seconds — shows real-time progress bar (0→100%)
+5. Frontend polls for progress every 5 seconds — shows real-time progress bar (0→100%)
 6. If crawl takes longer than a random 5–10 seconds → UI shows "Notify me" email form
 7. When crawl finishes → if email was given, send notification with the **same tracking URL**
 8. User can close the browser at any time — crawl keeps running on the server
@@ -30,7 +30,7 @@ Backed by **Neon PostgreSQL** for storage and **Redis + BullMQ** for persistent 
 |----------------|-----------------------------------------------------|
 | Runtime        | Node.js (v20+)                                      |
 | Language       | TypeScript (strict mode)                            |
-| Framework      | Express.js (API + static HTML)                      |
+| Framework      | Express.js v5 (API + static HTML)                   |
 | Styling        | Tailwind CSS (CDN) + Google Sans (Google Fonts CDN) |
 | Database       | PostgreSQL via Neon (serverless)                    |
 | DB Client      | `pg` (node-postgres) — raw parameterized queries    |
@@ -39,6 +39,8 @@ Backed by **Neon PostgreSQL** for storage and **Redis + BullMQ** for persistent 
 | Email          | Nodemailer + Gmail SMTP (App Password)              |
 | API Docs       | Swagger UI — protected by HTTP Basic Auth           |
 | Security       | `helmet`, `express-rate-limit`, `cors`, input validation |
+| CSV Export     | BullMQ export queue + worker, `node-cron` cleanup   |
+| Linting        | ESLint + `@typescript-eslint`                       |
 | Env Config     | `dotenv`                                            |
 
 ---
@@ -116,6 +118,21 @@ CREATE TABLE IF NOT EXISTS crawled_pages (
 > `total_pages_queued` tracks how many URLs have been discovered and queued total.
 > Progress = `total_pages_found ÷ total_pages_queued × 100`
 
+### Table: `csv_exports`
+
+```sql
+CREATE TABLE IF NOT EXISTS csv_exports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  job_id UUID NOT NULL REFERENCES crawl_jobs(id) ON DELETE CASCADE,
+  email VARCHAR(255) NOT NULL,
+  file_path TEXT,
+  status VARCHAR(20) NOT NULL DEFAULT 'processing',  -- processing | completed | sent
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+> CSV exports are ephemeral — a cron job deletes files + records older than 5 minutes.
+
 ---
 
 ## 📁 Project Folder Structure
@@ -123,7 +140,7 @@ CREATE TABLE IF NOT EXISTS crawled_pages (
 ```
 domain-crawler/
 ├── src/
-│   ├── index.ts                          # Express entry — registers middleware, routes, BullMQ worker
+│   ├── index.ts                          # Express entry — registers middleware, routes, BullMQ workers, cron
 │   ├── routes/
 │   │   ├── crawler.routes.ts             # /api/crawl/** API routes
 │   │   └── view.routes.ts                # HTML page routes
@@ -133,16 +150,21 @@ domain-crawler/
 │   ├── services/
 │   │   ├── crawler.service.ts            # BFS crawl logic — runs inside BullMQ worker
 │   │   ├── job.service.ts                # DB CRUD for crawl_jobs + crawled_pages
-│   │   └── email.service.ts              # Nodemailer send logic
+│   │   ├── email.service.ts              # Nodemailer send logic
+│   │   └── export.service.ts             # DB CRUD for csv_exports table
 │   ├── queue/
-│   │   ├── crawler.queue.ts              # BullMQ Queue definition (producer)
-│   │   └── crawler.worker.ts             # BullMQ Worker definition (consumer)
+│   │   ├── crawler.queue.ts              # BullMQ Queue definition — crawl jobs (producer)
+│   │   ├── crawler.worker.ts             # BullMQ Worker — crawl jobs (consumer, concurrency: 5)
+│   │   ├── export.queue.ts               # BullMQ Queue definition — CSV export jobs (producer)
+│   │   └── export.worker.ts              # BullMQ Worker — CSV export jobs (consumer, concurrency: 2)
+│   ├── cron/
+│   │   └── export-cleanup.ts             # node-cron job — deletes expired exports every minute
 │   ├── middleware/
 │   │   ├── security.middleware.ts        # Helmet, CORS, rate limiter
 │   │   └── swagger-auth.middleware.ts    # HTTP Basic Auth for /api-docs
 │   ├── db/
 │   │   ├── client.ts                     # pg Pool from DATABASE_URL
-│   │   └── migrate.ts                    # Creates tables if not exist
+│   │   └── migrate.ts                    # Creates tables if not exist (crawl_jobs, crawled_pages, csv_exports)
 │   ├── utils/
 │   │   └── url.utils.ts                  # extractRootDomain(), normalizeUrl(), isValidUrl()
 │   ├── swagger/
@@ -155,9 +177,12 @@ domain-crawler/
 │   ├── privacy-policy.html               # Privacy Policy (dummy content)
 │   ├── terms-of-service.html             # Terms of Service (dummy content)
 │   └── cookie-policy.html               # Cookie Policy (dummy — for future AdSense)
+├── tmp/
+│   └── exports/                          # Temporary CSV files (auto-cleaned by cron)
 ├── .env
 ├── .env.example
 ├── .gitignore
+├── eslint.config.cjs                     # ESLint v9 flat config for TypeScript
 ├── tsconfig.json
 ├── package.json
 └── COPILOT_CONTEXT.md
@@ -228,7 +253,7 @@ Saves email to `crawl_jobs.notify_email`. Called after 5–10s threshold on fron
 ---
 
 ### `GET /api/crawl/:job_id/progress`
-Lightweight polling endpoint — called every 2 seconds by frontend.
+Lightweight polling endpoint — called every 5 seconds by frontend.
 
 **Response (running):**
 ```json
@@ -258,7 +283,11 @@ Lightweight polling endpoint — called every 2 seconds by frontend.
 ---
 
 ### `GET /api/crawl/:job_id`
-Full results — called once crawl is complete to load results table.
+Full paginated results — called once crawl is complete to load results table.
+
+**Query Parameters:**
+- `page` — page number (default: 1)
+- `limit` — rows per page: `50` | `100` | `500` | `1000` (default: 50)
 
 **Response:**
 ```json
@@ -267,9 +296,69 @@ Full results — called once crawl is complete to load results table.
   "domain": "amplifying.ai",
   "status": "completed",
   "total_pages_found": 54,
+  "pagination": {
+    "page": 1,
+    "limit": 50,
+    "total_count": 54,
+    "total_pages": 2
+  },
   "pages": [ "...array of crawled_pages rows..." ]
 }
 ```
+
+---
+
+### `POST /api/crawl/:job_id/export`
+Request a CSV export — generates CSV in background, emails download link to user.
+
+**Request:**
+```json
+{ "email": "user@example.com" }
+```
+
+**Response (HTTP 202):**
+```json
+{
+  "status": "processing",
+  "export_id": "export-uuid",
+  "message": "CSV export started. Download link will be sent to user@example.com."
+}
+```
+
+**Response — already in progress (HTTP 200):**
+```json
+{
+  "status": "already_processing",
+  "export_id": "export-uuid",
+  "message": "An export is already in progress or was recently sent. Please wait for it to expire."
+}
+```
+
+---
+
+### `GET /api/crawl/:job_id/export/status`
+Check export status — used by frontend to control export button state.
+
+**Response (active):**
+```json
+{
+  "active": true,
+  "export_id": "export-uuid",
+  "status": "processing",
+  "email": "user@example.com",
+  "created_at": "2025-01-01T00:00:00Z"
+}
+```
+
+**Response (no active export):**
+```json
+{ "active": false }
+```
+
+---
+
+### `GET /api/crawl/:job_id/download/:export_id`
+Download the generated CSV file. Returns `404` if not found, `410` if expired/deleted.
 
 ---
 
@@ -283,7 +372,7 @@ Full results — called once crawl is complete to load results table.
   - **Immediately show the tracking URL** on screen in a highlighted box:
     > 🔗 Your tracking link: `http://your-domain:5005/results?job_id=abc-123`
     > "Bookmark this! You can come back anytime even if you close the tab."
-  - Show live progress bar (0→100%) — polls `GET /api/crawl/:job_id/progress` every 2 seconds
+  - Show live progress bar (0→100%) — polls `GET /api/crawl/:job_id/progress` every 5 seconds
   - Show live counter: "23 of 61 pages crawled..."
 - **After random 5–10 seconds, if still running** → animated card slides in:
   > "⏳ This might take a while. Want an email when it's done?"
@@ -294,10 +383,13 @@ Full results — called once crawl is complete to load results table.
 
 ### `/results` → `public/results.html` — Results / Tracking Page
 - Reads `?job_id=xxx` from URL query string
-- **Works at any time** — if crawl is still running, shows live progress bar
-- When complete → renders full 12-column results table
-- "Download CSV" button
-- Back to Home link
+- **Works at any time** — if crawl is still running, shows live progress bar (polls every 5s)
+- When complete → renders full 12-column **paginated** results table
+- Rows-per-page selector: 50 / 100 / 500 / 1000
+- Pagination controls with page numbers
+- "📥 Export CSV" button → opens modal → user enters email → download link emailed (5-min expiry)
+- Export button disables while export is processing, polls status every 3s, re-enables after expiry
+- "← New Crawl" link back to Home
 - This is the page the tracking URL points to AND what the email links to
 
 ### `/privacy-policy` → `public/privacy-policy.html`
@@ -336,24 +428,34 @@ Full results — called once crawl is complete to load results table.
 - Jobs are processed one at a time per domain (no duplicate crawls)
 
 ### Redis Connection (`src/queue/crawler.queue.ts`)
+Redis URL is manually parsed with `new URL()` and passed as `{host, port, password}` config to BullMQ's built-in connection (no `ioredis` dependency).
 ```typescript
 import { Queue } from 'bullmq';
-import IORedis from 'ioredis';
-
-export const redisConnection = new IORedis(process.env.REDIS_URL!, {
-  maxRetriesPerRequest: null, // required by BullMQ
-});
 
 export const crawlerQueue = new Queue('crawler', {
-  connection: redisConnection,
+  connection: {
+    host: new URL(process.env.REDIS_URL!).hostname,
+    port: parseInt(new URL(process.env.REDIS_URL!).port, 10) || 6379,
+    password: new URL(process.env.REDIS_URL!).password || undefined,
+    maxRetriesPerRequest: null,  // required by BullMQ
+  },
 });
 ```
 
-### Worker (`src/queue/crawler.worker.ts`)
+### Crawler Worker (`src/queue/crawler.worker.ts`)
 ```typescript
 import { Worker } from 'bullmq';
-import { redisConnection } from './crawler.queue';
 import { crawlerService } from '../services/crawler.service';
+
+function getRedisConfig() {
+  const url = new URL(process.env.REDIS_URL!);
+  return {
+    host: url.hostname,
+    port: parseInt(url.port, 10) || 6379,
+    password: url.password || undefined,
+    maxRetriesPerRequest: null,
+  };
+}
 
 export const crawlerWorker = new Worker(
   'crawler',
@@ -362,11 +464,14 @@ export const crawlerWorker = new Worker(
     await crawlerService.crawl(jobId, startUrl, domain);
   },
   {
-    connection: redisConnection,
+    connection: getRedisConfig(),
     concurrency: 5, // max 5 crawl jobs running at same time
   }
 );
 ```
+
+### Export Queue + Worker (`src/queue/export.queue.ts` + `export.worker.ts`)
+Separate BullMQ queue `csv-export` with concurrency 2. Worker generates CSV from all crawled pages, saves to `tmp/exports/`, emails download link via `emailService.sendExportReadyEmail()`, marks export as `sent`.
 
 ### Adding a Job (inside `crawler.controller.ts`)
 ```typescript
@@ -403,7 +508,7 @@ progress_percent = Math.round((total_pages_found / total_pages_queued) * 100)
 
 **Frontend polling:**
 ```javascript
-// Poll every 2 seconds
+// Poll every 5 seconds
 const interval = setInterval(async () => {
   const res = await fetch(`/api/crawl/${jobId}/progress`);
   const data = await res.json();
@@ -413,7 +518,7 @@ const interval = setInterval(async () => {
     clearInterval(interval);
     window.location.href = `/results?job_id=${jobId}`;
   }
-}, 2000);
+}, 5000);
 ```
 
 ---
@@ -432,6 +537,21 @@ const interval = setInterval(async () => {
 9. Email body: domain, total pages found, time taken
 10. Email CTA button: "View Full Results →" → APP_BASE_URL/results?job_id=:id
     (this is the SAME tracking URL the user already has)
+```
+
+### CSV Export Email Flow
+
+```
+1. User clicks "📥 Export CSV" on results page → enters email in modal
+2. POST /api/crawl/:job_id/export → creates csv_exports record, pushes to BullMQ `csv-export` queue
+3. Export worker fetches all crawled pages, generates CSV, saves to tmp/exports/
+4. Worker updates export status to 'completed', builds download URL
+5. Worker sends email via emailService.sendExportReadyEmail() with download link
+6. Worker marks export status as 'sent'
+7. Email subject: "📥 Your CSV export for [domain] is ready!"
+8. Email CTA button: "Download CSV →" (link valid for 5 minutes)
+9. Cron job (every minute) deletes expired exports (>5 min) from disk + DB
+10. After expiry, export button re-enables on frontend for a new export
 ```
 
 ### Nodemailer Setup (`src/services/email.service.ts`)
@@ -487,7 +607,9 @@ crawl(jobId, startUrl, domain):
 ### 1. Helmet.js — HTTP Security Headers
 ```typescript
 import helmet from 'helmet';
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false,  // Disabled to allow CDN scripts (Tailwind, Google Fonts)
+}));
 ```
 
 ### 2. CORS — Restrict to Own Domain
@@ -496,13 +618,14 @@ import cors from 'cors';
 app.use(cors({ origin: process.env.ALLOWED_ORIGIN }));
 ```
 
-### 3. Rate Limiting — 30 requests / 15 min / IP
+### 3. Rate Limiting — 200 POST requests / 15 min / IP
 ```typescript
 import rateLimit from 'express-rate-limit';
 app.use('/api/', rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 30,
+  max: 200,
   message: { error: 'Too many requests, please try again later.' },
+  skip: (req) => req.method === 'GET',  // Skip rate limit for GET (progress polling)
 }));
 ```
 
@@ -597,6 +720,18 @@ export interface CrawledPage {
 export interface StartCrawlRequest { url: string; }
 export interface DecideRequest { domain: string; action: 're-crawl' | 'use-existing'; }
 export interface NotifyRequest { email: string; }
+export interface ExportRequest { email: string; }
+
+export type ExportStatus = 'processing' | 'completed' | 'sent';
+
+export interface CsvExport {
+  id: string;
+  job_id: string;
+  email: string;
+  file_path?: string;
+  status: ExportStatus;
+  created_at: Date;
+}
 
 export interface ProgressResponse {
   job_id: string;
@@ -637,38 +772,43 @@ export interface ProgressResponse {
 ```json
 {
   "dependencies": {
-    "axios": "^1.6.0",
-    "bullmq": "^5.0.0",
-    "cheerio": "^1.0.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
-    "express": "^4.18.0",
-    "express-rate-limit": "^7.0.0",
-    "helmet": "^7.0.0",
-    "ioredis": "^5.3.0",
-    "nodemailer": "^6.9.0",
-    "pg": "^8.11.0",
+    "axios": "^1.13.6",
+    "bullmq": "^5.70.4",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.0",
+    "helmet": "^8.1.0",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^8.0.1",
+    "pg": "^8.20.0",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0",
-    "uuid": "^9.0.0"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/node": "^20.0.0",
-    "@types/nodemailer": "^6.4.0",
-    "@types/pg": "^8.10.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.3.5",
+    "@types/node-cron": "^3.0.11",
+    "@types/nodemailer": "^7.0.11",
+    "@types/pg": "^8.18.0",
     "@types/swagger-jsdoc": "^6.0.4",
-    "@types/swagger-ui-express": "^4.1.6",
-    "@types/uuid": "^9.0.0",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "eslint": "^10.0.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.9.3"
   },
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "migrate": "ts-node src/db/migrate.ts"
+    "migrate": "ts-node src/db/migrate.ts",
+    "lint": "eslint --config eslint.config.cjs src/**/*.ts"
   }
 }
 ```
@@ -748,9 +888,9 @@ The Neon MCP lets Copilot Chat **talk to your database directly** — run querie
 
 ### Step 5 — Install All Dependencies
 ```bash
-npm install axios bullmq cheerio cors dotenv express express-rate-limit helmet ioredis nodemailer pg swagger-jsdoc swagger-ui-express uuid
+npm install axios bullmq cheerio cors dotenv express express-rate-limit helmet node-cron nodemailer pg swagger-jsdoc swagger-ui-express uuid
 
-npm install -D @types/cors @types/express @types/node @types/nodemailer @types/pg @types/swagger-jsdoc @types/swagger-ui-express @types/uuid ts-node-dev typescript
+npm install -D @types/cors @types/express @types/node @types/node-cron @types/nodemailer @types/pg @types/swagger-jsdoc @types/swagger-ui-express @types/uuid @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint ts-node-dev typescript
 ```
 
 ---
@@ -821,7 +961,7 @@ Click **"Send Request"** above each block to test directly in VS Code.
 2. **Tracking URL returned immediately** on `POST /api/crawl` — before crawl even starts
 3. **Same tracking URL sent in email** — it's always `/results?job_id=:id`
 4. **BullMQ + Redis for all jobs** — never use in-memory queues or setTimeout for crawling
-5. **Redis connection** uses `ioredis` with `maxRetriesPerRequest: null` (BullMQ requirement)
+5. **Redis connection** — URL manually parsed with `new URL()`, passed as `{host, port, password}` config to BullMQ (no `ioredis` dependency). `maxRetriesPerRequest: null` required by BullMQ
 6. **Progress formula** — `Math.round((total_pages_found / total_pages_queued) * 100)`
 7. **Guard divide-by-zero** — if `total_pages_queued === 0` return `progress_percent: 0`
 8. **`total_pages_queued` updates in real-time** — increments as new URLs are discovered during crawl
@@ -837,3 +977,10 @@ Click **"Send Request"** above each block to test directly in VS Code.
 18. **Fail gracefully** — page fetch error → record `status_code = 0`, continue crawl
 19. **Frontend is pure HTML** — Tailwind CDN + Google Sans CDN, no build step, no React
 20. **5 HTML pages** — Home, Results, Privacy Policy, Terms of Service, Cookie Policy
+21. **Polling interval is 5 seconds** — both `index.html` and `results.html` poll progress every 5s
+22. **Rate limit skips GET** — only POST requests are rate-limited (200/15min). GET requests (progress polling) are exempt
+23. **Helmet CSP disabled** — `contentSecurityPolicy: false` to allow CDN scripts
+24. **CSV export pipeline** — separate BullMQ queue (`csv-export`), worker (concurrency: 2), `csv_exports` DB table, 5-min expiry, cron cleanup every minute
+25. **Results are paginated** — `GET /api/crawl/:job_id` accepts `?page=` and `?limit=` (50/100/500/1000)
+26. **ESLint configured** — `eslint.config.cjs` (flat config) with `@typescript-eslint`, run via `npm run lint`
+27. **Express v5** — project uses Express `^5.2.1`, not v4

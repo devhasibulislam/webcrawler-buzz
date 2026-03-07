@@ -1,0 +1,16 @@
+# robots.txt — Domain Crawler
+
+User-agent: *
+Allow: /
+Allow: /privacy-policy.html
+Allow: /terms-of-service.html
+Allow: /cookie-policy.html
+
+# Block results pages (contain private/temporary crawl data)
+Disallow: /results.html
+
+# Block API routes
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://webcrawler.example.com/sitemap.xml
