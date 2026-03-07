@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts",
-    "build": "tsc",
+    "build": "npm run css:build && tsc",
+    "css:build": "tailwindcss -i src/styles/input.css -o public/styles.css --minify",
+    "css:watch": "tailwindcss -i src/styles/input.css -o public/styles.css --watch",
     "start": "node dist/index.js",
     "migrate": "ts-node src/db/migrate.ts",
     "lint": "eslint --config eslint.config.cjs src/**/*.ts"
@@ -16,7 +18,9 @@
   "type": "commonjs",
   "dependencies": {
     "axios": "^1.13.6",
+    "baseline-browser-mapping": "^2.10.0",
     "bullmq": "^5.70.4",
+    "caniuse-lite": "^1.0.30001777",
     "cheerio": "^1.2.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
@@ -43,6 +47,7 @@
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
     "eslint": "^10.0.2",
+    "tailwindcss": "^3.4.19",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
   }
