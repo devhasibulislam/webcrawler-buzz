@@ -157,7 +157,7 @@
     </div>
 
     <!-- Export Modal -->
-    <div id="export-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div id="export-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 items-center justify-center z-50">
       <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md mx-4">
         <h3 class="text-lg font-bold text-gray-800 mb-2">📥 Export CSV</h3>
         <p class="text-sm text-gray-500 mb-4">Enter your email. We'll send you a download link (valid for 5 minutes).</p>
@@ -457,6 +457,7 @@
     exportCsvBtn.addEventListener('click', () => {
       if (exportCsvBtn.disabled) return;
       exportModal.classList.remove('hidden');
+      exportModal.classList.add('flex');
       exportEmailInput.value = '';
       exportModalError.classList.add('hidden');
     });
@@ -464,12 +465,14 @@
     // Cancel modal
     exportCancelBtn.addEventListener('click', () => {
       exportModal.classList.add('hidden');
+      exportModal.classList.remove('flex');
     });
 
     // Close modal on backdrop click
     exportModal.addEventListener('click', (e) => {
       if (e.target === exportModal) {
         exportModal.classList.add('hidden');
+        exportModal.classList.remove('flex');
       }
     });
 
@@ -496,6 +499,7 @@
 
         if (res.ok) {
           exportModal.classList.add('hidden');
+          exportModal.classList.remove('flex');
           disableExportBtn(email, 'processing');
           pollExportUntilDone();
         } else {
