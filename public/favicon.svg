@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb"/>
+      <stop offset="100%" style="stop-color:#1d4ed8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Blue rounded square background -->
+  <rect x="0" y="0" width="32" height="32" rx="7" ry="7" fill="url(#bg)"/>
+
+  <!-- Web spokes — 8 directions from center 16,15 -->
+  <line x1="16" y1="15" x2="16" y2="4"    stroke="white" stroke-width="0.7" opacity="0.45"/>
+  <line x1="16" y1="15" x2="23.8" y2="7.2" stroke="white" stroke-width="0.7" opacity="0.45"/>
+  <line x1="16" y1="15" x2="27" y2="15"   stroke="white" stroke-width="0.7" opacity="0.45"/>
+  <line x1="16" y1="15" x2="23.8" y2="22.8" stroke="white" stroke-width="0.7" opacity="0.45"/>
+  <line x1="16" y1="15" x2="16" y2="27"   stroke="white" stroke-width="0.7" opacity="0.45"/>
+  <line x1="16" y1="15" x2="8.2" y2="22.8" stroke="white" stroke-width="0.7" opacity="0.45"/>
+  <line x1="16" y1="15" x2="5" y2="15"    stroke="white" stroke-width="0.7" opacity="0.45"/>
+  <line x1="16" y1="15" x2="8.2" y2="7.2" stroke="white" stroke-width="0.7" opacity="0.45"/>
+
+  <!-- Web rings -->
+  <circle cx="16" cy="15" r="4.5"  fill="none" stroke="white" stroke-width="0.7" opacity="0.45"/>
+  <circle cx="16" cy="15" r="8.5"  fill="none" stroke="white" stroke-width="0.6" opacity="0.3"/>
+  <circle cx="16" cy="15" r="12.5" fill="none" stroke="white" stroke-width="0.5" opacity="0.18"/>
+
+  <!-- Spider cephalothorax -->
+  <ellipse cx="16" cy="13" rx="3" ry="3" fill="white"/>
+
+  <!-- Spider abdomen -->
+  <ellipse cx="16" cy="19" rx="3.8" ry="4.5" fill="white"/>
+
+  <!-- Eyes -->
+  <circle cx="14.7" cy="12.2" r="0.7" fill="#2563eb"/>
+  <circle cx="17.3" cy="12.2" r="0.7" fill="#2563eb"/>
+
+  <!-- Left legs -->
+  <path d="M13 12.5 Q9.5 10 7.5 8.5"   fill="none" stroke="white" stroke-width="0.9" stroke-linecap="round"/>
+  <path d="M13 14   Q9   13 7   13"     fill="none" stroke="white" stroke-width="0.9" stroke-linecap="round"/>
+  <path d="M13 16   Q9   17 7   18"     fill="none" stroke="white" stroke-width="0.9" stroke-linecap="round"/>
+  <path d="M13 18.5 Q9.5 21 7.5 23"    fill="none" stroke="white" stroke-width="0.9" stroke-linecap="round"/>
+
+  <!-- Right legs -->
+  <path d="M19 12.5 Q22.5 10 24.5 8.5" fill="none" stroke="white" stroke-width="0.9" stroke-linecap="round"/>
+  <path d="M19 14   Q23   13 25   13"   fill="none" stroke="white" stroke-width="0.9" stroke-linecap="round"/>
+  <path d="M19 16   Q23   17 25   18"   fill="none" stroke="white" stroke-width="0.9" stroke-linecap="round"/>
+  <path d="M19 18.5 Q22.5 21 24.5 23"  fill="none" stroke="white" stroke-width="0.9" stroke-linecap="round"/>
+</svg>
