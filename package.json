@@ -1,7 +1,7 @@
 {
   "name": "webcrawler.buzz",
   "version": "1.0.0",
-  "description": "",
+  "description": "🕷️ A domain crawler that discovers every page of any website — built with Express.js, TypeScript, BullMQ, and Neon PostgreSQL.",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts",
@@ -12,8 +12,8 @@
     "migrate": "ts-node src/db/migrate.ts",
     "lint": "eslint --config eslint.config.cjs src/**/*.ts"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["nodejs", "redis", "crawler", "typescript", "neon", "web-crawler", "postgresql", "expressjs", "seo-tools", "bullmq"],
+  "author": "Hasibul Islam <devhasibulislam@gmail.com>",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
