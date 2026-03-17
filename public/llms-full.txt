@@ -210,9 +210,39 @@ A: Domain Crawler accesses only publicly available pages, similar to how Google'
 
 domain crawler, website crawler, site crawler, SEO crawler, free SEO tool, web scraper, URL scanner, bulk URL checker, website audit tool, crawl website, link checker, site analyzer, broken link checker, SEO audit tool, website analysis tool, HTTP status checker, meta tag checker, page speed analyzer, website health check, site structure analyzer, SEO report generator, free website audit, online crawler tool, web page analyzer, internal link checker, external link finder, redirect checker, indexability checker
 
+## Blog
+
+WebCrawler.buzz publishes in-depth guides on web crawling, technical SEO, and site auditing. All blog posts are available at https://webcrawler.buzz/blogs
+
+### What Is a Web Crawler? A Beginner's Complete Guide
+URL: https://webcrawler.buzz/blogs/what-is-a-web-crawler
+Category: Basics | Read time: 6 min | Published: 2025-01-10
+Summary: Explains what a web crawler is, how BFS crawling works, what data crawlers collect, why crawlers matter for SEO, and the difference between crawlers and scrapers.
+
+### Why Every Website Owner Needs to Crawl Their Domain at Least Once
+URL: https://webcrawler.buzz/blogs/why-every-website-owner-needs-a-domain-crawler
+Category: SEO | Read time: 7 min | Published: 2025-01-18
+Summary: Covers what a domain crawl reveals (broken links, missing titles, noindex issues, redirect chains, orphaned pages), how often to crawl, and how to use WebCrawler.buzz for site audits.
+
+### How Web Crawlers Directly Impact Your SEO Rankings
+URL: https://webcrawler.buzz/blogs/how-web-crawlers-impact-seo
+Category: SEO | Read time: 8 min | Published: 2025-01-26
+Summary: Deep dive into crawl budget, crawlability vs indexability, internal linking as a crawler road map, page speed effects on crawl rate, and HTTP status codes and their SEO impact.
+
+### Web Crawler vs. Site Audit Tools: What Is the Difference and Which Do You Need?
+URL: https://webcrawler.buzz/blogs/web-crawler-vs-site-audit-tools
+Category: Tools | Read time: 6 min | Published: 2025-02-04
+Summary: Compares pure web crawlers with SEO site audit tools (Screaming Frog, Ahrefs, Semrush), explains where they overlap, and when to use each type.
+
+### How to Do a Complete Technical SEO Audit Using a Domain Crawler
+URL: https://webcrawler.buzz/blogs/how-to-do-a-technical-seo-audit-with-a-domain-crawler
+Category: How-To | Read time: 9 min | Published: 2025-02-14
+Summary: Step-by-step guide covering 7 audit steps — crawl the domain, fix 404s, audit redirects, check titles and meta descriptions, review indexability, identify slow pages, find orphaned pages.
+
 ## Contact & Legal
 
 - Website: https://webcrawler.buzz
+- Blog: https://webcrawler.buzz/blogs
 - Privacy Policy: https://webcrawler.buzz/privacy-policy
 - Terms of Service: https://webcrawler.buzz/terms-of-service
 - Cookie Policy: https://webcrawler.buzz/cookie-policy

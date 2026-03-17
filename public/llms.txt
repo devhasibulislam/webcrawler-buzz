@@ -43,9 +43,20 @@ Paste any URL and Domain Crawler will:
 
 domain crawler, website crawler, site crawler, SEO crawler, free SEO tool, web scraper, URL scanner, bulk URL checker, website audit tool, crawl website, link checker, site analyzer, broken link checker, SEO audit tool, website analysis tool, HTTP status checker, meta tag checker, page speed analyzer
 
+## Blog
+
+WebCrawler.buzz publishes guides on web crawling, technical SEO, and site auditing:
+
+- What Is a Web Crawler? A Beginner's Complete Guide: https://webcrawler.buzz/blogs/what-is-a-web-crawler
+- Why Every Website Owner Needs to Crawl Their Domain at Least Once: https://webcrawler.buzz/blogs/why-every-website-owner-needs-a-domain-crawler
+- How Web Crawlers Directly Impact Your SEO Rankings: https://webcrawler.buzz/blogs/how-web-crawlers-impact-seo
+- Web Crawler vs. Site Audit Tools — What Is the Difference: https://webcrawler.buzz/blogs/web-crawler-vs-site-audit-tools
+- How to Do a Complete Technical SEO Audit Using a Domain Crawler: https://webcrawler.buzz/blogs/how-to-do-a-technical-seo-audit-with-a-domain-crawler
+
 ## Links
 
 - Website: https://webcrawler.buzz
+- Blog: https://webcrawler.buzz/blogs
 - Privacy Policy: https://webcrawler.buzz/privacy-policy
 - Terms of Service: https://webcrawler.buzz/terms-of-service
 - Cookie Policy: https://webcrawler.buzz/cookie-policy

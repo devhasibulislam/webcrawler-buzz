@@ -10,7 +10,7 @@
     "author": "WebCrawler Team",
     "published_at": "2025-01-10",
     "read_time_minutes": 6,
-    "cover_image": "/blog/covers/what-is-a-web-crawler.jpg",
+    "cover_image": "/og-image.png",
     "excerpt": "Ever wondered how Google finds billions of web pages and knows exactly what is on each one? The secret is a web crawler — and understanding it can change how you think about your website.",
     "content": {
       "intro": "Ever wondered how Google finds billions of web pages and knows exactly what is on each one? The secret is a web crawler — and understanding it can change how you think about your website forever. Whether you are a developer, a business owner, or just someone curious about how the internet works, this guide breaks it all down in plain English.",
@@ -50,7 +50,7 @@
     "author": "WebCrawler Team",
     "published_at": "2025-01-18",
     "read_time_minutes": 7,
-    "cover_image": "/blog/covers/why-crawl-your-domain.jpg",
+    "cover_image": "/og-image.png",
     "excerpt": "Most website owners have no idea what is actually happening under the hood of their site. Hidden broken links, orphaned pages, missing meta tags — these silent problems cost you traffic every single day.",
     "content": {
       "intro": "Most website owners spend a lot of time creating content and almost no time checking whether that content is actually accessible and healthy. Hidden broken links, orphaned pages, missing meta descriptions, and accidental noindex tags silently cost you search traffic every single day — and you would never know unless you crawl your own site.",
@@ -86,7 +86,7 @@
     "author": "WebCrawler Team",
     "published_at": "2025-01-26",
     "read_time_minutes": 8,
-    "cover_image": "/blog/covers/web-crawlers-seo-impact.jpg",
+    "cover_image": "/og-image.png",
     "excerpt": "You can write the best content in the world, but if Google's crawler cannot efficiently navigate your website, your rankings will always be limited. Here is exactly how crawlers shape your SEO outcomes.",
     "content": {
       "intro": "Technical SEO often gets overshadowed by content and link building — but it is the foundation everything else rests on. If a search engine's crawler cannot efficiently navigate and understand your website, no amount of great content will save your rankings. Web crawlers are the gatekeepers between your site and search engine visibility.",
@@ -126,7 +126,7 @@
     "author": "WebCrawler Team",
     "published_at": "2025-02-04",
     "read_time_minutes": 6,
-    "cover_image": "/blog/covers/crawler-vs-audit-tools.jpg",
+    "cover_image": "/og-image.png",
     "excerpt": "There are dozens of tools out there for analyzing websites — crawlers, scrapers, site auditors, SEO platforms. The terminology is confusing. Here is a clear breakdown of what each actually does.",
     "content": {
       "intro": "Walk into any conversation about SEO tools and you will hear a dozen different names thrown around — web crawlers, site audit tools, site scrapers, SEO spiders. The terminology is genuinely confusing because many tools combine multiple behaviors. This guide cuts through the noise and explains exactly what each type does, where they overlap, and which one fits your specific needs.",
@@ -166,7 +166,7 @@
     "author": "WebCrawler Team",
     "published_at": "2025-02-14",
     "read_time_minutes": 9,
-    "cover_image": "/blog/covers/technical-seo-audit-guide.jpg",
+    "cover_image": "/og-image.png",
     "excerpt": "A technical SEO audit sounds complicated but with the right tool it takes less than 30 minutes for most websites. Here is the exact step-by-step process using a domain crawler.",
     "content": {
       "intro": "A technical SEO audit sounds intimidating — like something that requires expensive tools, weeks of work, and a certified expert. In reality, for most websites, a solid technical audit takes less than 30 minutes if you know exactly what to look for and have the right crawl data in front of you. This guide walks you through every step.",
