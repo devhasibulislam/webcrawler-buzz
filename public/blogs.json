@@ -1,0 +1,206 @@
+[
+  {
+    "id": 1,
+    "slug": "what-is-a-web-crawler",
+    "title": "What Is a Web Crawler? A Beginner's Complete Guide",
+    "meta_title": "What Is a Web Crawler? A Beginner's Complete Guide | WebCrawler.buzz",
+    "meta_description": "Learn what a web crawler is, how it works, and why it matters for SEO and website discovery. A simple, complete guide for beginners.",
+    "category": "Basics",
+    "tags": ["web crawler", "spider bot", "SEO basics", "how it works", "beginners"],
+    "author": "WebCrawler Team",
+    "published_at": "2025-01-10",
+    "read_time_minutes": 6,
+    "cover_image": "/blog/covers/what-is-a-web-crawler.jpg",
+    "excerpt": "Ever wondered how Google finds billions of web pages and knows exactly what is on each one? The secret is a web crawler — and understanding it can change how you think about your website.",
+    "content": {
+      "intro": "Ever wondered how Google finds billions of web pages and knows exactly what is on each one? The secret is a web crawler — and understanding it can change how you think about your website forever. Whether you are a developer, a business owner, or just someone curious about how the internet works, this guide breaks it all down in plain English.",
+      "sections": [
+        {
+          "heading": "So What Exactly Is a Web Crawler?",
+          "body": "A web crawler — also called a spider bot, spider, or search engine bot — is an automated program that browses the internet on its own. Think of it like a very fast, very tireless reader. It visits a webpage, reads everything on it, takes notes, then follows every link on that page to visit the next one. It keeps doing this over and over, endlessly, until it has visited every page it can find.\n\nSearch engines like Google, Bing, and Yahoo all have their own crawlers. Google's crawler is called Googlebot. These bots run 24 hours a day, 7 days a week, scanning the entire web so their search results stay fresh and accurate."
+        },
+        {
+          "heading": "How Does a Web Crawler Actually Work?",
+          "body": "The process is surprisingly simple at its core:\n\n1. It starts with a list of known URLs called 'seed URLs' — popular websites that are good starting points.\n2. It visits each URL, downloads the page content, and reads all the links on that page.\n3. It adds every new link it finds to a queue of pages to visit next.\n4. It repeats this process recursively — visiting every new link, finding more links, and so on.\n5. All the data it collects (page titles, content, metadata, response codes) gets stored in a massive index database.\n\nThis is called Breadth-First Search or BFS — a fundamental computer science technique where you explore all nearby pages before going deeper."
+        },
+        {
+          "heading": "What Data Does a Crawler Collect?",
+          "body": "A web crawler is not just looking at text. Modern crawlers collect a rich set of data from every page they visit, including the page title and headings, meta description, all links (both internal and external), HTTP status codes (is the page working? is it a redirect?), page load speed, content type (is it HTML, a PDF, an image?), and whether the page allows itself to be indexed via meta robots tags.\n\nThis is exactly the kind of rich data that WebCrawler.buzz collects when you crawl any domain — giving you a complete picture of every page on a website."
+        },
+        {
+          "heading": "Why Should You Care About Web Crawlers?",
+          "body": "If your website cannot be crawled, it effectively does not exist on the internet. Search engines cannot rank pages they have never seen. This is why developers and SEO professionals use crawling tools to audit their own websites — finding broken links, pages that are accidentally blocked from crawlers, missing meta descriptions, redirect chains, and pages that are too slow to load.\n\nWeb crawlers are also used for competitive research, sitemap generation, content auditing, and monitoring website changes over time."
+        },
+        {
+          "heading": "Web Crawlers vs. Web Scrapers — What Is the Difference?",
+          "body": "People often confuse these two terms. A web crawler discovers URLs — its primary job is navigation and mapping. A web scraper extracts specific data from pages — like prices, names, or phone numbers. Many tools combine both behaviors, but they serve different purposes. WebCrawler.buzz is primarily a crawler — it maps every page of a domain rather than extracting specific data fields from any single page."
+        }
+      ],
+      "conclusion": "Web crawlers are the invisible backbone of the internet as we know it. Without them, search engines would be blind, websites would be undiscoverable, and the web would be chaos. Understanding how they work gives you a powerful edge — whether you are optimizing your site for search engines or auditing a client's website for technical issues. Try crawling your own domain today and see exactly what a bot sees when it visits your site."
+    }
+  },
+  {
+    "id": 2,
+    "slug": "why-every-website-owner-needs-a-domain-crawler",
+    "title": "Why Every Website Owner Needs to Crawl Their Domain at Least Once",
+    "meta_title": "Why Every Website Owner Should Crawl Their Domain | WebCrawler.buzz",
+    "meta_description": "Discover why crawling your own website is one of the most important SEO tasks you can do. Find broken links, missing titles, slow pages, and more.",
+    "category": "SEO",
+    "tags": ["SEO audit", "domain crawl", "broken links", "technical SEO", "website health"],
+    "author": "WebCrawler Team",
+    "published_at": "2025-01-18",
+    "read_time_minutes": 7,
+    "cover_image": "/blog/covers/why-crawl-your-domain.jpg",
+    "excerpt": "Most website owners have no idea what is actually happening under the hood of their site. Hidden broken links, orphaned pages, missing meta tags — these silent problems cost you traffic every single day.",
+    "content": {
+      "intro": "Most website owners spend a lot of time creating content and almost no time checking whether that content is actually accessible and healthy. Hidden broken links, orphaned pages, missing meta descriptions, and accidental noindex tags silently cost you search traffic every single day — and you would never know unless you crawl your own site.",
+      "sections": [
+        {
+          "heading": "What a Domain Crawl Actually Tells You",
+          "body": "When you run a full crawl of your domain, you get a complete map of every page that exists on your site — including pages you forgot about, pages that were never meant to be public, and pages that have quietly broken over time. A good crawl report shows you the HTTP status of every page (200 OK, 301 redirect, 404 not found, 500 server error), the title tag and meta description of every page, how fast each page responded, whether each page is indexable by search engines, and how many internal and external links each page has."
+        },
+        {
+          "heading": "The Most Common Problems a Crawl Uncovers",
+          "body": "404 Broken Links — Every time a visitor or search bot lands on a 404 page, it is a bad experience. These pile up silently over years as you rename pages, delete content, and restructure your site. A crawl finds every single one instantly.\n\nMissing or Duplicate Title Tags — Title tags are one of the most important on-page SEO factors. Many sites have dozens of pages with empty, duplicate, or auto-generated titles that do nothing for rankings.\n\nAccidental noindex Tags — This is a surprisingly common disaster. A developer adds a noindex tag during testing and forgets to remove it. Suddenly an important page is invisible to Google, and nobody notices for months.\n\nRedirect Chains — A page that redirects to another redirect to another URL wastes crawl budget and slows down users. A crawl maps every redirect so you can clean them up.\n\nOrphaned Pages — Pages with no internal links pointing to them. Google cannot easily find these, meaning they get crawled rarely or never."
+        },
+        {
+          "heading": "How Often Should You Crawl Your Domain?",
+          "body": "For a small website under 100 pages, crawling once a month is usually enough. For larger websites that publish content regularly or have e-commerce pages that change frequently, weekly crawls make sense. Any time you do a major site redesign, domain migration, or CMS change, you should crawl immediately before and after to catch any regressions."
+        },
+        {
+          "heading": "Using WebCrawler.buzz for Your Site Audit",
+          "body": "WebCrawler.buzz was built exactly for this use case. Paste your domain URL, hit crawl, and within minutes you get a full report of every page — complete with title, meta description, HTTP status, response time, content type, redirect URL, internal link count, external link count, and whether each page is indexable. No installation required, no configuration, no technical setup. Just paste and go.\n\nThe results table gives you an instant snapshot of your website's technical health, and you can download the full report as CSV for deeper analysis in Excel or Google Sheets."
+        }
+      ],
+      "conclusion": "Crawling your own domain is one of the highest-leverage SEO tasks you can do, yet most website owners never do it. The problems it uncovers — broken links, missing tags, redirect issues, orphaned pages — are exactly the kinds of issues that quietly drag down your rankings over time. Do it today. You will almost certainly find something you did not know was broken."
+    }
+  },
+  {
+    "id": 3,
+    "slug": "how-web-crawlers-impact-seo",
+    "title": "How Web Crawlers Directly Impact Your SEO Rankings",
+    "meta_title": "How Web Crawlers Impact SEO Rankings | WebCrawler.buzz",
+    "meta_description": "Understanding how web crawlers work is the foundation of technical SEO. Learn how crawl budget, indexability, and crawl efficiency directly affect your Google rankings.",
+    "category": "SEO",
+    "tags": ["SEO", "crawl budget", "Googlebot", "indexing", "technical SEO", "rankings"],
+    "author": "WebCrawler Team",
+    "published_at": "2025-01-26",
+    "read_time_minutes": 8,
+    "cover_image": "/blog/covers/web-crawlers-seo-impact.jpg",
+    "excerpt": "You can write the best content in the world, but if Google's crawler cannot efficiently navigate your website, your rankings will always be limited. Here is exactly how crawlers shape your SEO outcomes.",
+    "content": {
+      "intro": "Technical SEO often gets overshadowed by content and link building — but it is the foundation everything else rests on. If a search engine's crawler cannot efficiently navigate and understand your website, no amount of great content will save your rankings. Web crawlers are the gatekeepers between your site and search engine visibility.",
+      "sections": [
+        {
+          "heading": "What Is Crawl Budget and Why Does It Matter?",
+          "body": "Every website gets a 'crawl budget' — a limited number of pages that Googlebot will crawl within a given timeframe. For small sites this rarely matters. But for large websites with thousands of pages, crawl budget is critical. If your site wastes crawl budget on low-value pages — thin content, duplicate pages, parameter URLs, infinite scroll pages — then important pages get crawled less frequently, meaning updates to those pages take longer to show up in search results.\n\nOptimizing your crawl budget means making sure bots spend their limited visits on your most important, high-value pages."
+        },
+        {
+          "heading": "Crawlability vs. Indexability — Know the Difference",
+          "body": "These two terms are often confused but they mean very different things. Crawlability is whether a search engine bot can physically access and read a page. A page could be blocked by robots.txt, hidden behind a login, or unreachable due to a server error — these are crawlability problems. Indexability is whether a page that has been crawled is allowed to appear in search results. A page can be crawlable but not indexable due to a noindex meta tag, a canonical pointing elsewhere, or a duplicate content issue.\n\nYou need both to rank. A crawl tool like WebCrawler.buzz helps you identify both types of issues across your entire domain instantly."
+        },
+        {
+          "heading": "Internal Links Are a Crawler's Road Map",
+          "body": "Crawlers discover pages by following links. This means your internal linking structure is essentially the road map you hand to Googlebot. Pages with many internal links pointing to them get crawled more often and carry more authority. Orphaned pages — those with zero internal links — are nearly invisible to crawlers.\n\nA domain crawl showing you the internal link count per page is extremely valuable here. Pages with very few internal links are candidates for better internal linking. Pages with zero are urgent fixes."
+        },
+        {
+          "heading": "Page Speed and Its Effect on Crawling",
+          "body": "Crawlers respect server resources. If your pages load slowly, Googlebot throttles how aggressively it crawls your site to avoid overloading your server. This directly reduces your effective crawl rate. Response time data from a domain crawl — which WebCrawler.buzz collects for every page — lets you immediately spot your slowest pages so you can prioritize performance fixes."
+        },
+        {
+          "heading": "HTTP Status Codes and SEO",
+          "body": "Every HTTP response code means something to a crawler. 200 is healthy. 301 is a permanent redirect — generally fine but chains of multiple redirects waste crawl resources. 302 is a temporary redirect — Googlebot does not always pass link authority through these. 404 is a broken page — if many internal links point to 404s, you are wasting crawl budget and losing link equity. 500 means a server error — if Googlebot sees too many of these, it may reduce its crawl rate for your entire domain.\n\nRegularly auditing your status codes across all pages is one of the most impactful technical SEO habits you can build."
+        }
+      ],
+      "conclusion": "Search engine rankings are not just about content quality — they are about how efficiently a crawler can find, read, and understand every page of your site. Crawl budget, internal linking, page speed, status codes, and indexability settings all feed directly into how well your site performs. A regular domain crawl is the fastest way to catch and fix issues before they compound into ranking problems."
+    }
+  },
+  {
+    "id": 4,
+    "slug": "web-crawler-vs-site-audit-tools",
+    "title": "Web Crawler vs. Site Audit Tools: What Is the Difference and Which Do You Need?",
+    "meta_title": "Web Crawler vs Site Audit Tools: Key Differences | WebCrawler.buzz",
+    "meta_description": "Confused about the difference between a web crawler and an SEO site audit tool? This guide breaks down what each does, how they overlap, and when to use which.",
+    "category": "Tools",
+    "tags": ["site audit", "web crawler", "SEO tools", "Screaming Frog", "comparison", "tools"],
+    "author": "WebCrawler Team",
+    "published_at": "2025-02-04",
+    "read_time_minutes": 6,
+    "cover_image": "/blog/covers/crawler-vs-audit-tools.jpg",
+    "excerpt": "There are dozens of tools out there for analyzing websites — crawlers, scrapers, site auditors, SEO platforms. The terminology is confusing. Here is a clear breakdown of what each actually does.",
+    "content": {
+      "intro": "Walk into any conversation about SEO tools and you will hear a dozen different names thrown around — web crawlers, site audit tools, site scrapers, SEO spiders. The terminology is genuinely confusing because many tools combine multiple behaviors. This guide cuts through the noise and explains exactly what each type does, where they overlap, and which one fits your specific needs.",
+      "sections": [
+        {
+          "heading": "What Is a Pure Web Crawler?",
+          "body": "A pure web crawler has one primary mission: discover every URL that exists within a domain. It starts from a seed URL, follows every link it finds, and keeps going until it has mapped the entire site structure. It records metadata for each page it visits — status codes, titles, response times, content types — but its core output is a complete list of pages.\n\nThis is exactly what WebCrawler.buzz does. You paste a URL, it maps every reachable page within that domain, and gives you a structured report. No configuration required, no account needed, no installed software."
+        },
+        {
+          "heading": "What Is an SEO Site Audit Tool?",
+          "body": "An SEO site audit tool is a crawler with a layer of analysis built on top. Tools like Screaming Frog, Ahrefs Site Audit, and Semrush Site Audit all crawl your pages but then apply hundreds of SEO-specific rules to generate actionable recommendations — things like 'this title is too long', 'this page has duplicate H1 tags', or 'your Core Web Vitals score is poor here'. They generate scores, priority lists, and suggested fixes.\n\nThese tools are powerful but also complex, expensive, and often overkill for simple domain discovery tasks."
+        },
+        {
+          "heading": "Where They Overlap",
+          "body": "Both types of tools visit pages and collect metadata. Both track status codes, titles, meta descriptions, and links. The difference is in what they do with that data. A crawler gives you the raw data — here is everything. An audit tool interprets that data — here is what is wrong and here is how to fix it.\n\nFor many developers and website owners, the raw data from a crawl is exactly what they need. They can do their own analysis. They do not need a tool telling them what to think — they just need a complete, accurate list of every page and its key properties."
+        },
+        {
+          "heading": "When to Use a Simple Domain Crawler",
+          "body": "Use a domain crawler like WebCrawler.buzz when you want to quickly map all pages on any website, need to verify a site migration went cleanly (are all old URLs redirecting properly?), want to check a client's site before proposing SEO work, need to generate a sitemap from scratch, want to find orphaned pages with no internal links, or need a fast, no-login discovery tool without committing to a monthly subscription."
+        },
+        {
+          "heading": "When to Use a Full SEO Audit Platform",
+          "body": "Invest in a full audit platform when you are managing SEO for large websites on an ongoing basis, need historical data and trend tracking over time, want detailed scoring with prioritized fix recommendations, or are running an agency and need client-facing SEO reports with branding.\n\nFor quick, one-off domain discovery or technical audits, a lightweight crawler is faster, simpler, and completely free."
+        }
+      ],
+      "conclusion": "The best tool is the one that matches your actual need at that moment. If you need a full ongoing SEO platform, invest in one. But if you need to quickly discover every page of a domain, check its health, and get a clean downloadable report — a simple domain crawler is all you need. WebCrawler.buzz was designed to be exactly that: fast, clean, and zero friction."
+    }
+  },
+  {
+    "id": 5,
+    "slug": "how-to-do-a-technical-seo-audit-with-a-domain-crawler",
+    "title": "How to Do a Complete Technical SEO Audit Using a Domain Crawler",
+    "meta_title": "Complete Technical SEO Audit Using a Domain Crawler | WebCrawler.buzz",
+    "meta_description": "Step-by-step guide to performing a technical SEO audit using a domain crawler. Find broken pages, redirect issues, missing tags, and more in minutes.",
+    "category": "How-To",
+    "tags": ["technical SEO", "SEO audit", "how to", "broken links", "redirect audit", "step by step"],
+    "author": "WebCrawler Team",
+    "published_at": "2025-02-14",
+    "read_time_minutes": 9,
+    "cover_image": "/blog/covers/technical-seo-audit-guide.jpg",
+    "excerpt": "A technical SEO audit sounds complicated but with the right tool it takes less than 30 minutes for most websites. Here is the exact step-by-step process using a domain crawler.",
+    "content": {
+      "intro": "A technical SEO audit sounds intimidating — like something that requires expensive tools, weeks of work, and a certified expert. In reality, for most websites, a solid technical audit takes less than 30 minutes if you know exactly what to look for and have the right crawl data in front of you. This guide walks you through every step.",
+      "sections": [
+        {
+          "heading": "Step 1 — Crawl the Entire Domain",
+          "body": "Before anything else, you need a complete picture of every page on your site. Go to WebCrawler.buzz, paste your domain URL (e.g. https://yourwebsite.com), and hit Start Crawl. The crawler will discover every page within your domain — no depth limit — and collect 12 data points per page including title, meta description, HTTP status, response time, content type, page size, internal links, external links, redirect URL, and indexability.\n\nOnce the crawl is done, download the full report as CSV so you can work through it systematically."
+        },
+        {
+          "heading": "Step 2 — Find and Fix All 404 Broken Pages",
+          "body": "Filter your crawl results by HTTP status code = 404. Every page in this list is broken. For each one, decide: should this page be restored? If yes, restore the content. If no, set up a 301 redirect to the most relevant existing page. Never leave a 404 just sitting there if there used to be content at that URL — you lose any link equity that was pointing to it.\n\nAlso check: are any of your other crawled pages linking to these 404 URLs? Update those internal links to point to the correct destinations."
+        },
+        {
+          "heading": "Step 3 — Audit Your Redirect Chains",
+          "body": "Filter by HTTP status codes 301 and 302. A single redirect is normal. A chain of redirects (A redirects to B which redirects to C) is a problem — it slows down page loads, wastes crawl budget, and leaks link authority at each hop. The Redirect URL column in your crawl report shows exactly where each redirect ends up. Identify chains and collapse them to a single direct redirect wherever possible.\n\nAlso check for 302 temporary redirects that have been in place for a long time. These should almost always be converted to 301 permanent redirects."
+        },
+        {
+          "heading": "Step 4 — Check Every Page's Title and Meta Description",
+          "body": "Filter your crawl report for rows where the Page Title column is empty. These are pages with no title tag — a basic but critical SEO issue. Add a unique, descriptive title to every page.\n\nNext filter for pages where the Meta Description is empty. While meta descriptions are not a direct ranking factor, they heavily influence click-through rate from search results. Write compelling descriptions for your most important pages first.\n\nFinally look for duplicate titles — pages sharing the same title. Each page on your site should have a unique title that clearly describes what is on that specific page."
+        },
+        {
+          "heading": "Step 5 — Review Indexability",
+          "body": "Filter for pages where Is Indexable = false. These are pages that have noindex set in their meta robots tag. Go through each one and ask: should this page be indexed? If yes, remove the noindex tag. If no, confirm it is intentional.\n\nCommon pages that should be noindex: thank you pages, order confirmation pages, internal search result pages, admin pages. Common pages that should NEVER be noindex but sometimes accidentally are: your homepage, product pages, blog posts, service pages."
+        },
+        {
+          "heading": "Step 6 — Identify Slow Pages",
+          "body": "Sort your crawl report by Response Time (ms) in descending order. The pages at the top are your slowest. Page speed is a Google ranking factor — slow pages get ranked lower and crawled less frequently. Prioritize fixing pages that are both slow AND important to your SEO strategy (main landing pages, top blog posts, product pages).\n\nCommon causes of slow response times: unoptimized images, too many third-party scripts, no caching, slow hosting, and database query issues."
+        },
+        {
+          "heading": "Step 7 — Find Orphaned Pages",
+          "body": "Filter for pages where Internal Links Count = 0. These pages have no other page on your site linking to them, meaning crawlers can only find them by direct URL — they will be crawled rarely if at all, and they carry no internal authority.\n\nFor each orphaned page, decide: is this page worth keeping? If yes, add it to your navigation or add internal links from relevant existing pages. If no, consider redirecting it to a related page or removing it entirely."
+        }
+      ],
+      "conclusion": "A complete technical SEO audit does not need to be complex or expensive. With a single domain crawl and a systematic approach — fixing 404s, cleaning up redirects, adding missing titles, reviewing noindex settings, improving slow pages, and connecting orphaned content — you can meaningfully improve your site's technical health in a single afternoon. Run this process every quarter and your site will stay in excellent technical shape all year long."
+    }
+  }
+]
