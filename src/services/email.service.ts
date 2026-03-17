@@ -35,6 +35,9 @@ export const emailService = {
             View Full Results →
           </a>
         </div>
+        <p style="font-size: 13px; color: #e53e3e; font-weight: 600;">
+          ⚠️ These results will be automatically deleted in 1 hour. Make sure to export your CSV before then!
+        </p>
         <p style="font-size: 13px; color: #888;">
           You can also paste this link into your browser:<br/>
           <a href="${trackingUrl}">${trackingUrl}</a>

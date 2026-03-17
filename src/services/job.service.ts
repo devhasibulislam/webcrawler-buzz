@@ -179,4 +179,23 @@ export const jobService = {
     );
     return result.rows;
   },
+
+  /**
+   * Get completed/failed jobs older than 1 hour (for cleanup).
+   */
+  async getExpiredJobs(): Promise<CrawlJob[]> {
+    const result = await pool.query(
+      `SELECT * FROM crawl_jobs
+       WHERE status IN ('completed', 'failed')
+         AND updated_at <= NOW() - INTERVAL '1 hour'`
+    );
+    return result.rows;
+  },
+
+  /**
+   * Delete a crawl job by ID (cascade removes crawled_pages + csv_exports).
+   */
+  async deleteJob(jobId: string): Promise<void> {
+    await pool.query(`DELETE FROM crawl_jobs WHERE id = $1`, [jobId]);
+  },
 };

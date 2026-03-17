@@ -15,7 +15,7 @@ import viewRoutes from './routes/view.routes';
 import './queue/crawler.worker';
 import './queue/export.worker';
 
-import { startExportCleanupCron } from './cron/export-cleanup';
+import { startExportCleanupCron, startJobCleanupCron } from './cron/export-cleanup';
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '5005', 10);
@@ -52,6 +52,7 @@ const server = app.listen(PORT, () => {
   console.log(`🕷️  Domain Crawler running on http://localhost:${PORT}`);
   console.log(`📖  Swagger docs: http://localhost:${PORT}/api-docs`);
   startExportCleanupCron();
+  startJobCleanupCron();
 });
 
 server.on('error', (err) => {

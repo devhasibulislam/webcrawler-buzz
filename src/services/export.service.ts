@@ -79,4 +79,15 @@ export const exportService = {
   async deleteExport(exportId: string): Promise<void> {
     await pool.query(`DELETE FROM csv_exports WHERE id = $1`, [exportId]);
   },
+
+  /**
+   * Get all exports for a specific job (for job cleanup — need file paths before cascade delete).
+   */
+  async getExpiredExportsByJobId(jobId: string): Promise<CsvExport[]> {
+    const result = await pool.query(
+      `SELECT * FROM csv_exports WHERE job_id = $1`,
+      [jobId]
+    );
+    return result.rows;
+  },
 };
