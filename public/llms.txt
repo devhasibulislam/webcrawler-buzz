@@ -1,14 +1,14 @@
-# Domain Crawler
+# WebCrawler.buzz — Free Website Crawler Online | Web Crawler Tool Free
 
-> A free online tool to crawl any website and generate a comprehensive SEO audit report.
+> A free online web crawler and URL crawler to crawl any website online and generate a comprehensive SEO audit report. Use our website crawler online free at webcrawler.buzz — also known as DomainCrawler.
 
 ## Overview
 
-Domain Crawler (webcrawler.buzz) is a web-based domain crawling tool that scans entire websites using breadth-first search (BFS) and extracts page-level SEO data. It is completely free to use with no sign-up required.
+WebCrawler.buzz (DomainCrawler) is a free website crawler online that lets you crawl a website online to discover every page. This online webcrawler uses breadth-first search (BFS) scoped to a root domain and extracts page-level SEO data. Whether you need a web crawler online, a URL crawler, or want to test crawl a website — this free site crawler is completely free to use with no sign-up required.
 
 ## What It Does
 
-Paste any URL and Domain Crawler will:
+Paste any URL and this web crawler online will:
 - Crawl every discoverable page on the domain
 - Extract page titles, meta descriptions, HTTP status codes, response times, content types, page sizes
 - Count internal and external links on each page
@@ -20,8 +20,12 @@ Paste any URL and Domain Crawler will:
 ## Key Features
 
 - Free website crawler — no registration, no limits on pages
-- Real-time progress tracking with percentage updates
-- Duplicate domain detection with option to re-crawl or view existing results
+- Website crawler online free — works from any browser, no install needed
+- Online web crawler and URL crawler with real-time progress tracking
+- Crawl website online with duplicate domain detection and re-crawl option
+- Web crawler free online — also works as a site crawler free tool
+- Free web crawler with webcrawler online dashboard
+- Crawl site online for SEO audits and test crawl website before migrations
 - Paginated results view (50, 100, 500, or 1000 results per page)
 - CSV export with download link sent via email
 - Email notifications when crawl completes
@@ -30,18 +34,19 @@ Paste any URL and Domain Crawler will:
 
 ## Use Cases
 
-- SEO audits and website health checks
-- Broken link detection (find 4xx and 5xx status codes)
-- Site structure analysis via internal/external link counts
-- Page speed analysis via response times
-- Indexability verification across an entire domain
+- SEO audits: Use this free online web crawler for website health checks
+- Broken link detection: URL crawler finds 4xx and 5xx status codes
+- Site structure analysis via internal/external link counts (site crawler online)
+- Page speed analysis via response times (web crawler test)
+- Indexability verification across an entire domain (domain crawler online)
 - Meta data auditing (missing titles, duplicate descriptions)
-- Content type and page size analysis
-- Website migration validation
+- Content type and page size analysis (website url crawler)
+- Website migration validation (test crawl website before going live)
+- Free website crawl for quick site audits (crawler free, crawling online)
 
 ## Target Keywords
 
-domain crawler, website crawler, site crawler, SEO crawler, free SEO tool, web scraper, URL scanner, bulk URL checker, website audit tool, crawl website, link checker, site analyzer, broken link checker, SEO audit tool, website analysis tool, HTTP status checker, meta tag checker, page speed analyzer
+web crawler online, website crawler online, website crawler online free, crawl website online, free website crawler, domain crawler online, online web crawler, crawl a website online, online site crawler, crawler online, online website crawler, url crawler, domaincrawler, free web crawler, online webcrawler, free site crawler, domain crawler, crawling online, web crawler free online, webcrawler online, site crawler, crawl site online, free online web crawler, web crawler test, crawler free, site crawler free, free website crawl, site crawler online, website crawler free, website crawler free online, webcrawler, website crawler, test crawl website, website url crawler, web crawler tool free, free website crawler tool, free online crawler, SEO crawler, free SEO tool, URL scanner, bulk URL checker, website audit tool, broken link checker, SEO audit tool, website analysis tool, HTTP status checker
 
 ## Blog
 

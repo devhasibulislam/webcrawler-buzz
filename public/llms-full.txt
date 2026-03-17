@@ -1,13 +1,13 @@
-# Domain Crawler — Full Documentation
+# WebCrawler.buzz — Free Website Crawler Online (Full Documentation)
 
-> A free online tool to crawl any website and generate a comprehensive SEO audit report.
-> Website: https://webcrawler.buzz
+> A free online web crawler and URL crawler tool to crawl any website online and generate a comprehensive SEO audit report.
+> Website: https://webcrawler.buzz | Also known as: DomainCrawler, WebCrawler, Online WebCrawler
 
 ## Product Overview
 
-Domain Crawler is a production-grade web crawler built for SEO professionals, developers, and website owners who want to audit their websites quickly and for free. It performs breadth-first search (BFS) crawling scoped to a root domain and extracts detailed page-level data.
+WebCrawler.buzz (DomainCrawler) is a free website crawler online built for SEO professionals, developers, and website owners who want to crawl a website online quickly and for free. This online web crawler and URL crawler tool performs breadth-first search (BFS) crawling scoped to a root domain and extracts detailed page-level data.
 
-No registration is required. No API key is needed. Just paste a URL, click "Start Crawl," and view your results.
+No registration is required. No API key is needed. Just paste a URL, click “Start Crawl,” and use this website crawler online free to view your results. It’s the best web crawler free online tool available — a true free online web crawler with no limitations.
 
 ## How It Works
 
@@ -42,16 +42,16 @@ For every page crawled, Domain Crawler collects:
 ## Features in Detail
 
 ### Free & No Registration
-Domain Crawler is completely free. No account creation, no API keys, no usage limits on the number of pages crawled per domain.
+This domain crawler online is completely free. No account creation, no API keys, no usage limits on the number of pages crawled per domain. It’s the best free website crawler and web crawler tool free available online. Also works as a crawler free alternative to paid desktop tools.
 
 ### Real-Time Progress Tracking
-After starting a crawl, you see a live progress bar that updates every 5 seconds showing how many pages have been crawled out of the total discovered.
+After starting a crawl with this web crawler online, you see a live progress bar that updates every 5 seconds showing how many pages have been crawled out of the total discovered.
 
 ### Shareable Tracking URLs
-Each crawl generates a unique tracking URL that you can bookmark or share. Come back anytime to check progress or view results, even after closing the browser.
+Each crawl generates a unique tracking URL that you can bookmark or share. Come back anytime to check progress or view results, even after closing the browser. Perfect for crawling online across devices.
 
 ### Duplicate Domain Detection
-If you try to crawl a domain that was already crawled, Domain Crawler shows you the existing results count and gives you two options:
+If you try to crawl a domain that was already crawled, this online website crawler shows you the existing results count and gives you two options:
 - **View Existing Results** — Jump straight to the previous crawl data
 - **Re-crawl Fresh** — Start a completely new crawl of the domain
 
@@ -175,7 +175,7 @@ Tracks CSV export requests and their lifecycle.
 
 ## Comparison with Alternatives
 
-| Feature | Domain Crawler | Screaming Frog | Sitebulb | Ahrefs Site Audit |
+| Feature | WebCrawler.buzz (DomainCrawler) | Screaming Frog | Sitebulb | Ahrefs Site Audit |
 |---------|:-:|:-:|:-:|:-:|
 | Free | ✅ Completely free | Free up to 500 URLs | Paid only | Paid only |
 | No install needed | ✅ Web-based | Desktop app required | Desktop app required | Web-based but paid |
@@ -189,13 +189,16 @@ Tracks CSV export requests and their lifecycle.
 ## Frequently Asked Questions
 
 **Q: Is Domain Crawler really free?**
-A: Yes, completely free with no hidden costs, no registration required, and no limits on the number of pages crawled.
+A: Yes, completely free with no hidden costs, no registration required, and no limits on the number of pages crawled. It’s the best website crawler online free tool available. WebCrawler.buzz is a free web crawler, free site crawler, and free online web crawler all in one.
 
 **Q: How long does a crawl take?**
-A: It depends on the size of the website. Small sites (under 100 pages) typically complete in under a minute. Larger sites may take several minutes. You can bookmark the tracking URL and come back later.
+A: It depends on the size of the website. Small sites (under 100 pages) typically complete in under a minute. Larger sites may take several minutes. You can bookmark the tracking URL and come back later. Use web crawler test mode for quick checks.
 
 **Q: Can I crawl any website?**
-A: You can crawl any publicly accessible website. The crawler respects the domain boundary and only crawls pages within the root domain you submit.
+A: You can crawl a website online as long as it’s publicly accessible. This online web crawler and URL crawler respects the domain boundary and only crawls pages within the root domain you submit. You can also test crawl a website to verify your setup.
+
+**Q: What’s the difference between this and other crawlers?**
+A: Unlike desktop tools, this is a website crawler free online — no downloads needed. It works as an online webcrawler, site crawler online, and free online crawler from any browser. Crawl site online instantly.
 
 **Q: How do I export my results?**
 A: Click the "Export CSV" button on the results page, enter your email, and you'll receive a download link within minutes.
@@ -208,7 +211,7 @@ A: Domain Crawler accesses only publicly available pages, similar to how Google'
 
 ## Keywords
 
-domain crawler, website crawler, site crawler, SEO crawler, free SEO tool, web scraper, URL scanner, bulk URL checker, website audit tool, crawl website, link checker, site analyzer, broken link checker, SEO audit tool, website analysis tool, HTTP status checker, meta tag checker, page speed analyzer, website health check, site structure analyzer, SEO report generator, free website audit, online crawler tool, web page analyzer, internal link checker, external link finder, redirect checker, indexability checker
+web crawler online, website crawler online, website crawler online free, crawl website online, free website crawler, domain crawler online, online web crawler, crawl a website online, online site crawler, crawler online, online website crawler, url crawler, domaincrawler, free web crawler, online webcrawler, free site crawler, domain crawler, crawling online, web crawler free online, webcrawler online, site crawler, crawl site online, free online web crawler, web crawler test, crawler free, site crawler free, free website crawl, site crawler online, website crawler free, website crawler free online, webcrawler, website crawler, test crawl website, website url crawler, web crawler tool free, free website crawler tool, free online crawler, SEO crawler, free SEO tool, URL scanner, bulk URL checker, website audit tool, crawl website, link checker, site analyzer, broken link checker, SEO audit tool, website analysis tool, HTTP status checker, meta tag checker, page speed analyzer, website health check, site structure analyzer, SEO report generator, free website audit, online crawler tool, web page analyzer, internal link checker, external link finder, redirect checker, indexability checker
 
 ## Blog
 
