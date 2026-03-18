@@ -76,6 +76,18 @@ export const viewController = {
     res.sendFile(path.join(__dirname, '../../public/cookie-policy.html'));
   },
 
+  about(_req: Request, res: Response): void {
+    res.sendFile(path.join(__dirname, '../../public/about.html'));
+  },
+
+  apiDocsPublic(_req: Request, res: Response): void {
+    res.sendFile(path.join(__dirname, '../../public/api-docs-public.html'));
+  },
+
+  notFound(_req: Request, res: Response): void {
+    res.status(404).sendFile(path.join(__dirname, '../../public/404.html'));
+  },
+
   // ── Blog listing ──────────────────────────────────────────
   blogList(_req: Request, res: Response): void {
     try {

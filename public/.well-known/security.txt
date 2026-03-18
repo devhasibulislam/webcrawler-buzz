@@ -1,0 +1,8 @@
+# Security Contact for WebCrawler.buzz
+# https://securitytxt.org/
+
+Contact: mailto:devhasibulislam@gmail.com
+Expires: 2027-03-18T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://webcrawler.buzz/.well-known/security.txt
+Policy: https://github.com/devhasibulislam/webcrawler/blob/master/SECURITY.md

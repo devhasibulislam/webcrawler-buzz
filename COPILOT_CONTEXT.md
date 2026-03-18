@@ -144,10 +144,11 @@ domain-crawler/
 │   ├── index.ts                          # Express entry — registers middleware, routes, BullMQ workers, cron
 │   ├── routes/
 │   │   ├── crawler.routes.ts             # /api/crawl/** API routes
-│   │   └── view.routes.ts                # HTML page routes
+│   │   ├── operational.routes.ts         # /api/health + /api/stats endpoints
+│   │   └── view.routes.ts                # HTML page routes + 404 catch-all
 │   ├── controllers/
 │   │   ├── crawler.controller.ts         # API request/response logic
-│   │   └── view.controller.ts            # res.sendFile for HTML pages
+│   │   └── view.controller.ts            # res.sendFile for HTML pages + blog SSR + 404
 │   ├── services/
 │   │   ├── crawler.service.ts            # BFS crawl logic — runs inside BullMQ worker
 │   │   ├── job.service.ts                # DB CRUD for crawl_jobs + crawled_pages
@@ -175,9 +176,22 @@ domain-crawler/
 ├── public/
 │   ├── index.html                        # Home page — main crawler UI
 │   ├── results.html                      # Results table (tracking URL page)
-│   ├── privacy-policy.html               # Privacy Policy (dummy content)
-│   ├── terms-of-service.html             # Terms of Service (dummy content)
-│   └── cookie-policy.html               # Cookie Policy (dummy — for future AdSense)
+│   ├── about.html                        # About page — project info, author, tech stack, trust signals
+│   ├── api-docs-public.html              # Public API documentation page
+│   ├── 404.html                          # Custom 404 page
+│   ├── blogs.html                        # Blog listing template
+│   ├── blog-post.html                    # Blog post template
+│   ├── blogs.json                        # Blog post data
+│   ├── privacy-policy.html               # Privacy Policy
+│   ├── terms-of-service.html             # Terms of Service
+│   ├── cookie-policy.html                # Cookie Policy
+│   ├── humans.txt                        # humans.txt standard
+│   ├── llms.txt                          # LLM discovery (short)
+│   ├── llms-full.txt                     # LLM discovery (full)
+│   ├── robots.txt                        # robots.txt
+│   ├── sitemap.xml                       # Sitemap
+│   └── .well-known/
+│       └── security.txt                  # Security contact (RFC 9116)
 ├── tmp/
 │   └── exports/                          # Temporary CSV files (auto-cleaned by cron)
 ├── .env
@@ -186,6 +200,11 @@ domain-crawler/
 ├── eslint.config.cjs                     # ESLint v9 flat config for TypeScript
 ├── tsconfig.json
 ├── package.json
+├── LICENSE                               # MIT License
+├── CONTRIBUTING.md                       # Contribution guidelines
+├── CODE_OF_CONDUCT.md                    # Community code of conduct
+├── SECURITY.md                           # Security policy + vulnerability reporting
+├── CHANGELOG.md                          # Version history
 └── COPILOT_CONTEXT.md
 ```
 
@@ -387,6 +406,45 @@ Download the generated CSV file. Returns `404` if not found, `410` if expired/de
 
 ---
 
+### `GET /api/health`
+
+Health check endpoint — returns database and Redis connectivity status.
+
+**Response (HTTP 200):**
+
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-03-18T12:00:00.000Z",
+  "uptime": 3600,
+  "version": "1.2.0",
+  "services": {
+    "database": { "status": "ok", "latency_ms": 12 },
+    "redis": { "status": "ok" }
+  }
+}
+```
+
+---
+
+### `GET /api/stats`
+
+Public usage statistics — anonymized data for transparency.
+
+**Response:**
+
+```json
+{
+  "generated_at": "2026-03-18T12:00:00.000Z",
+  "note": "Stats reflect current data. Completed jobs are auto-cleaned after 1 hour.",
+  "crawl_jobs": { "total": 150, "completed": 120, "active": 3, "failed": 5 },
+  "pages_crawled": 12000,
+  "unique_domains": 85
+}
+```
+
+---
+
 ## 🖥️ Frontend Pages (Pure HTML — served by Express)
 
 ### `/` → `public/index.html` — Home Page
@@ -425,9 +483,29 @@ Download the generated CSV file. Returns `404` if not found, `410` if expired/de
 
 ### `/cookie-policy` → `public/cookie-policy.html`
 
-- All three have dummy placeholder content — user replaces later
+- All three have placeholder content — user replaces later
 - Cookie Policy is for future Google AdSense compliance
 - Consistent header/footer with Home page
+
+### `/about` → `public/about.html` — About Page
+
+- Project description, tech stack, how it works, author info
+- Links to GitHub repo, MIT License, CONTRIBUTING.md
+- Security & privacy practices section
+- Trust signals grid (open source, no data retention, free, security policy, API docs, Product Hunt)
+- JSON-LD structured data (AboutPage + SoftwareApplication)
+
+### `/api-docs-public` → `public/api-docs-public.html` — Public API Docs
+
+- Full REST API reference with request/response examples
+- All endpoints documented with JSON samples
+- Rate limit info
+- No authentication required to view
+
+### 404 → `public/404.html` — Custom Error Page
+
+- Branded 404 page with navigation back to Home, Blog, About
+- Returned by catch-all route in view.routes.ts
 
 ---
 

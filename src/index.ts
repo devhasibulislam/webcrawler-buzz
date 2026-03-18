@@ -9,6 +9,7 @@ import { setupSecurity } from './middleware/security.middleware';
 import { swaggerAuth } from './middleware/swagger-auth.middleware';
 import { swaggerSpec } from './swagger/swagger';
 import crawlerRoutes from './routes/crawler.routes';
+import operationalRoutes from './routes/operational.routes';
 import viewRoutes from './routes/view.routes';
 
 // Import workers to start processing jobs
@@ -35,6 +36,7 @@ app.use('/api-docs', swaggerAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // API routes
 app.use('/api/crawl', crawlerRoutes);
+app.use('/api', operationalRoutes);
 
 // View routes (HTML pages)
 app.use('/', viewRoutes);

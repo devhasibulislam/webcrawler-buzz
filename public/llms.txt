@@ -61,7 +61,25 @@ WebCrawler.buzz publishes guides on web crawling, technical SEO, and site auditi
 ## Links
 
 - Website: https://webcrawler.buzz
+- About: https://webcrawler.buzz/about
+- API Documentation: https://webcrawler.buzz/api-docs-public
+- Health Check: https://webcrawler.buzz/api/health
+- Public Stats: https://webcrawler.buzz/api/stats
 - Blog: https://webcrawler.buzz/blogs
+- Source Code: https://github.com/devhasibulislam/webcrawler
+- License: MIT (https://github.com/devhasibulislam/webcrawler/blob/master/LICENSE)
+- Security Policy: https://webcrawler.buzz/.well-known/security.txt
 - Privacy Policy: https://webcrawler.buzz/privacy-policy
 - Terms of Service: https://webcrawler.buzz/terms-of-service
 - Cookie Policy: https://webcrawler.buzz/cookie-policy
+
+## Trust & Transparency
+
+- Open source under MIT License — full code on GitHub
+- Built by Hasibul Islam (https://github.com/devhasibulislam)
+- Featured on Product Hunt: https://www.producthunt.com/products/webcrawler-buzz
+- No data retention — crawl results auto-delete after 1 hour
+- Security: Helmet, CORS, rate limiting, parameterized SQL queries
+- Standard health check and public stats endpoints
+- security.txt at /.well-known/security.txt for responsible disclosure
+- Tech stack: Node.js, TypeScript, Express.js v5, PostgreSQL (Neon), Redis (BullMQ), Axios, Cheerio

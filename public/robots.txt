@@ -1,10 +1,12 @@
-# robots.txt — Domain Crawler
+# robots.txt — WebCrawler.buzz
 
 User-agent: *
 Allow: /
 
-# Block API routes
-Disallow: /api/
+# Block API routes (except public endpoints)
+Disallow: /api/crawl/
+Allow: /api/health
+Allow: /api/stats
 
 # Sitemap
 Sitemap: https://webcrawler.buzz/sitemap.xml

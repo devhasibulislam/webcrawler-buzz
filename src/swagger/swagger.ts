@@ -1,11 +1,13 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 
+const { version } = require('../../package.json');
+
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Domain Crawler API',
-      version: '1.0.0',
+      title: 'WebCrawler.buzz API',
+      version,
       description:
         'A production-grade background domain crawler. Start crawls, track progress, and retrieve results.',
     },

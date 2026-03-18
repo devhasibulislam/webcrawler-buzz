@@ -245,7 +245,28 @@ Summary: Step-by-step guide covering 7 audit steps — crawl the domain, fix 404
 ## Contact & Legal
 
 - Website: https://webcrawler.buzz
+- About: https://webcrawler.buzz/about
+- API Documentation: https://webcrawler.buzz/api-docs-public
+- Health Check: https://webcrawler.buzz/api/health
+- Public Stats: https://webcrawler.buzz/api/stats
+- Source Code: https://github.com/devhasibulislam/webcrawler
+- License: MIT (https://github.com/devhasibulislam/webcrawler/blob/master/LICENSE)
+- Security Policy: https://webcrawler.buzz/.well-known/security.txt
 - Blog: https://webcrawler.buzz/blogs
 - Privacy Policy: https://webcrawler.buzz/privacy-policy
 - Terms of Service: https://webcrawler.buzz/terms-of-service
 - Cookie Policy: https://webcrawler.buzz/cookie-policy
+
+## Trust & Transparency
+
+WebCrawler.buzz is a fully open-source project built by Hasibul Islam (https://github.com/devhasibulislam). Key trust signals:
+
+- MIT License — 100% of the source code is public on GitHub
+- Featured on Product Hunt (https://www.producthunt.com/products/webcrawler-buzz)
+- No data retention — crawl results auto-delete after 1 hour, CSV exports after 5 minutes
+- Security: Helmet HTTP headers, CORS, rate limiting (200 POST req/15 min), parameterized SQL queries
+- Standard health check endpoint at /api/health (database + Redis connectivity)
+- Public usage statistics endpoint at /api/stats
+- security.txt at /.well-known/security.txt for responsible vulnerability disclosure
+- SECURITY.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md, CHANGELOG.md in the repository
+- Tech stack: Node.js v20+, TypeScript (strict mode), Express.js v5, PostgreSQL (Neon serverless), Redis + BullMQ, Axios, Cheerio, Nodemailer

@@ -1,0 +1,23 @@
+/* TEAM */
+
+Developer: Hasibul Islam
+Contact: devhasibulislam@gmail.com
+GitHub: https://github.com/devhasibulislam
+From: Bangladesh
+
+/* SITE */
+
+Name: WebCrawler.buzz
+URL: https://webcrawler.buzz
+Description: Free, open-source website crawler for SEO audits
+Language: English
+Standards: HTML5, CSS3, OpenAPI 3.0
+Components: Node.js, TypeScript, Express.js, PostgreSQL, Redis, BullMQ
+Software: VS Code, Git
+
+/* THANKS */
+
+Neon (https://neon.tech) — Serverless PostgreSQL
+Redis Cloud (https://redis.com) — Managed Redis
+BullMQ (https://bullmq.io) — Job Queue
+Product Hunt — Launch platform

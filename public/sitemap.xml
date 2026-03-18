@@ -37,6 +37,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://webcrawler.buzz/about</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://webcrawler.buzz/api-docs-public</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://webcrawler.buzz/blogs/what-is-a-web-crawler</loc>
     <lastmod>2025-01-10</lastmod>
     <changefreq>monthly</changefreq>

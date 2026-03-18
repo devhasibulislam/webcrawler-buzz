@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NE3SYMYFJF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NE3SYMYFJF');
+  </script>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192x192.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Documentation — WebCrawler.buzz REST API Reference</title>
+  <meta name="description" content="Full REST API documentation for WebCrawler.buzz — the free website crawler. Start crawls, track progress, get results, and export CSV programmatically." />
+  <meta name="robots" content="index, follow" />
+  <meta name="keywords" content="webcrawler api, website crawler api, crawl api, free crawler api, web crawler api documentation, rest api crawler, domain crawler api, seo api" />
+  <link rel="canonical" href="https://webcrawler.buzz/api-docs-public" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="API Documentation — WebCrawler.buzz REST API" />
+  <meta property="og:description" content="Full REST API documentation for WebCrawler.buzz — start crawls, track progress, get results, and export CSV programmatically." />
+  <meta property="og:url" content="https://webcrawler.buzz/api-docs-public" />
+  <meta property="og:site_name" content="WebCrawler.buzz" />
+  <meta property="og:image" content="https://webcrawler.buzz/og-image.png" />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "name": "WebCrawler.buzz REST API Documentation",
+    "description": "Full REST API reference for the free, open-source WebCrawler.buzz domain crawler.",
+    "url": "https://webcrawler.buzz/api-docs-public",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "WebCrawler.buzz",
+      "url": "https://webcrawler.buzz/"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    body { font-family: 'Google Sans', sans-serif; }
+    code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85em; }
+    pre { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85em; }
+    .method-post { background-color: #dbeafe; color: #1d4ed8; }
+    .method-get { background-color: #dcfce7; color: #15803d; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <header class="bg-white shadow-sm">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/"><img src="/webcrawler-logo.png" alt="WebCrawler" class="h-10" width="192" height="40" /></a>
+      <nav class="text-sm text-gray-600 space-x-4">
+        <a href="/" class="hover:text-gray-800">Home</a>
+        <a href="/blogs" class="hover:text-gray-800">Blog</a>
+        <a href="/about" class="hover:text-gray-800">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl mx-auto px-6 py-12">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-800 mb-4">API Documentation</h1>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">Full REST API reference for WebCrawler.buzz. Start crawls, track progress, retrieve results, and export data — all programmatically.</p>
+      <p class="text-sm text-gray-500 mt-2">Base URL: <code class="bg-gray-100 px-2 py-1 rounded">https://webcrawler.buzz</code></p>
+    </div>
+
+    <!-- POST /api/crawl -->
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-6 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="method-post text-xs font-bold px-3 py-1 rounded-full">POST</span>
+        <code class="text-gray-800 font-semibold">/api/crawl</code>
+      </div>
+      <p class="text-gray-600 mb-4">Start a new crawl. Validates the URL, creates a job, pushes to the crawl queue, and returns a tracking URL immediately.</p>
+      <h4 class="font-semibold text-gray-700 text-sm mb-2">Request Body (JSON)</h4>
+      <pre class="bg-gray-900 text-green-400 rounded-xl p-4 overflow-x-auto mb-4">{
+  "url": "https://example.com"
+}</pre>
+      <h4 class="font-semibold text-gray-700 text-sm mb-2">Response (201 — New Crawl)</h4>
+      <pre class="bg-gray-900 text-green-400 rounded-xl p-4 overflow-x-auto mb-4">{
+  "status": "started",
+  "job_id": "abc-123-def",
+  "tracking_url": "https://webcrawler.buzz/results?job_id=abc-123-def",
+  "message": "Crawl started! Use tracking_url to follow progress."
+}</pre>
+      <h4 class="font-semibold text-gray-700 text-sm mb-2">Response (200 — Domain Already Crawled)</h4>
+      <pre class="bg-gray-900 text-green-400 rounded-xl p-4 overflow-x-auto">{
+  "status": "exists",
+  "job_id": "xyz-789",
+  "domain": "example.com",
+  "total_pages": 42,
+  "tracking_url": "https://webcrawler.buzz/results?job_id=xyz-789",
+  "prompt": "Send action 're-crawl' or 'use-existing' to POST /api/crawl/decide"
+}</pre>
+    </section>
+
+    <!-- POST /api/crawl/decide -->
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-6 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="method-post text-xs font-bold px-3 py-1 rounded-full">POST</span>
+        <code class="text-gray-800 font-semibold">/api/crawl/decide</code>
+      </div>
+      <p class="text-gray-600 mb-4">When a domain was already crawled, choose to re-crawl or use existing results.</p>
+      <h4 class="font-semibold text-gray-700 text-sm mb-2">Request Body (JSON)</h4>
+      <pre class="bg-gray-900 text-green-400 rounded-xl p-4 overflow-x-auto">{
+  "domain": "example.com",
+  "action": "re-crawl"  // or "use-existing"
+}</pre>
+    </section>
+
+    <!-- GET /api/crawl/:job_id/progress -->
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-6 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="method-get text-xs font-bold px-3 py-1 rounded-full">GET</span>
+        <code class="text-gray-800 font-semibold">/api/crawl/:job_id/progress</code>
+      </div>
+      <p class="text-gray-600 mb-4">Lightweight progress polling. Returns current status and completion percentage.</p>
+      <h4 class="font-semibold text-gray-700 text-sm mb-2">Response</h4>
+      <pre class="bg-gray-900 text-green-400 rounded-xl p-4 overflow-x-auto">{
+  "job_id": "abc-123-def",
+  "status": "running",
+  "total_pages_found": 25,
+  "total_pages_queued": 100,
+  "progress_percent": 25
+}</pre>
+    </section>
+
+    <!-- GET /api/crawl/:job_id -->
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-6 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="method-get text-xs font-bold px-3 py-1 rounded-full">GET</span>
+        <code class="text-gray-800 font-semibold">/api/crawl/:job_id?page=1&amp;limit=50</code>
+      </div>
+      <p class="text-gray-600 mb-4">Get paginated crawl results. Supports 50, 100, 500, or 1000 results per page.</p>
+      <h4 class="font-semibold text-gray-700 text-sm mb-2">Query Parameters</h4>
+      <div class="overflow-x-auto mb-4">
+        <table class="w-full text-sm">
+          <thead><tr class="border-b"><th class="text-left py-2 text-gray-700">Param</th><th class="text-left py-2 text-gray-700">Type</th><th class="text-left py-2 text-gray-700">Default</th><th class="text-left py-2 text-gray-700">Description</th></tr></thead>
+          <tbody>
+            <tr class="border-b"><td class="py-2"><code>page</code></td><td class="py-2 text-gray-500">integer</td><td class="py-2 text-gray-500">1</td><td class="py-2 text-gray-600">Page number</td></tr>
+            <tr><td class="py-2"><code>limit</code></td><td class="py-2 text-gray-500">integer</td><td class="py-2 text-gray-500">50</td><td class="py-2 text-gray-600">Results per page (50, 100, 500, 1000)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- POST /api/crawl/:job_id/notify -->
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-6 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="method-post text-xs font-bold px-3 py-1 rounded-full">POST</span>
+        <code class="text-gray-800 font-semibold">/api/crawl/:job_id/notify</code>
+      </div>
+      <p class="text-gray-600 mb-4">Register an email address to receive a notification when the crawl completes.</p>
+      <h4 class="font-semibold text-gray-700 text-sm mb-2">Request Body (JSON)</h4>
+      <pre class="bg-gray-900 text-green-400 rounded-xl p-4 overflow-x-auto">{
+  "email": "you@example.com"
+}</pre>
+    </section>
+
+    <!-- POST /api/crawl/:job_id/export -->
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-6 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="method-post text-xs font-bold px-3 py-1 rounded-full">POST</span>
+        <code class="text-gray-800 font-semibold">/api/crawl/:job_id/export</code>
+      </div>
+      <p class="text-gray-600 mb-4">Request a CSV export of the crawl results. A download link will be sent to the provided email address.</p>
+      <h4 class="font-semibold text-gray-700 text-sm mb-2">Request Body (JSON)</h4>
+      <pre class="bg-gray-900 text-green-400 rounded-xl p-4 overflow-x-auto">{
+  "email": "you@example.com"
+}</pre>
+    </section>
+
+    <!-- Operational Endpoints -->
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-6 mb-6">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Operational Endpoints</h2>
+      <div class="space-y-4">
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <span class="method-get text-xs font-bold px-3 py-1 rounded-full">GET</span>
+            <code class="text-gray-800 font-semibold">/api/health</code>
+          </div>
+          <p class="text-gray-600 text-sm">Returns system health status including database and Redis connectivity.</p>
+        </div>
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <span class="method-get text-xs font-bold px-3 py-1 rounded-full">GET</span>
+            <code class="text-gray-800 font-semibold">/api/stats</code>
+          </div>
+          <p class="text-gray-600 text-sm">Returns public usage statistics (total crawls, pages crawled, etc.).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rate Limits -->
+    <section class="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 mb-6">
+      <h2 class="text-xl font-bold text-yellow-800 mb-2">⚠️ Rate Limits</h2>
+      <p class="text-yellow-700 text-sm">POST endpoints are rate-limited to <strong>200 requests per 15 minutes per IP</strong>. GET endpoints (progress polling, results) are not rate-limited.</p>
+    </section>
+  </main>
+
+  <footer class="text-center text-gray-600 text-xs py-6">
+    <div class="flex justify-center mb-4">
+      <a href="https://www.producthunt.com/products/webcrawler-buzz?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-webcrawler-buzz" target="_blank" rel="noopener noreferrer"><img alt="webcrawler.buzz - Discover Every Page | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1092117&amp;theme=light&amp;t=1772897374846"></a>
+    </div>
+    &copy; 2026 Domain Crawler &middot;
+    <a href="/" class="hover:text-gray-800">Home</a> &middot;
+    <a href="/about" class="hover:text-gray-800">About</a> &middot;
+    <a href="/privacy-policy" class="hover:text-gray-800">Privacy Policy</a> &middot;
+    <a href="/terms-of-service" class="hover:text-gray-800">Terms of Service</a> &middot;
+    <a href="/cookie-policy" class="hover:text-gray-800">Cookie Policy</a>
+  </footer>
+</body>
+</html>
