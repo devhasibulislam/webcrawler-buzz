@@ -53,20 +53,20 @@
 
 ## ✨ Features
 
-| Feature | Description |
-|---------|-------------|
-| 🔍 **BFS Crawling** | Breadth-first search scoped to root domain — no depth limit |
-| 📊 **Rich SEO Data** | Title, meta description, status code, response time, content type, page size, link counts, redirect chains, indexability |
-| 📈 **Real-Time Progress** | Live progress bar polling every 5 seconds |
-| 🔗 **Tracking URLs** | Shareable bookmarkable links to check progress/results anytime |
-| 📧 **Email Notifications** | Optional email alerts when crawls complete |
-| 📥 **CSV Export** | Export full results as CSV, delivered via email |
-| ♻️ **Duplicate Detection** | Already crawled that domain? Re-use results or re-crawl fresh |
-| 🧹 **Auto-Cleanup** | Ephemeral data — crawls auto-delete after 1 hour, exports after 5 min |
-| 🔒 **Security** | Helmet, CORS, rate limiting, input validation |
-| 📖 **API Docs** | Full OpenAPI/Swagger documentation |
-| 💚 **Health Check** | `GET /api/health` — standard health endpoint |
-| 📊 **Public Stats** | `GET /api/stats` — live transparency stats |
+| Feature                    | Description                                                                                                              |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| 🔍 **BFS Crawling**        | Breadth-first search scoped to root domain — no depth limit                                                              |
+| 📊 **Rich SEO Data**       | Title, meta description, status code, response time, content type, page size, link counts, redirect chains, indexability |
+| 📈 **Real-Time Progress**  | Live progress bar polling every 5 seconds                                                                                |
+| 🔗 **Tracking URLs**       | Shareable bookmarkable links to check progress/results anytime                                                           |
+| 📧 **Email Notifications** | Optional email alerts when crawls complete                                                                               |
+| 📥 **CSV Export**          | Export full results as CSV, delivered via email                                                                          |
+| ♻️ **Duplicate Detection** | Already crawled that domain? Re-use results or re-crawl fresh                                                            |
+| 🧹 **Auto-Cleanup**        | Ephemeral data — crawls auto-delete after 1 hour, exports after 5 min                                                    |
+| 🔒 **Security**            | Helmet, CORS, rate limiting, input validation                                                                            |
+| 📖 **API Docs**            | Full OpenAPI/Swagger documentation                                                                                       |
+| 💚 **Health Check**        | `GET /api/health` — standard health endpoint                                                                             |
+| 📊 **Public Stats**        | `GET /api/stats` — live transparency stats                                                                               |
 
 ---
 
@@ -82,7 +82,7 @@
 ┌─────────────────────────────────────────────────────────┐
 │                  Express.js v5 Server                   │
 │     Routes → Controllers → Services → Database          │
-│     Middleware: Helmet, CORS, Rate Limiter               │
+│     Middleware: Helmet, CORS, Rate Limiter              │
 └──────┬───────────────┬──────────────────┬───────────────┘
        │               │                  │
        ▼               ▼                  ▼
@@ -91,27 +91,27 @@
 │  Postgres│   │ BullMQ       │   │ (Nodemailer) │
 │          │   │              │   │              │
 │ 3 tables │   │ Crawl Queue  │   │ Notifications│
-│ crawl_   │   │ Export Queue  │   │ CSV links    │
+│ crawl_   │   │ Export Queue │   │ CSV links    │
 │ jobs     │   │ Workers x5+2 │   │              │
 └──────────┘   └──────────────┘   └──────────────┘
 ```
 
 ### Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Runtime | Node.js (v20+) |
-| Language | TypeScript (strict mode) |
-| Framework | Express.js v5 |
-| Database | PostgreSQL via [Neon](https://neon.tech) (serverless) |
-| DB Client | `pg` (node-postgres) — raw parameterized queries |
-| Job Queue | [BullMQ](https://docs.bullmq.io) + Redis |
-| Crawling | `axios` + `cheerio` |
-| Email | Nodemailer + Gmail SMTP |
-| CSS | Tailwind CSS (CDN) |
-| API Docs | Swagger UI (OpenAPI 3.0) |
-| Security | `helmet`, `express-rate-limit`, `cors` |
-| Linting | ESLint + `@typescript-eslint` |
+| Layer     | Technology                                            |
+| --------- | ----------------------------------------------------- |
+| Runtime   | Node.js (v20+)                                        |
+| Language  | TypeScript (strict mode)                              |
+| Framework | Express.js v5                                         |
+| Database  | PostgreSQL via [Neon](https://neon.tech) (serverless) |
+| DB Client | `pg` (node-postgres) — raw parameterized queries      |
+| Job Queue | [BullMQ](https://docs.bullmq.io) + Redis              |
+| Crawling  | `axios` + `cheerio`                                   |
+| Email     | Nodemailer + Gmail SMTP                               |
+| CSS       | Tailwind CSS (CDN)                                    |
+| API Docs  | Swagger UI (OpenAPI 3.0)                              |
+| Security  | `helmet`, `express-rate-limit`, `cors`                |
+| Linting   | ESLint + `@typescript-eslint`                         |
 
 ---
 
@@ -191,23 +191,23 @@ All endpoints are documented via Swagger at `/api-docs` (requires Basic Auth) an
 
 ### Core Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/crawl` | Start a new crawl |
-| `POST` | `/api/crawl/decide` | Handle duplicate domain (re-crawl or use existing) |
-| `POST` | `/api/crawl/:job_id/notify` | Register email for notification |
-| `GET` | `/api/crawl/:job_id/progress` | Poll crawl progress |
-| `GET` | `/api/crawl/:job_id` | Get paginated results |
-| `POST` | `/api/crawl/:job_id/export` | Request CSV export |
-| `GET` | `/api/crawl/:job_id/export/status` | Check export status |
-| `GET` | `/api/crawl/:job_id/download/:export_id` | Download CSV file |
+| Method | Endpoint                                 | Description                                        |
+| ------ | ---------------------------------------- | -------------------------------------------------- |
+| `POST` | `/api/crawl`                             | Start a new crawl                                  |
+| `POST` | `/api/crawl/decide`                      | Handle duplicate domain (re-crawl or use existing) |
+| `POST` | `/api/crawl/:job_id/notify`              | Register email for notification                    |
+| `GET`  | `/api/crawl/:job_id/progress`            | Poll crawl progress                                |
+| `GET`  | `/api/crawl/:job_id`                     | Get paginated results                              |
+| `POST` | `/api/crawl/:job_id/export`              | Request CSV export                                 |
+| `GET`  | `/api/crawl/:job_id/export/status`       | Check export status                                |
+| `GET`  | `/api/crawl/:job_id/download/:export_id` | Download CSV file                                  |
 
 ### Operational Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/health` | Health check (DB + Redis status) |
-| `GET` | `/api/stats` | Public usage statistics |
+| Method | Endpoint      | Description                      |
+| ------ | ------------- | -------------------------------- |
+| `GET`  | `/api/health` | Health check (DB + Redis status) |
+| `GET`  | `/api/stats`  | Public usage statistics          |
 
 ### Example: Start a Crawl
 
