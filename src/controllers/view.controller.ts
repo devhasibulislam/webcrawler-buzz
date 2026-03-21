@@ -86,16 +86,27 @@ export const viewController = {
 
   sitemapXml(_req: Request, res: Response): void {
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+    res.setHeader('X-Robots-Tag', 'noindex');
     res.sendFile(path.join(__dirname, '../../public/sitemap.xml'));
+  },
+
+  robotsTxt(_req: Request, res: Response): void {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+    res.setHeader('X-Robots-Tag', 'noindex');
+    res.sendFile(path.join(__dirname, '../../public/robots.txt'));
   },
 
   llmsTxt(_req: Request, res: Response): void {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600');
     res.sendFile(path.join(__dirname, '../../public/llms.txt'));
   },
 
   llmsFullTxt(_req: Request, res: Response): void {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600');
     res.sendFile(path.join(__dirname, '../../public/llms-full.txt'));
   },
 

@@ -15,6 +15,7 @@ router.get('/cookie-policy', viewController.cookiePolicy);
 
 // SEO / LLM files — explicit routes with correct Content-Type headers
 router.get('/sitemap.xml', viewController.sitemapXml);
+router.get('/robots.txt', viewController.robotsTxt);
 router.get('/llms.txt', viewController.llmsTxt);
 router.get('/llms-full.txt', viewController.llmsFullTxt);
 
