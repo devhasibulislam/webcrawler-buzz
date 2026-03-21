@@ -84,6 +84,21 @@ export const viewController = {
     res.sendFile(path.join(__dirname, '../../public/api-docs-public.html'));
   },
 
+  sitemapXml(_req: Request, res: Response): void {
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.sendFile(path.join(__dirname, '../../public/sitemap.xml'));
+  },
+
+  llmsTxt(_req: Request, res: Response): void {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.sendFile(path.join(__dirname, '../../public/llms.txt'));
+  },
+
+  llmsFullTxt(_req: Request, res: Response): void {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.sendFile(path.join(__dirname, '../../public/llms-full.txt'));
+  },
+
   notFound(_req: Request, res: Response): void {
     res.status(404).sendFile(path.join(__dirname, '../../public/404.html'));
   },
