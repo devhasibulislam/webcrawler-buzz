@@ -14,10 +14,11 @@ router.get('/terms-of-service', viewController.termsOfService);
 router.get('/cookie-policy', viewController.cookiePolicy);
 
 // SEO / LLM files — explicit routes with correct Content-Type headers
-router.get('/sitemap.xml', viewController.sitemapXml);
-router.get('/robots.txt', viewController.robotsTxt);
-router.get('/llms.txt', viewController.llmsTxt);
-router.get('/llms-full.txt', viewController.llmsFullTxt);
+// Include trailing-slash variants so bots never hit the 404 catch-all
+router.get(['/sitemap.xml', '/sitemap.xml/'], viewController.sitemapXml);
+router.get(['/robots.txt', '/robots.txt/'], viewController.robotsTxt);
+router.get(['/llms.txt', '/llms.txt/'], viewController.llmsTxt);
+router.get(['/llms-full.txt', '/llms-full.txt/'], viewController.llmsFullTxt);
 
 // 404 catch-all (must be last)
 router.use(viewController.notFound);
