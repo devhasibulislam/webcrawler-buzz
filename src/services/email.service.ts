@@ -8,6 +8,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Verify SMTP connection on startup
+transporter.verify()
+  .then(() => console.log('[Email] SMTP connection verified ✅'))
+  .catch((err) => console.error('[Email] SMTP connection FAILED ❌:', err.message));
+
 export const emailService = {
   /**
    * Send a crawl-complete notification email.

@@ -321,7 +321,10 @@
 
         if (data.status === 'completed') {
           clearInterval(pollInterval);
-          clearTimeout(notifyTimeout);
+          // Show notify card immediately if not already visible (so user can still request email)
+          if (notifyCard && notifyCard.classList.contains('hidden')) {
+            notifyCard.classList.remove('hidden');
+          }
           progressText.textContent = `✅ Crawl complete! ${data.total_pages_found} pages found. Redirecting...`;
           setTimeout(() => {
             window.location.href = `/results?job_id=${currentJobId}`;

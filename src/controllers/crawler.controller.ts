@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { jobService } from '../services/job.service';
 import { exportService } from '../services/export.service';
+import { emailService } from '../services/email.service';
 import { crawlerQueue } from '../queue/crawler.queue';
 import { exportQueue } from '../queue/export.queue';
 import { extractRootDomain, isValidUrl } from '../utils/url.utils';
@@ -164,6 +165,21 @@ export const crawlerController = {
       }
 
       await jobService.setNotifyEmail(job_id, email);
+
+      // If the crawl already completed before the user submitted their email,
+      // send the notification immediately (race condition fix)
+      if (job.status === 'completed') {
+        try {
+          await emailService.sendCrawlCompleteEmail(
+            email,
+            job.domain,
+            job.total_pages_found,
+            job_id
+          );
+        } catch (emailErr: any) {
+          console.error(`[Controller] Failed to send retroactive email: ${emailErr.message}`);
+        }
+      }
 
       res.status(200).json({
         message: `Got it! We'll send results to ${email} when done.`,
