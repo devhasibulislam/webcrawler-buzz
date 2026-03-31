@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2026-03-31
+
+### Changed
+- Complete homepage redesign with gradient hero banner, capabilities, all-features grid, who-it's-for personas, FAQ accordion, and CTA section
+- Added FAQPage JSON-LD structured data for rich snippets and AEO visibility
+- Sticky header for better navigation
+- Footer now includes all three Product Hunt badges (review, follow, featured)
+- Improved semantic HTML structure with proper heading hierarchy
+- Version bump from 1.2.1 to 1.2.2
+
 ## [1.2.1] - 2026-03-21
 
 ### Fixed
