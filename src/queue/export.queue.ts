@@ -5,7 +5,8 @@ function getRedisConfig() {
   return {
     host: url.hostname,
     port: parseInt(url.port, 10) || 6379,
-    password: url.password || undefined,
+    username: url.username ? decodeURIComponent(url.username) : undefined,
+    password: url.password ? decodeURIComponent(url.password) : undefined,
     maxRetriesPerRequest: null,
   };
 }

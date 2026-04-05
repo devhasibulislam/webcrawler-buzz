@@ -4,10 +4,16 @@ export const crawlerQueue = new Queue('crawler', {
   connection: {
     host: extractRedisHost(),
     port: extractRedisPort(),
+    username: extractRedisUsername(),
     password: extractRedisPassword(),
     maxRetriesPerRequest: null,
   },
 });
+
+function extractRedisUsername(): string | undefined {
+  const url = new URL(process.env.REDIS_URL!);
+  return url.username ? decodeURIComponent(url.username) : undefined;
+}
 
 function extractRedisHost(): string {
   const url = new URL(process.env.REDIS_URL!);
@@ -21,5 +27,5 @@ function extractRedisPort(): number {
 
 function extractRedisPassword(): string | undefined {
   const url = new URL(process.env.REDIS_URL!);
-  return url.password || undefined;
+  return url.password ? decodeURIComponent(url.password) : undefined;
 }
