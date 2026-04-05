@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.3] - 2026-04-05
+
+### Added
+- Retroactive email notifications: if a crawl completes before the user submits their email, the notification is sent immediately
+- SMTP connection verification on startup with status logging
+- Product Hunt badge added to the 404 page footer
+- Redis username support and URL-decoded password handling across all queue/worker configurations
+
+### Changed
+- Complete homepage redesign with gradient hero banner, capabilities grid, who-it's-for personas, FAQ accordion, CTA section, and FAQPage JSON-LD structured data
+- Sticky header and improved semantic HTML structure with proper heading hierarchy
+- Footer redesigned with Product Hunt badges (review, follow, featured) across pages
+- Improved error handling on crawl submission form (handles all non-OK responses)
+- Redis URL switched to local configuration for development
+- Version bump from 1.2.2 to 1.2.3
+
 ## [1.2.2] - 2026-03-31
 
 ### Changed
