@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.4] - 2026-04-06
+
+### Changed
+- Inlined CSS into all HTML pages to eliminate render-blocking stylesheet request
+- Self-hosted Google Sans fonts with `font-display: optional` replacing external Google Fonts loading
+- Optimized logo to WebP with `<picture>` element and srcset (66 KB → 3.5 KB)
+- Shortened homepage title (75 → 58 chars) and meta description (228 → 154 chars)
+- Added WebSite + SearchAction JSON-LD structured data on homepage
+- Added `<main>` landmark and aria-labels for improved accessibility
+- Unique alt texts on all Product Hunt badge images
+- Removed deprecated `<meta name="keywords">` from all pages
+- Rewrote keyword-stuffed about page section into natural helpful content
+- Added all three Product Hunt badges (review, follow, featured) to every page footer
+- Version bump from 1.2.3 to 1.2.4
+
 ## [1.2.3] - 2026-04-05
 
 ### Added

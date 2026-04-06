@@ -417,7 +417,7 @@ Health check endpoint — returns database and Redis connectivity status.
   "status": "ok",
   "timestamp": "2026-03-18T12:00:00.000Z",
   "uptime": 3600,
-  "version": "1.2.3",
+  "version": "1.2.4",
   "services": {
     "database": { "status": "ok", "latency_ms": 12 },
     "redis": { "status": "ok" }
