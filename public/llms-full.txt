@@ -1,13 +1,13 @@
-# WebCrawler.buzz — Free Website Crawler Online (Full Documentation)
+# WebCrawler.buzz — Web Crawler Online Free (Full Documentation)
 
-> A free online web crawler and URL crawler tool to crawl any website online and generate a comprehensive SEO audit report.
+> A free web crawler online and domain crawler online tool to crawl any website online and generate a comprehensive SEO audit report.
 > Website: https://webcrawler.buzz | Also known as: DomainCrawler, WebCrawler, Online WebCrawler
 
 ## Product Overview
 
-WebCrawler.buzz (DomainCrawler) is a free website crawler online built for SEO professionals, developers, and website owners who want to crawl a website online quickly and for free. This online web crawler and URL crawler tool performs breadth-first search (BFS) crawling scoped to a root domain and extracts detailed page-level data.
+WebCrawler.buzz (DomainCrawler) is a web crawler online free tool built for SEO professionals, developers, and website owners who want to crawl website online quickly and for free. This domain crawler online and URL crawler tool performs breadth-first search (BFS) crawling scoped to a root domain and extracts detailed page-level data.
 
-No registration is required. No API key is needed. Just paste a URL, click “Start Crawl,” and use this website crawler online free to view your results. It’s the best web crawler free online tool available — a true free online web crawler with no limitations.
+No registration is required. No API key is needed. Just paste a URL, click "Start Crawl," and use this website crawler online free to view your results. It's the best web crawl online tool available — a true free web crawler online with no limitations.
 
 ## How It Works
 
@@ -241,6 +241,11 @@ Summary: Compares pure web crawlers with SEO site audit tools (Screaming Frog, A
 URL: https://webcrawler.buzz/blogs/how-to-do-a-technical-seo-audit-with-a-domain-crawler
 Category: How-To | Read time: 9 min | Published: 2025-02-14
 Summary: Step-by-step guide covering 7 audit steps — crawl the domain, fix 404s, audit redirects, check titles and meta descriptions, review indexability, identify slow pages, find orphaned pages.
+
+### 10 Best Free Web Crawler Tools in 2026 — Compared and Ranked
+URL: https://webcrawler.buzz/blogs/best-free-web-crawler-tools
+Category: Tools | Read time: 12 min | Published: 2026-04-17
+Summary: Compares 10 free web crawler tools including WebCrawler.buzz, Screaming Frog, Scrapy, Crawlee, Colly, Katana, Playwright/Puppeteer, Wget, Sitebulb, and Firecrawl. Covers online tools, open-source frameworks, CLI tools, and desktop apps with a comparison table and selection guide.
 
 ## Contact & Legal
 

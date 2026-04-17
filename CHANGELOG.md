@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.5] - 2026-04-07
+
+### Changed
+- SEO keyword optimization across all HTML pages based on Google Search Console data
+- Updated title tags, meta descriptions, OG tags, Twitter tags, H1s, H2s, and body content to highlight high-impression and high-CTR keywords
+- Prioritized keywords: web crawler online, domain crawler online, web crawl online, website crawler online free, crawl website online, free web crawler
+- Updated JSON-LD alternateName with additional keyword variants
+- Updated llms.txt and llms-full.txt with refreshed keyword positioning
+- Version bump from 1.2.4 to 1.2.5
+
 ## [1.2.4] - 2026-04-06
 
 ### Changed

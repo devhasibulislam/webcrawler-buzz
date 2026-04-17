@@ -1,14 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NE3SYMYFJF"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-NE3SYMYFJF');
-  </script>
+  <!-- Google Analytics is loaded by /cookie-consent.js after user consent -->
   <meta charset="UTF-8" />
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -17,15 +10,15 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192x192.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About WebCrawler.buzz — Open-Source Free Website Crawler Online</title>
-  <meta name="description" content="Learn about WebCrawler.buzz — the free, open-source website crawler built by Hasibul Islam. See our tech stack, mission, security practices, and how the tool works." />
+  <title>About WebCrawler.buzz — Free Web Crawler Online &amp; Domain Crawler Tool</title>
+  <meta name="description" content="Learn about WebCrawler.buzz — the free web crawler online and open-source domain crawler built by Hasibul Islam. Web crawl online, see our tech stack, and learn how this website crawler online works." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://webcrawler.buzz/about" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="About WebCrawler.buzz — Open-Source Free Website Crawler" />
-  <meta property="og:description" content="WebCrawler.buzz is a free, open-source domain crawler built with Express.js, TypeScript, BullMQ, and Neon PostgreSQL. Learn about the project, the developer, and our security practices." />
+  <meta property="og:title" content="About WebCrawler.buzz — Free Web Crawler Online &amp; Domain Crawler" />
+  <meta property="og:description" content="WebCrawler.buzz is a free web crawler online and open-source domain crawler online tool. Learn about this website crawler, the developer, and the technology behind it." />
   <meta property="og:url" content="https://webcrawler.buzz/about" />
   <meta property="og:site_name" content="WebCrawler.buzz" />
   <meta property="og:image" content="https://webcrawler.buzz/og-image.png" />
@@ -35,8 +28,8 @@
 
   <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="About WebCrawler.buzz — Open-Source Free Website Crawler" />
-  <meta name="twitter:description" content="WebCrawler.buzz is a free, open-source domain crawler. Learn about the project, tech stack, and security practices." />
+  <meta name="twitter:title" content="About WebCrawler.buzz — Free Web Crawler Online &amp; Domain Crawler" />
+  <meta name="twitter:description" content="WebCrawler.buzz is a free web crawler online and open-source domain crawler online. Learn about the project, tech stack, and security practices." />
   <meta name="twitter:image" content="https://webcrawler.buzz/og-image.png" />
 
   <!-- Structured Data (JSON-LD) -->
@@ -93,15 +86,15 @@
   <main class="flex-1 max-w-4xl mx-auto px-6 py-12">
     <!-- Hero -->
     <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold text-gray-800 mb-4">About WebCrawler.buzz</h1>
-      <p class="text-lg text-gray-600 max-w-2xl mx-auto">A free, open-source website crawler that anyone can use, inspect, and contribute to. Built with transparency and trust in mind.</p>
+      <h1 class="text-4xl font-bold text-gray-800 mb-4">About WebCrawler.buzz — Free Web Crawler Online</h1>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">A free, open-source web crawler online that anyone can use, inspect, and contribute to. Domain crawler built with transparency and trust in mind.</p>
     </div>
 
     <!-- What & Why -->
     <section class="bg-white rounded-2xl shadow border border-gray-200 p-8 mb-8">
       <h2 class="text-2xl font-bold text-gray-800 mb-4">What is WebCrawler.buzz?</h2>
-      <p class="text-gray-600 mb-4">WebCrawler.buzz is a <strong>production-grade domain crawler</strong> that discovers every publicly accessible page on any website. It extracts page titles, meta descriptions, HTTP status codes, response times, content types, page sizes, internal/external link counts, redirect chains, and indexability status.</p>
-      <p class="text-gray-600 mb-4">It's designed for <strong>SEO professionals</strong>, <strong>developers</strong>, and <strong>website owners</strong> who need a quick, reliable way to audit a website — without installing desktop software, creating accounts, or paying subscription fees.</p>
+      <p class="text-gray-600 mb-4">WebCrawler.buzz is a <strong>production-grade web crawler online</strong> and <strong>domain crawler online tool</strong> that discovers every publicly accessible page on any website. Use it to crawl website online and extract page titles, meta descriptions, HTTP status codes, response times, content types, page sizes, internal/external link counts, redirect chains, and indexability status.</p>
+      <p class="text-gray-600 mb-4">It's designed for <strong>SEO professionals</strong>, <strong>developers</strong>, and <strong>website owners</strong> who need a quick, reliable free website crawler — without installing desktop software, creating accounts, or paying subscription fees.</p>
       <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-4">
         <p class="text-blue-800 text-sm font-medium">💡 This is NOT affiliated with the original 1990s WebCrawler search engine. This is an independent, modern, open-source SEO tool built from scratch.</p>
       </div>
@@ -213,38 +206,128 @@
       </ul>
     </section>
 
-    <!-- How It Works -->
+    <!-- Under the Hood — Full Architecture -->
     <section class="bg-white rounded-2xl shadow border border-gray-200 p-8 mb-8">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4">⚙️ How It Works</h2>
-      <div class="space-y-4">
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">⚙️ Under the Hood — How the Crawl Pipeline Works</h2>
+      <p class="text-gray-500 text-sm mb-6">A step-by-step look at the entire process — from the moment you paste a URL to the CSV landing in your inbox.</p>
+
+      <div class="space-y-6">
+        <!-- Step 1 -->
         <div class="flex gap-4 items-start">
           <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
           <div>
-            <h3 class="font-semibold text-gray-800">You submit a URL</h3>
-            <p class="text-gray-600 text-sm">The server validates the URL, creates a job in PostgreSQL, and pushes it to a Redis queue via BullMQ.</p>
+            <h3 class="font-semibold text-gray-800">URL Submission & Validation</h3>
+            <p class="text-gray-600 text-sm">You paste a URL and hit "Start Crawl." The Express.js server validates the URL format, extracts the root domain, and checks PostgreSQL for an existing crawl on the same domain. If a recent crawl exists, you're asked whether to <strong>re-crawl</strong> or <strong>use existing results</strong> — no wasted work.</p>
           </div>
         </div>
+        <!-- Step 2 -->
         <div class="flex gap-4 items-start">
           <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
           <div>
-            <h3 class="font-semibold text-gray-800">BFS crawl runs in the background</h3>
-            <p class="text-gray-600 text-sm">A worker picks up the job and performs breadth-first search crawling using Axios (HTTP) and Cheerio (HTML parsing), scoped to the root domain.</p>
+            <h3 class="font-semibold text-gray-800">Job Creation & Queuing</h3>
+            <p class="text-gray-600 text-sm">A new crawl job is inserted into PostgreSQL (status: <code class="bg-gray-100 px-1 rounded text-xs">pending</code>) and immediately pushed to a <strong>BullMQ</strong> queue backed by Redis. You get a unique tracking URL you can bookmark or share — close the tab anytime and come back later.</p>
           </div>
         </div>
+        <!-- Step 3 -->
         <div class="flex gap-4 items-start">
           <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
           <div>
-            <h3 class="font-semibold text-gray-800">Real-time progress updates</h3>
-            <p class="text-gray-600 text-sm">Your browser polls for progress every 5 seconds. The progress bar shows pages crawled vs. discovered.</p>
+            <h3 class="font-semibold text-gray-800">BFS Crawl Execution</h3>
+            <p class="text-gray-600 text-sm">A crawler worker (concurrency: 5 parallel crawls) picks up the job and runs <strong>breadth-first search</strong> scoped to the root domain. For every page, <strong>Axios</strong> fetches the HTML (15s timeout, custom User-Agent) and <strong>Cheerio</strong> parses it to extract:</p>
+            <ul class="mt-2 space-y-1 text-gray-600 text-sm list-disc pl-6">
+              <li>Page title & meta description</li>
+              <li>HTTP status code & server response time</li>
+              <li>Content type, page size, word count</li>
+              <li>Internal & external link counts</li>
+              <li>Redirect chains traced to final destination</li>
+              <li>Indexability status (<code class="bg-gray-100 px-1 rounded text-xs">noindex</code>, canonical tags)</li>
+            </ul>
+            <p class="text-gray-600 text-sm mt-2">Each discovered internal link is normalized, deduplicated, and added to the BFS queue. Each crawled page is atomically inserted into PostgreSQL with counters updated in real time. A 50ms delay between requests keeps the target server safe.</p>
           </div>
         </div>
+        <!-- Step 4 -->
         <div class="flex gap-4 items-start">
           <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
           <div>
-            <h3 class="font-semibold text-gray-800">View full results</h3>
-            <p class="text-gray-600 text-sm">When done, browse a paginated results table or export to CSV. Close the tab anytime — your tracking URL always works.</p>
+            <h3 class="font-semibold text-gray-800">Real-Time Progress Tracking</h3>
+            <p class="text-gray-600 text-sm">Your browser polls the <code class="bg-gray-100 px-1 rounded text-xs">GET /api/crawl/:job_id/progress</code> endpoint every 5 seconds. The progress bar shows <strong>pages crawled vs. pages discovered</strong> — so you always know how far along the crawl is. Job status transitions: <code class="bg-gray-100 px-1 rounded text-xs">pending → running → completed</code>.</p>
           </div>
         </div>
+        <!-- Step 5 -->
+        <div class="flex gap-4 items-start">
+          <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm flex-shrink-0">5</div>
+          <div>
+            <h3 class="font-semibold text-gray-800">Results & Email Notification</h3>
+            <p class="text-gray-600 text-sm">Once the BFS queue is exhausted, the job is finalized (status: <code class="bg-gray-100 px-1 rounded text-xs">completed</code>). If you provided an email, a <strong>styled HTML notification</strong> is sent via Gmail SMTP with a "View Full Results" button. There's a race-condition fix too: if the crawl finishes <em>before</em> you submit your email, the notification fires immediately after you add it.</p>
+          </div>
+        </div>
+        <!-- Step 6 -->
+        <div class="flex gap-4 items-start">
+          <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm flex-shrink-0">6</div>
+          <div>
+            <h3 class="font-semibold text-gray-800">Paginated Results View</h3>
+            <p class="text-gray-600 text-sm">Browse your crawl results in a paginated, searchable table with 50, 100, 500, or 1,000 results per page. Every column is visible: URL, title, meta description, HTTP status, response time, content type, page size, internal/external links, redirect URL, and indexability.</p>
+          </div>
+        </div>
+        <!-- Step 7 -->
+        <div class="flex gap-4 items-start">
+          <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm flex-shrink-0">7</div>
+          <div>
+            <h3 class="font-semibold text-gray-800">CSV Export Pipeline</h3>
+            <p class="text-gray-600 text-sm">Click "Export CSV" and a second BullMQ queue (<code class="bg-gray-100 px-1 rounded text-xs">csv-export</code>, concurrency: 2) processes the request. The export worker fetches all crawled pages from PostgreSQL, builds a 12-column CSV in memory (URL, title, meta, status, response time, content type, size, internal links, external links, redirect, indexable, timestamp), writes it to disk, and sends you a <strong>download link via email</strong>. Export deduplication prevents duplicate requests within 5 minutes.</p>
+          </div>
+        </div>
+        <!-- Step 8 -->
+        <div class="flex gap-4 items-start">
+          <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm flex-shrink-0">8</div>
+          <div>
+            <h3 class="font-semibold text-gray-800">Automatic Cleanup</h3>
+            <p class="text-gray-600 text-sm">Two scheduled cron jobs run in the background: one deletes crawl jobs (and all their pages) after <strong>1 hour</strong>, and another removes CSV export files after <strong>5 minutes</strong>. No data is stored permanently — ephemeral by design.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Architecture Diagram -->
+      <div class="mt-8 bg-gray-900 rounded-xl p-6 overflow-x-auto">
+        <p class="text-gray-400 text-xs uppercase font-bold mb-3 tracking-wider">Architecture Flow</p>
+        <pre class="text-green-400 text-xs leading-relaxed font-mono">User submits URL
+  │
+  ├─► Validate URL ─► Extract root domain
+  │                        │
+  │              Duplicate check (PostgreSQL)
+  │                   │              │
+  │             EXISTS (200)    NEW JOB (201)
+  │             prompt decide   jobService.createJob()
+  │                                  │
+  │                                  ▼
+  │                    ┌──── BullMQ + Redis ────┐
+  │                    │    'crawler' queue      │
+  │                    └───────────┬────────────┘
+  │                                ▼
+  │                    Crawler Worker (×5 concurrency)
+  │                                │
+  │                                ▼
+  │                    BFS Loop: axios.get() → cheerio
+  │                    Extract: title, meta, links, status
+  │                    Insert page → PostgreSQL
+  │                    Internal links → back to queue
+  │                                │
+  │                                ▼
+  │                    Job finalized → status: completed
+  │                    Email notification (if provided)
+  │
+  └─► User clicks "Export CSV"
+            │
+            ▼
+      ┌──── BullMQ + Redis ────┐
+      │   'csv-export' queue   │
+      └───────────┬────────────┘
+                  ▼
+      Export Worker (×2 concurrency)
+      Fetch all pages → Build CSV → Write to disk
+                  │
+                  ▼
+      Email download link → Auto-delete in 5 min</pre>
       </div>
     </section>
 
@@ -297,9 +380,44 @@
       </div>
     </section>
 
+    <!-- Community & Social -->
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-8 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">🌐 Community & Social</h2>
+      <p class="text-gray-500 text-sm mb-6">WebCrawler.buzz is shared and discussed across developer communities. Follow along for updates, behind-the-scenes, and new features.</p>
+      <div class="grid md:grid-cols-2 gap-4">
+        <a href="https://lisonet-template.vercel.app/21fcb7" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 bg-blue-50 border border-blue-200 rounded-xl p-5 hover:shadow-md transition-shadow group">
+          <div class="bg-blue-600 text-white rounded-xl w-12 h-12 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">Facebook Post</div>
+            <div class="text-gray-500 text-sm">Launch announcement &amp; product overview</div>
+          </div>
+        </a>
+        <a href="https://lisonet-template.vercel.app/4715ec" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 bg-blue-50 border border-blue-200 rounded-xl p-5 hover:shadow-md transition-shadow group">
+          <div class="bg-blue-700 text-white rounded-xl w-12 h-12 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">LinkedIn Post</div>
+            <div class="text-gray-500 text-sm">Technical deep-dive &amp; developer story</div>
+          </div>
+        </a>
+      </div>
+      <div class="flex flex-wrap gap-3 mt-6">
+        <a href="https://www.producthunt.com/products/webcrawler-buzz" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-orange-50 border border-orange-200 text-orange-700 text-sm font-medium px-4 py-2 rounded-lg hover:bg-orange-100 transition-colors">
+          🏆 Product Hunt
+        </a>
+        <a href="https://github.com/devhasibulislam/webcrawler" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </section>
+
     <!-- Trust Signals -->
     <section class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-8 mb-8">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Why Trust WebCrawler.buzz?</h2>
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Why Trust This Free Web Crawler?</h2>
       <div class="grid md:grid-cols-3 gap-6 mt-6">
         <div class="text-center">
           <div class="text-3xl mb-2">🔓</div>
@@ -348,5 +466,6 @@
     <a href="/terms-of-service" class="hover:text-gray-800">Terms of Service</a> &middot;
     <a href="/cookie-policy" class="hover:text-gray-800">Cookie Policy</a>
   </footer>
+  <script src="/cookie-consent.js"></script>
 </body>
 </html>

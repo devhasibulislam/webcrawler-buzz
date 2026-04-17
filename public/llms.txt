@@ -1,10 +1,10 @@
-# WebCrawler.buzz — Free Website Crawler Online | Web Crawler Tool Free
+# WebCrawler.buzz — Web Crawler Online Free | Domain Crawler Online Tool
 
-> A free online web crawler and URL crawler to crawl any website online and generate a comprehensive SEO audit report. Use our website crawler online free at webcrawler.buzz — also known as DomainCrawler.
+> A free web crawler online and domain crawler online tool to crawl any website online and generate a comprehensive SEO audit report. Use our website crawler online free at webcrawler.buzz — also known as DomainCrawler.
 
 ## Overview
 
-WebCrawler.buzz (DomainCrawler) is a free website crawler online that lets you crawl a website online to discover every page. This online webcrawler uses breadth-first search (BFS) scoped to a root domain and extracts page-level SEO data. Whether you need a web crawler online, a URL crawler, or want to test crawl a website — this free site crawler is completely free to use with no sign-up required.
+WebCrawler.buzz (DomainCrawler) is a web crawler online that lets you crawl website online free to discover every page. This online webcrawler uses breadth-first search (BFS) scoped to a root domain and extracts page-level SEO data. Whether you need a domain crawler online, a free website crawler, or want to web crawl online — this free site crawler is completely free to use with no sign-up required.
 
 ## What It Does
 
@@ -19,11 +19,11 @@ Paste any URL and this web crawler online will:
 
 ## Key Features
 
-- Free website crawler — no registration, no limits on pages
+- Web crawler online free — no registration, no limits on pages
 - Website crawler online free — works from any browser, no install needed
-- Online web crawler and URL crawler with real-time progress tracking
+- Domain crawler online and URL crawler with real-time progress tracking
 - Crawl website online with duplicate domain detection and re-crawl option
-- Web crawler free online — also works as a site crawler free tool
+- Web crawl online free — also works as a site crawler free tool
 - Free web crawler with webcrawler online dashboard
 - Crawl site online for SEO audits and test crawl website before migrations
 - Paginated results view (50, 100, 500, or 1000 results per page)
@@ -57,6 +57,7 @@ WebCrawler.buzz publishes guides on web crawling, technical SEO, and site auditi
 - How Web Crawlers Directly Impact Your SEO Rankings: https://webcrawler.buzz/blogs/how-web-crawlers-impact-seo
 - Web Crawler vs. Site Audit Tools — What Is the Difference: https://webcrawler.buzz/blogs/web-crawler-vs-site-audit-tools
 - How to Do a Complete Technical SEO Audit Using a Domain Crawler: https://webcrawler.buzz/blogs/how-to-do-a-technical-seo-audit-with-a-domain-crawler
+- 10 Best Free Web Crawler Tools in 2026 — Compared and Ranked: https://webcrawler.buzz/blogs/best-free-web-crawler-tools
 
 ## Links
 
