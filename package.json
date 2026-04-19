@@ -10,7 +10,8 @@
     "css:watch": "tailwindcss -i src/styles/input.css -o public/styles.css --watch",
     "start": "node dist/index.js",
     "migrate": "ts-node src/db/migrate.ts",
-    "lint": "eslint --config eslint.config.cjs src/**/*.ts"
+    "lint": "eslint --config eslint.config.cjs src/**/*.ts",
+    "fresh": "clear && npm install -f && npm run lint && npm run build && npm run dev"
   },
   "keywords": ["nodejs", "redis", "crawler", "typescript", "neon", "web-crawler", "postgresql", "expressjs", "seo-tools", "bullmq"],
   "author": "Hasibul Islam <devhasibulislam@gmail.com>",
