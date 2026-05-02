@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
+import compression from 'compression';
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 
@@ -20,6 +21,9 @@ import { startExportCleanupCron, startJobCleanupCron } from './cron/export-clean
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '5005', 10);
+
+// Compression middleware (gzip/brotli)
+app.use(compression());
 
 // Security middleware
 setupSecurity(app);

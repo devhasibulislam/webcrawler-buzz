@@ -13,7 +13,18 @@
     "lint": "eslint --config eslint.config.cjs src/**/*.ts",
     "fresh": "clear && npm install -f && npm run lint && npm run build && npm run dev"
   },
-  "keywords": ["nodejs", "redis", "crawler", "typescript", "neon", "web-crawler", "postgresql", "expressjs", "seo-tools", "bullmq"],
+  "keywords": [
+    "nodejs",
+    "redis",
+    "crawler",
+    "typescript",
+    "neon",
+    "web-crawler",
+    "postgresql",
+    "expressjs",
+    "seo-tools",
+    "bullmq"
+  ],
   "author": "Hasibul Islam <devhasibulislam@gmail.com>",
   "license": "MIT",
   "type": "commonjs",
@@ -23,6 +34,7 @@
     "bullmq": "^5.70.4",
     "caniuse-lite": "^1.0.30001777",
     "cheerio": "^1.2.0",
+    "compression": "^1.8.1",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
@@ -36,6 +48,7 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@types/compression": "^1.8.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.3.5",

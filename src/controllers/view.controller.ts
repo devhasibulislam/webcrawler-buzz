@@ -134,7 +134,7 @@ export const viewController = {
           </div>
           <h2 class="text-lg font-bold text-gray-800 mb-2 leading-snug">${escHtml(post.title)}</h2>
           <p class="text-gray-600 text-sm mb-3 line-clamp-3">${escHtml(post.excerpt)}</p>
-          <time class="text-gray-400 text-xs" datetime="${escHtml(post.published_at)}">${formatDate(post.published_at)}</time>
+          <time class="text-gray-500 text-xs" datetime="${escHtml(post.published_at)}">${formatDate(post.published_at)}</time>
         </div>
       </a>`
         )

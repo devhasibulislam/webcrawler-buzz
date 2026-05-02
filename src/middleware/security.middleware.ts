@@ -7,7 +7,25 @@ export function setupSecurity(app: Express): void {
   // 1. Helmet — HTTP security headers
   app.use(
     helmet({
-      contentSecurityPolicy: false, // Allow CDN scripts (Tailwind, Google Fonts)
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          imgSrc: ["'self'", "data:", "https://www.googletagmanager.com"],
+          connectSrc: ["'self'", "https://www.google-analytics.com", "https://www.googletagmanager.com"],
+          fontSrc: ["'self'"],
+          frameSrc: ["'none'"],
+          objectSrc: ["'none'"],
+          baseUri: ["'self'"],
+          formAction: ["'self'"],
+        },
+      },
+      strictTransportSecurity: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true,
+      },
     })
   );
 
