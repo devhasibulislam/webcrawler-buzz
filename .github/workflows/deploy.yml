@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -19,20 +23,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       # ── Step 3: Install ALL dependencies (for build) ─
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       # ── Step 4: Lint ───────────────────────────────
       - name: Lint
         run: npm run lint
 
-      # ── Step 5: Build TypeScript + Tailwind CSS ────
+      # ── Step 5: Run unit tests ─────────────────────
+      - name: Test
+        run: npm test
+
+      # ── Step 6: Build TypeScript + Tailwind CSS ────
       - name: Build
         run: npm run build
 
-      # ── Step 6: Package deployment artifact ────────
+      # ── Step 7: Package deployment artifact ────────
       # Only ship what's needed at runtime:
       #   dist/        → compiled JS
       #   public/      → static HTML, CSS, fonts, etc.
@@ -49,7 +58,7 @@ jobs:
           cp ecosystem.config.cjs deploy-package/
           tar -czf deploy.tar.gz -C deploy-package .
 
-      # ── Step 7: Upload artifact to VPS ─────────────
+      # ── Step 8: Upload artifact to VPS ─────────────
       - name: Copy artifact to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -59,7 +68,7 @@ jobs:
           source: deploy.tar.gz
           target: /tmp
 
-      # ── Step 8: Deploy on VPS ──────────────────────
+      # ── Step 9: Deploy on VPS ──────────────────────
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.2.0
         with:

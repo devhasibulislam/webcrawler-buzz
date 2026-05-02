@@ -48,6 +48,38 @@ async function migrate() {
     );
   `);
 
+  // ── Indexes for query performance ──────────────────────
+  // crawl_jobs: lookup by domain + status (used by findJobByDomain)
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_crawl_jobs_domain_status
+    ON crawl_jobs (domain, status);
+  `);
+
+  // crawl_jobs: cleanup cron queries by status + updated_at
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_crawl_jobs_status_updated
+    ON crawl_jobs (status, updated_at)
+    WHERE status IN ('completed', 'failed');
+  `);
+
+  // crawled_pages: lookup by job_id (used by all page queries)
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_crawled_pages_job_id
+    ON crawled_pages (job_id);
+  `);
+
+  // crawled_pages: pagination ordering (job_id + discovered_at)
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_crawled_pages_job_discovered
+    ON crawled_pages (job_id, discovered_at ASC);
+  `);
+
+  // csv_exports: lookup active exports by job_id + status
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_csv_exports_job_status
+    ON csv_exports (job_id, status);
+  `);
+
   console.log('Migrations complete.');
   await pool.end();
 }
