@@ -65,7 +65,7 @@ export const crawlerService = {
 
           responseTimeMs = Date.now() - startTime;
           statusCode = response.status;
-          contentType = response.headers['content-type'] || '';
+          contentType = String(response.headers['content-type'] || '');
           const body =
             typeof response.data === 'string'
               ? response.data
