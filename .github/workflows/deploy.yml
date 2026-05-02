@@ -6,26 +6,122 @@ on:
       - master
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.0
+      # ── Step 1: Checkout code ──────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Step 2: Setup Node.js ──────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # ── Step 3: Install ALL dependencies (for build) ─
+      - name: Install dependencies
+        run: npm install
+
+      # ── Step 4: Lint ───────────────────────────────
+      - name: Lint
+        run: npm run lint
+
+      # ── Step 5: Build TypeScript + Tailwind CSS ────
+      - name: Build
+        run: npm run build
+
+      # ── Step 6: Package deployment artifact ────────
+      # Only ship what's needed at runtime:
+      #   dist/        → compiled JS
+      #   public/      → static HTML, CSS, fonts, etc.
+      #   tmp/exports/ → ensure exports dir exists
+      #   package.json → for production npm install on VPS
+      #   ecosystem.config.cjs → PM2 config
+      - name: Create deployment package
+        run: |
+          mkdir -p deploy-package/tmp/exports
+          cp -r dist deploy-package/
+          cp -r public deploy-package/
+          touch deploy-package/tmp/exports/.gitkeep
+          cp package.json deploy-package/
+          cp ecosystem.config.cjs deploy-package/
+          tar -czf deploy.tar.gz -C deploy-package .
+
+      # ── Step 7: Upload artifact to VPS ─────────────
+      - name: Copy artifact to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          source: deploy.tar.gz
+          target: /tmp
+
+      # ── Step 8: Deploy on VPS ──────────────────────
+      - name: Deploy on VPS
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
+            set -e
+
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-            source ~/.bashrc || source ~/.profile || true
-            cd /home/ubuntu/webcrawler
-            pm2 stop webcrawler
-            git checkout -- .
-            git pull origin master
-            npm install -f
-            npm run lint
-            npm run build
-            pm2 start webcrawler
+
+            APP_DIR="/root/webcrawler-buzz"
+
+            # Backup current node_modules to avoid full reinstall
+            if [ -d "$APP_DIR/node_modules" ]; then
+              mv "$APP_DIR/node_modules" /tmp/crawler-node-modules-backup 2>/dev/null || true
+            fi
+
+            # Preserve .env
+            if [ -f "$APP_DIR/.env" ]; then
+              cp "$APP_DIR/.env" /tmp/crawler-env-backup
+            fi
+
+            # Preserve existing exports (user downloads)
+            if [ -d "$APP_DIR/tmp/exports" ]; then
+              mkdir -p /tmp/crawler-exports-backup
+              cp -r "$APP_DIR/tmp/exports/"* /tmp/crawler-exports-backup/ 2>/dev/null || true
+            fi
+
+            # Clean old dist and public (keep logs)
+            rm -rf "$APP_DIR/dist" "$APP_DIR/public"
+            mkdir -p "$APP_DIR"
+
+            # Extract new build
+            tar -xzf /tmp/deploy.tar.gz -C "$APP_DIR"
+            rm -f /tmp/deploy.tar.gz
+
+            # Restore .env
+            if [ -f /tmp/crawler-env-backup ]; then
+              mv /tmp/crawler-env-backup "$APP_DIR/.env"
+            fi
+
+            # Restore exports
+            if [ -d /tmp/crawler-exports-backup ]; then
+              cp -r /tmp/crawler-exports-backup/* "$APP_DIR/tmp/exports/" 2>/dev/null || true
+              rm -rf /tmp/crawler-exports-backup
+            fi
+
+            # Restore node_modules, then install production deps only
+            if [ -d /tmp/crawler-node-modules-backup ]; then
+              mv /tmp/crawler-node-modules-backup "$APP_DIR/node_modules"
+            fi
+
+            cd "$APP_DIR"
+            npm install --omit=dev --ignore-scripts=false
+
+            # Ensure logs directory exists
+            mkdir -p "$APP_DIR/logs"
+
+            # Restart app via PM2
+            pm2 restart webcrawler-buzz --update-env || pm2 start ecosystem.config.cjs --env production
             pm2 save
+
             echo "WebCrawler deployment completed!"
