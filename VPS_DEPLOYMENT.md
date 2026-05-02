@@ -60,23 +60,28 @@ systemctl enable redis-server
 systemctl start redis-server
 ```
 
-### Configure Redis Password
+### Configure Redis ACL
 
 ```bash
 nano /etc/redis/redis.conf
 ```
 
-Find `# requirepass foobared` and replace with:
+In the SECURITY section, set a default password and create an ACL user for the app:
 
 ```
-requirepass webcrawler@123
+requirepass 19691
+
+user default on >19691 ~* &* +@all
+user webcrawler on >webcrawler@123 ~webcrawler:* ~bull:* &* +@all
 ```
+
+> The `webcrawler` user needs access to both `webcrawler:*` (app keys) and `bull:*` (BullMQ queue keys).
 
 Restart:
 
 ```bash
 systemctl restart redis-server
-redis-cli -a 'webcrawler@123' ping   # PONG
+redis-cli -u 'redis://webcrawler:webcrawler@123@localhost:6379' ping   # PONG
 ```
 
 ---
@@ -223,7 +228,7 @@ Paste:
 PORT=5005
 APP_BASE_URL=https://webcrawler.buzz
 DATABASE_URL=postgresql://webcrawler:webcrawler@123@localhost:5432/webcrawler
-REDIS_URL=redis://:webcrawler@123@localhost:6379
+REDIS_URL=redis://webcrawler:webcrawler@123@localhost:6379
 GMAIL_USER=devhasibulislam@gmail.com
 GMAIL_APP_PASSWORD=xrnc oaay pfjc dlrd
 SWAGGER_USERNAME=devhasibulislam
@@ -288,7 +293,7 @@ curl -I https://webcrawler.buzz
 | `nginx -t`                                      | Test Nginx config    |
 | `ufw status`                                    | Check firewall rules |
 | `psql -U webcrawler -d webcrawler -h localhost` | Connect to DB        |
-| `redis-cli -a 'webcrawler@123' ping`            | Test Redis           |
+| `redis-cli -u 'redis://webcrawler:webcrawler@123@localhost:6379' ping` | Test Redis |
 
 ---
 
@@ -325,7 +330,7 @@ sudo systemctl restart postgresql
 
 ```bash
 systemctl status redis-server
-redis-cli -a 'webcrawler@123' ping
+redis-cli -u 'redis://webcrawler:webcrawler@123@localhost:6379' ping
 ```
 
 ### Deploy fails at SCP step
@@ -342,4 +347,4 @@ redis-cli -a 'webcrawler@123' ping
 | Nginx             | 80, 443 | Cloudflare Origin Cert      | Yes            |
 | Node.js (Express) | 5005    | —                           | No (localhost) |
 | PostgreSQL        | 5432    | webcrawler / webcrawler@123 | No (localhost) |
-| Redis             | 6379    | password: webcrawler@123    | No (localhost) |
+| Redis             | 6379    | ACL user: webcrawler / webcrawler@123 | No (localhost) |
