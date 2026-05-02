@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.6] - 2026-05-02
+
+### Added
+- Testing framework with Vitest (unit) and Playwright (e2e) including initial test suites
+- Database performance indexes on `crawl_jobs`, `crawled_pages`, and `csv_exports` tables
+- Compression middleware (gzip/brotli) for all HTTP responses
+- VPS deployment guide (`VPS_DEPLOYMENT.md`) with detailed setup instructions
+- PM2 ecosystem configuration (`ecosystem.config.cjs`)
+- `CONTEXT.md` with project architecture and domain context
+- ADR documentation (`docs/adr/`) for key architectural decisions
+
+### Changed
+- Rewrote GitHub Actions deployment workflow with build-on-CI, artifact packaging, and zero-downtime deploy
+- Strengthened Content Security Policy with explicit directives replacing blanket disable
+- Added HSTS with `includeSubDomains` and `preload` flags
+- Redis configuration updated to support ACL authentication
+- Improved `content-type` header handling to ensure string coercion
+- Updated blog post timestamp color for better readability (`text-gray-400` → `text-gray-500`)
+- Version bump from 1.2.5 to 1.2.6
+
+### Fixed
+- Redis URL format corrected for ACL-based authentication
+- `content-type` header type safety in crawler service
+
 ## [1.2.5] - 2026-04-07
 
 ### Changed
