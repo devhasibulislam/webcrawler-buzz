@@ -25,6 +25,19 @@ const PORT = parseInt(process.env.PORT || '5005', 10);
 // Compression middleware (gzip/brotli)
 app.use(compression());
 
+// SEO-critical files — served before security/static middleware so bots always get them
+// These need explicit Cache-Control with s-maxage so Cloudflare edge caches them
+app.get(['/robots.txt', '/robots.txt/'], (_req, res) => {
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+  res.sendFile(path.join(__dirname, '../public/robots.txt'));
+});
+app.get(['/sitemap.xml', '/sitemap.xml/'], (_req, res) => {
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+  res.sendFile(path.join(__dirname, '../public/sitemap.xml'));
+});
+
 // Security middleware
 setupSecurity(app);
 

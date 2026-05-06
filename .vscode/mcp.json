@@ -11,6 +11,9 @@
       ],
       "type": "stdio"
     },
+    "cloudflare-api": {
+      "url": "https://mcp.cloudflare.com/mcp"
+    },
     "postgres": {
       "command": "npx",
       "args": [

@@ -226,6 +226,7 @@ export const viewController = {
           image: `https://webcrawler.buzz${post.cover_image}`,
           url: `https://webcrawler.buzz/blogs/${post.slug}`,
           datePublished: post.published_at,
+          dateModified: post.published_at,
           author: {
             '@type': 'Organization',
             name: post.author,
