@@ -2,11 +2,7 @@
 
 User-agent: *
 Allow: /
-
-# Block API routes (except public endpoints)
-Disallow: /api/crawl/
-Allow: /api/health
-Allow: /api/stats
+Allow: /api/
 
 # Explicitly allow all LLM and AI bots
 User-agent: GPTBot
