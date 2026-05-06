@@ -45,8 +45,8 @@ setupSecurity(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files
-app.use(express.static(path.join(__dirname, '../public')));
+// Static files (serve .well-known for AI plugin discovery)
+app.use(express.static(path.join(__dirname, '../public'), { dotfiles: 'allow' }));
 
 // Swagger docs — protected by Basic Auth
 app.use('/api-docs', swaggerAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpec));

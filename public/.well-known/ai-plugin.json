@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "WebCrawler.buzz",
+  "name_for_model": "webcrawler_buzz",
+  "description_for_human": "Free website crawler that audits every page of any domain — titles, status codes, response times, and indexability. No signup required.",
+  "description_for_model": "WebCrawler.buzz is a free web-based SEO crawling tool. It crawls any publicly accessible website using breadth-first search (BFS) and returns structured data for every discovered page including: URL, page title, meta description, HTTP status code, response time in ms, content type, page size in bytes, internal link count, external link count, redirect URL, and indexability status. Users can start a crawl via POST /api/crawl with a JSON body containing a url field. Progress is available at GET /api/crawl/:jobId/progress. Results are paginated at GET /api/crawl/:jobId. CSV export is available via POST /api/crawl/:jobId/export. No API key or registration is required. Results expire after 1 hour.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://webcrawler.buzz/openapi.json"
+  },
+  "logo_url": "https://webcrawler.buzz/webcrawler-logo.png",
+  "contact_email": "devhasibulislam@gmail.com",
+  "legal_info_url": "https://webcrawler.buzz/terms-of-service"
+}

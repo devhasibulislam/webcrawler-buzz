@@ -1,52 +1,61 @@
-# WebCrawler.buzz — Web Crawler Online Free | Domain Crawler Online Tool
+# WebCrawler.buzz
 
-> A free web crawler online and domain crawler online tool to crawl any website online and generate a comprehensive SEO audit report. Use our website crawler online free at webcrawler.buzz — also known as DomainCrawler.
-
-## Overview
-
-WebCrawler.buzz (DomainCrawler) is a web crawler online that lets you crawl website online free to discover every page. This online webcrawler uses breadth-first search (BFS) scoped to a root domain and extracts page-level SEO data. Whether you need a domain crawler online, a free website crawler, or want to web crawl online — this free site crawler is completely free to use with no sign-up required.
+> Free web-based website crawler for SEO audits. Paste a URL, crawl every page, get structured data back. No signup required.
 
 ## What It Does
 
-Paste any URL and this web crawler online will:
-- Crawl every discoverable page on the domain
-- Extract page titles, meta descriptions, HTTP status codes, response times, content types, page sizes
-- Count internal and external links on each page
-- Detect redirect chains and final redirect URLs
-- Check indexability status of each page
-- Generate a paginated, searchable results table
-- Export results as CSV with email delivery
+WebCrawler.buzz crawls any publicly accessible website using breadth-first search (BFS) and returns structured SEO data for every discovered page.
 
-## Key Features
+## Data Collected Per Page
 
-- Web crawler online free — no registration, no limits on pages
-- Website crawler online free — works from any browser, no install needed
-- Domain crawler online and URL crawler with real-time progress tracking
-- Crawl website online with duplicate domain detection and re-crawl option
-- Web crawl online free — also works as a site crawler free tool
-- Free web crawler with webcrawler online dashboard
-- Crawl site online for SEO audits and test crawl website before migrations
-- Paginated results view (50, 100, 500, or 1000 results per page)
-- CSV export with download link sent via email
-- Email notifications when crawl completes
-- Shareable tracking URLs — bookmark or share your crawl progress
-- Mobile-friendly responsive design
+- URL, page title, meta description
+- HTTP status code (200, 301, 404, 500, etc.)
+- Response time in milliseconds
+- Content type and page size in bytes
+- Internal and external link counts
+- Redirect destination URL (if applicable)
+- Indexability status (noindex detection)
 
-## Use Cases
+## How to Use
 
-- SEO audits: Use this free online web crawler for website health checks
-- Broken link detection: URL crawler finds 4xx and 5xx status codes
-- Site structure analysis via internal/external link counts (site crawler online)
-- Page speed analysis via response times (web crawler test)
-- Indexability verification across an entire domain (domain crawler online)
-- Meta data auditing (missing titles, duplicate descriptions)
-- Content type and page size analysis (website url crawler)
-- Website migration validation (test crawl website before going live)
-- Free website crawl for quick site audits (crawler free, crawling online)
+1. Go to https://webcrawler.buzz
+2. Paste any URL and click "Start Crawl"
+3. Watch real-time progress or bookmark the tracking URL
+4. View paginated results when complete
+5. Export full report as CSV (delivered via email)
 
-## Target Keywords
+## API
 
-web crawler online, website crawler online, website crawler online free, crawl website online, free website crawler, domain crawler online, online web crawler, crawl a website online, online site crawler, crawler online, online website crawler, url crawler, domaincrawler, free web crawler, online webcrawler, free site crawler, domain crawler, crawling online, web crawler free online, webcrawler online, site crawler, crawl site online, free online web crawler, web crawler test, crawler free, site crawler free, free website crawl, site crawler online, website crawler free, website crawler free online, webcrawler, website crawler, test crawl website, website url crawler, web crawler tool free, free website crawler tool, free online crawler, SEO crawler, free SEO tool, URL scanner, bulk URL checker, website audit tool, broken link checker, SEO audit tool, website analysis tool, HTTP status checker
+Base URL: https://webcrawler.buzz/api
+
+- POST /api/crawl — Start a crawl (body: { "url": "https://example.com" })
+- GET /api/crawl/:jobId/progress — Check crawl progress
+- GET /api/crawl/:jobId — Get paginated results
+- POST /api/crawl/:jobId/export — Request CSV export (body: { "email": "..." })
+- GET /api/health — Service health check
+- GET /api/stats — Public usage statistics
+
+## Key Details
+
+- Completely free, no registration, no API key needed
+- Works from any browser — no desktop install
+- Results auto-expire after 1 hour; CSV exports expire after 5 minutes
+- Rate limit: 200 POST requests per 15 minutes per IP
+- Crawl concurrency: 5 simultaneous jobs
+- Open source: https://github.com/devhasibulislam/webcrawler (MIT license)
+
+## Full Documentation
+
+For complete technical docs, API schema, database structure, and blog index:
+https://webcrawler.buzz/llms-full.txt
+
+## Links
+
+- Website: https://webcrawler.buzz
+- API Docs: https://webcrawler.buzz/api-docs-public
+- Blog: https://webcrawler.buzz/blogs
+- About: https://webcrawler.buzz/about
+- GitHub: https://github.com/devhasibulislam/webcrawler
 
 ## Blog
 

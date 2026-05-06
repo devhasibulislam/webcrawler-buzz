@@ -1,277 +1,293 @@
-# WebCrawler.buzz — Web Crawler Online Free (Full Documentation)
+# WebCrawler.buzz — Full Technical Documentation
 
-> A free web crawler online and domain crawler online tool to crawl any website online and generate a comprehensive SEO audit report.
-> Website: https://webcrawler.buzz | Also known as: DomainCrawler, WebCrawler, Online WebCrawler
+> Free web-based website crawler for SEO audits. Crawls any publicly accessible domain and returns structured page-level data.
+> Website: https://webcrawler.buzz
+> Source: https://github.com/devhasibulislam/webcrawler (MIT License)
 
 ## Product Overview
 
-WebCrawler.buzz (DomainCrawler) is a web crawler online free tool built for SEO professionals, developers, and website owners who want to crawl website online quickly and for free. This domain crawler online and URL crawler tool performs breadth-first search (BFS) crawling scoped to a root domain and extracts detailed page-level data.
+WebCrawler.buzz is a free website crawling tool built for SEO professionals, developers, and website owners. It performs breadth-first search (BFS) crawling scoped to a root domain and extracts detailed page-level SEO data.
 
-No registration is required. No API key is needed. Just paste a URL, click "Start Crawl," and use this website crawler online free to view your results. It's the best web crawl online tool available — a true free web crawler online with no limitations.
+No registration required. No API key needed. Paste a URL, click "Start Crawl," and view results in your browser.
 
 ## How It Works
 
 1. **Submit a URL** — Enter any website URL on the homepage
-2. **Duplicate Detection** — If the domain was already crawled, you can view existing results or start a fresh re-crawl
-3. **BFS Crawling** — The crawler visits every discoverable page on the domain using breadth-first search, staying within the root domain scope
-4. **Real-Time Progress** — Watch a live progress bar with percentage updates (polls every 5 seconds)
-5. **Tracking URL** — Get a shareable bookmark link to check progress or results anytime
+2. **Duplicate Detection** — If the domain was already crawled recently, you can view existing results or start a fresh re-crawl
+3. **BFS Crawling** — The crawler visits every discoverable page on the domain, staying within the root domain scope
+4. **Real-Time Progress** — Live progress bar with percentage updates (polls every 5 seconds)
+5. **Tracking URL** — Shareable bookmark link to check progress or results anytime
 6. **Email Notification** — Optionally enter your email to get notified when the crawl completes
-7. **View Results** — Browse a paginated table with all crawled pages and SEO data
-8. **Export CSV** — Export your full results as a CSV file, delivered via email
+7. **View Results** — Paginated table with all crawled pages and their SEO data
+8. **Export CSV** — Export full results as a CSV file, delivered via email
 
-## Data Extracted Per Page
-
-For every page crawled, Domain Crawler collects:
+## Data Collected Per Page
 
 | Field | Description |
 |-------|-------------|
-| URL | The full URL of the crawled page |
-| Page Title | The content of the `<title>` tag |
-| Meta Description | The content of the `<meta name="description">` tag |
-| HTTP Status Code | The HTTP response status (200, 301, 404, 500, etc.) |
-| Response Time | Time to receive the response in milliseconds |
-| Content Type | The MIME type of the response (text/html, application/json, etc.) |
-| Page Size | The size of the response body in bytes |
-| Internal Links Count | Number of links pointing to pages on the same domain |
-| External Links Count | Number of links pointing to other domains |
-| Redirect URL | If the page redirected, the final destination URL |
+| URL | Full URL of the crawled page |
+| Page Title | Content of the `<title>` tag |
+| Meta Description | Content of `<meta name="description">` |
+| HTTP Status Code | Response status (200, 301, 404, 500, etc.) |
+| Response Time | Time to receive response in milliseconds |
+| Content Type | MIME type (text/html, application/json, etc.) |
+| Page Size | Response body size in bytes |
+| Internal Links Count | Links pointing to pages on the same domain |
+| External Links Count | Links pointing to other domains |
+| Redirect URL | Final destination if the page redirected |
 | Indexable | Whether the page is indexable by search engines |
-| Discovered At | Timestamp when the page was first discovered |
+| Discovered At | Timestamp when the page was first found |
 
-## Features in Detail
+## Features
 
-### Free & No Registration
-This domain crawler online is completely free. No account creation, no API keys, no usage limits on the number of pages crawled per domain. It’s the best free website crawler and web crawler tool free available online. Also works as a crawler free alternative to paid desktop tools.
+### No Registration Required
+Completely free. No account, no API keys, no page limits per crawl.
 
 ### Real-Time Progress Tracking
-After starting a crawl with this web crawler online, you see a live progress bar that updates every 5 seconds showing how many pages have been crawled out of the total discovered.
+Live progress bar updates every 5 seconds showing pages crawled vs. total discovered.
 
 ### Shareable Tracking URLs
-Each crawl generates a unique tracking URL that you can bookmark or share. Come back anytime to check progress or view results, even after closing the browser. Perfect for crawling online across devices.
+Each crawl gets a unique URL. Bookmark it or share it — works across devices and sessions.
 
 ### Duplicate Domain Detection
-If you try to crawl a domain that was already crawled, this online website crawler shows you the existing results count and gives you two options:
-- **View Existing Results** — Jump straight to the previous crawl data
-- **Re-crawl Fresh** — Start a completely new crawl of the domain
+If a domain was recently crawled, you can view existing results or start a fresh crawl.
 
 ### Email Notifications
-During a crawl, an email notification card slides in after a few seconds. Enter your email address to receive a notification when the crawl completes, including a direct link to your results.
+Enter your email during a crawl to receive a notification with a direct link when it completes.
 
 ### Paginated Results
-Results are displayed in a clean, sortable table with pagination. Choose to view 50, 100, 500, or 1000 results per page.
+Clean table view with pagination options: 50, 100, 500, or 1000 results per page.
 
 ### CSV Export
-Click the "Export CSV" button, enter your email, and receive a download link within minutes. The CSV contains all crawled page data. Download links are valid for 5 minutes.
+One-click export. CSV delivered to your email within minutes. Download links valid for 5 minutes.
 
-## Technical Architecture
+## REST API
 
-- **Backend**: Express.js v5 with TypeScript (strict mode)
-- **Database**: Neon PostgreSQL with SSL
-- **Queue System**: BullMQ with Redis for job processing
-- **Crawling**: axios for HTTP requests + cheerio for HTML parsing
-- **Email**: Nodemailer with Gmail SMTP
-- **Frontend**: Static HTML with Tailwind CSS and vanilla JavaScript
-
-### Concurrency & Rate Limiting
-- Crawler queue concurrency: 5 simultaneous crawl jobs
-- CSV export queue concurrency: 2 simultaneous exports
-- API rate limit: 200 POST requests per 15-minute window per IP
-- GET requests are exempt from rate limiting
-
-## API Endpoints
-
-Domain Crawler exposes the following REST API endpoints:
+Base URL: `https://webcrawler.buzz`
 
 ### Start a Crawl
 ```
 POST /api/crawl
+Content-Type: application/json
 Body: { "url": "https://example.com" }
-Response: { "job_id": "uuid", "tracking_url": "/results?job_id=uuid" }
+
+Response 201:
+{ "job_id": "uuid", "tracking_url": "/results?job_id=uuid", "domain": "example.com" }
 ```
 
-### Handle Duplicate Domain Decision
+### Handle Duplicate Domain
 ```
 POST /api/crawl/decide
+Content-Type: application/json
 Body: { "domain": "example.com", "action": "re-crawl" | "use-existing" }
 ```
 
 ### Get Crawl Progress
 ```
 GET /api/crawl/:jobId/progress
-Response: { "status": "running", "progress_percent": 45, "total_pages_found": 23, "total_pages_queued": 51 }
+
+Response 200:
+{
+  "job_id": "uuid",
+  "status": "running" | "completed" | "failed" | "pending",
+  "progress_percent": 45,
+  "total_pages_found": 23,
+  "total_pages_queued": 51
+}
 ```
 
 ### Get Crawl Results (Paginated)
 ```
 GET /api/crawl/:jobId?page=1&limit=50
-Response: { "domain": "example.com", "status": "completed", "pages": [...], "pagination": {...} }
+
+Response 200:
+{
+  "job_id": "uuid",
+  "domain": "example.com",
+  "status": "completed",
+  "total_pages_found": 150,
+  "pages": [...],
+  "pagination": { "page": 1, "limit": 50, "total_pages": 3, "total_results": 150 }
+}
 ```
 
 ### Register Email Notification
 ```
 POST /api/crawl/:jobId/notify
+Content-Type: application/json
 Body: { "email": "user@example.com" }
 ```
 
 ### Request CSV Export
 ```
 POST /api/crawl/:jobId/export
+Content-Type: application/json
 Body: { "email": "user@example.com" }
 ```
 
 ### Check Export Status
 ```
 GET /api/crawl/:jobId/export/status
-Response: { "active": true, "status": "processing", "email": "user@example.com" }
+
+Response 200:
+{ "active": true, "status": "processing" | "completed" | "sent", "email": "user@example.com" }
 ```
 
-### Download Exported CSV
+### Download CSV
 ```
 GET /api/crawl/:jobId/export/download/:exportId
-Response: CSV file download (valid for 5 minutes after generation)
+
+Response: CSV file stream (valid for 5 minutes after generation)
 ```
+
+### Health Check
+```
+GET /api/health
+
+Response 200: { "status": "ok", "db_latency_ms": 5, "redis_latency_ms": 2 }
+```
+
+### Public Stats
+```
+GET /api/stats
+
+Response 200: { "total_jobs": 1234, "total_pages_crawled": 56789, "unique_domains": 890 }
+```
+
+## Rate Limits
+
+- 200 POST requests per 15-minute window per IP
+- GET requests are exempt (progress polling works without limits)
+- Crawl queue concurrency: 5 simultaneous jobs
+- Export queue concurrency: 2 simultaneous exports
+
+## Data Retention
+
+- Crawl results auto-delete after 1 hour
+- CSV export files auto-delete after 5 minutes
+- No permanent data storage — all results are ephemeral
+
+## Technical Stack
+
+- **Backend**: Express.js v5, TypeScript (strict mode)
+- **Database**: PostgreSQL
+- **Queue**: BullMQ with Redis
+- **Crawling**: axios (HTTP) + cheerio (HTML parsing)
+- **Email**: Nodemailer (Gmail SMTP)
+- **Deployment**: PM2 on Ubuntu VPS behind Cloudflare + Nginx
+- **Frontend**: Static HTML, Tailwind CSS, vanilla JavaScript
 
 ## Database Schema
 
 ### crawl_jobs
-Stores metadata about each crawl job.
-- id (UUID, primary key)
-- url (TEXT) — the submitted URL
-- domain (TEXT) — extracted root domain
-- status (TEXT) — pending, running, completed, failed
-- total_pages_found (INTEGER)
-- total_pages_queued (INTEGER)
-- email (TEXT, nullable) — notification email
-- created_at (TIMESTAMP)
-- updated_at (TIMESTAMP)
+| Column | Type | Description |
+|--------|------|-------------|
+| id | UUID | Primary key |
+| domain | VARCHAR(255) | Root domain being crawled |
+| input_url | TEXT | Original URL submitted |
+| status | VARCHAR(20) | pending, running, completed, failed |
+| total_pages_found | INTEGER | Pages discovered so far |
+| total_pages_queued | INTEGER | Pages in BFS queue |
+| notify_email | VARCHAR(255) | Email for completion notification |
+| error_message | TEXT | Error details if failed |
+| created_at | TIMESTAMPTZ | Job creation time |
+| updated_at | TIMESTAMPTZ | Last status update |
 
 ### crawled_pages
-Stores data for each crawled page.
-- id (SERIAL, primary key)
-- job_id (UUID, foreign key → crawl_jobs.id)
-- url (TEXT)
-- page_title (TEXT)
-- meta_description (TEXT)
-- status_code (INTEGER)
-- response_time_ms (INTEGER)
-- content_type (TEXT)
-- page_size_bytes (INTEGER)
-- internal_links_count (INTEGER)
-- external_links_count (INTEGER)
-- redirect_url (TEXT)
-- is_indexable (BOOLEAN)
-- discovered_at (TIMESTAMP)
+| Column | Type | Description |
+|--------|------|-------------|
+| id | UUID | Primary key |
+| job_id | UUID | FK → crawl_jobs.id |
+| url | TEXT | Full page URL |
+| page_title | TEXT | Title tag content |
+| meta_description | TEXT | Meta description content |
+| status_code | INTEGER | HTTP response code |
+| response_time_ms | INTEGER | Response time |
+| content_type | VARCHAR(255) | MIME type |
+| page_size_bytes | INTEGER | Response body size |
+| internal_links_count | INTEGER | Same-domain link count |
+| external_links_count | INTEGER | External link count |
+| redirect_url | TEXT | Redirect destination |
+| is_indexable | BOOLEAN | Indexability status |
+| discovered_at | TIMESTAMPTZ | Discovery timestamp |
 
 ### csv_exports
-Tracks CSV export requests and their lifecycle.
-- id (UUID, primary key)
-- job_id (UUID, foreign key → crawl_jobs.id)
-- email (TEXT)
-- status (TEXT) — processing, completed, expired
-- file_path (TEXT)
-- created_at (TIMESTAMP)
-- expires_at (TIMESTAMP)
+| Column | Type | Description |
+|--------|------|-------------|
+| id | UUID | Primary key |
+| job_id | UUID | FK → crawl_jobs.id |
+| email | VARCHAR(255) | Recipient email |
+| file_path | TEXT | Server file path |
+| status | VARCHAR(20) | processing, completed, sent |
+| created_at | TIMESTAMPTZ | Export request time |
 
-## Comparison with Alternatives
+## Blog Posts
 
-| Feature | WebCrawler.buzz (DomainCrawler) | Screaming Frog | Sitebulb | Ahrefs Site Audit |
-|---------|:-:|:-:|:-:|:-:|
-| Free | ✅ Completely free | Free up to 500 URLs | Paid only | Paid only |
-| No install needed | ✅ Web-based | Desktop app required | Desktop app required | Web-based but paid |
-| No registration | ✅ | ✅ | ❌ | ❌ |
-| Real-time progress | ✅ | ✅ | ✅ | ✅ |
-| CSV export | ✅ | ✅ | ✅ | ✅ |
-| Email notifications | ✅ | ❌ | ❌ | ✅ |
-| Shareable results | ✅ via tracking URL | ❌ | ❌ | ✅ |
-| API access | ✅ REST API | ❌ | ❌ | ✅ (paid) |
+All published at https://webcrawler.buzz/blogs
+
+1. **What Is a Web Crawler? A Beginner's Complete Guide**
+   https://webcrawler.buzz/blogs/what-is-a-web-crawler
+   Published: 2025-01-10 | 6 min read
+   Explains web crawlers, BFS, what data they collect, why they matter for SEO, crawlers vs scrapers.
+
+2. **Why Every Website Owner Needs to Crawl Their Domain**
+   https://webcrawler.buzz/blogs/why-every-website-owner-needs-a-domain-crawler
+   Published: 2025-01-18 | 7 min read
+   Covers what a crawl reveals: broken links, missing titles, noindex issues, redirect chains, orphaned pages.
+
+3. **How Web Crawlers Directly Impact Your SEO Rankings**
+   https://webcrawler.buzz/blogs/how-web-crawlers-impact-seo
+   Published: 2025-01-26 | 8 min read
+   Crawl budget, crawlability vs indexability, internal linking, page speed effects, status codes and SEO.
+
+4. **Web Crawler vs. Site Audit Tools: Which Do You Need?**
+   https://webcrawler.buzz/blogs/web-crawler-vs-site-audit-tools
+   Published: 2025-02-04 | 6 min read
+   Compares crawlers with SEO audit tools (Screaming Frog, Ahrefs, Semrush), when to use each.
+
+5. **How to Do a Technical SEO Audit with a Domain Crawler**
+   https://webcrawler.buzz/blogs/how-to-do-a-technical-seo-audit-with-a-domain-crawler
+   Published: 2025-02-14 | 9 min read
+   Step-by-step: crawl domain, fix 404s, audit redirects, check titles, verify indexability, find slow pages.
+
+6. **10 Best Free Web Crawler Tools in 2026 — Compared and Ranked**
+   https://webcrawler.buzz/blogs/best-free-web-crawler-tools
+   Published: 2026-04-17 | 12 min read
+   Compares WebCrawler.buzz, Screaming Frog, Scrapy, Crawlee, Colly, Katana, and others with comparison table.
 
 ## Frequently Asked Questions
 
-**Q: Is Domain Crawler really free?**
-A: Yes, completely free with no hidden costs, no registration required, and no limits on the number of pages crawled. It’s the best website crawler online free tool available. WebCrawler.buzz is a free web crawler, free site crawler, and free online web crawler all in one.
+**Is this crawler free?**
+Yes. No hidden costs, no registration, no page limits.
 
-**Q: How long does a crawl take?**
-A: It depends on the size of the website. Small sites (under 100 pages) typically complete in under a minute. Larger sites may take several minutes. You can bookmark the tracking URL and come back later. Use web crawler test mode for quick checks.
+**How long does a crawl take?**
+Small sites (under 100 pages): under a minute. Larger sites: several minutes. Bookmark the tracking URL and return later.
 
-**Q: Can I crawl any website?**
-A: You can crawl a website online as long as it’s publicly accessible. This online web crawler and URL crawler respects the domain boundary and only crawls pages within the root domain you submit. You can also test crawl a website to verify your setup.
+**Can I crawl any website?**
+Any publicly accessible website. The crawler stays within the root domain boundary.
 
-**Q: What’s the difference between this and other crawlers?**
-A: Unlike desktop tools, this is a website crawler free online — no downloads needed. It works as an online webcrawler, site crawler online, and free online crawler from any browser. Crawl site online instantly.
+**How long are results available?**
+Crawl results expire after 1 hour. CSV downloads expire after 5 minutes. You can always re-crawl.
 
-**Q: How do I export my results?**
-A: Click the "Export CSV" button on the results page, enter your email, and you'll receive a download link within minutes.
+**Is there an API?**
+Yes. All endpoints documented above. No API key required.
 
-**Q: How long are export files available?**
-A: CSV download links are valid for 5 minutes after generation. After that, you can request a new export.
+**Can I crawl a site I don't own?**
+The crawler only accesses publicly available pages (like Googlebot). Use responsibly.
 
-**Q: Can I crawl a website I don't own?**
-A: Domain Crawler accesses only publicly available pages, similar to how Google's crawler works. However, please use the tool responsibly and only crawl sites you have permission to analyze.
-
-## Keywords
-
-web crawler online, website crawler online, website crawler online free, crawl website online, free website crawler, domain crawler online, online web crawler, crawl a website online, online site crawler, crawler online, online website crawler, url crawler, domaincrawler, free web crawler, online webcrawler, free site crawler, domain crawler, crawling online, web crawler free online, webcrawler online, site crawler, crawl site online, free online web crawler, web crawler test, crawler free, site crawler free, free website crawl, site crawler online, website crawler free, website crawler free online, webcrawler, website crawler, test crawl website, website url crawler, web crawler tool free, free website crawler tool, free online crawler, SEO crawler, free SEO tool, URL scanner, bulk URL checker, website audit tool, crawl website, link checker, site analyzer, broken link checker, SEO audit tool, website analysis tool, HTTP status checker, meta tag checker, page speed analyzer, website health check, site structure analyzer, SEO report generator, free website audit, online crawler tool, web page analyzer, internal link checker, external link finder, redirect checker, indexability checker
-
-## Blog
-
-WebCrawler.buzz publishes in-depth guides on web crawling, technical SEO, and site auditing. All blog posts are available at https://webcrawler.buzz/blogs
-
-### What Is a Web Crawler? A Beginner's Complete Guide
-URL: https://webcrawler.buzz/blogs/what-is-a-web-crawler
-Category: Basics | Read time: 6 min | Published: 2025-01-10
-Summary: Explains what a web crawler is, how BFS crawling works, what data crawlers collect, why crawlers matter for SEO, and the difference between crawlers and scrapers.
-
-### Why Every Website Owner Needs to Crawl Their Domain at Least Once
-URL: https://webcrawler.buzz/blogs/why-every-website-owner-needs-a-domain-crawler
-Category: SEO | Read time: 7 min | Published: 2025-01-18
-Summary: Covers what a domain crawl reveals (broken links, missing titles, noindex issues, redirect chains, orphaned pages), how often to crawl, and how to use WebCrawler.buzz for site audits.
-
-### How Web Crawlers Directly Impact Your SEO Rankings
-URL: https://webcrawler.buzz/blogs/how-web-crawlers-impact-seo
-Category: SEO | Read time: 8 min | Published: 2025-01-26
-Summary: Deep dive into crawl budget, crawlability vs indexability, internal linking as a crawler road map, page speed effects on crawl rate, and HTTP status codes and their SEO impact.
-
-### Web Crawler vs. Site Audit Tools: What Is the Difference and Which Do You Need?
-URL: https://webcrawler.buzz/blogs/web-crawler-vs-site-audit-tools
-Category: Tools | Read time: 6 min | Published: 2025-02-04
-Summary: Compares pure web crawlers with SEO site audit tools (Screaming Frog, Ahrefs, Semrush), explains where they overlap, and when to use each type.
-
-### How to Do a Complete Technical SEO Audit Using a Domain Crawler
-URL: https://webcrawler.buzz/blogs/how-to-do-a-technical-seo-audit-with-a-domain-crawler
-Category: How-To | Read time: 9 min | Published: 2025-02-14
-Summary: Step-by-step guide covering 7 audit steps — crawl the domain, fix 404s, audit redirects, check titles and meta descriptions, review indexability, identify slow pages, find orphaned pages.
-
-### 10 Best Free Web Crawler Tools in 2026 — Compared and Ranked
-URL: https://webcrawler.buzz/blogs/best-free-web-crawler-tools
-Category: Tools | Read time: 12 min | Published: 2026-04-17
-Summary: Compares 10 free web crawler tools including WebCrawler.buzz, Screaming Frog, Scrapy, Crawlee, Colly, Katana, Playwright/Puppeteer, Wget, Sitebulb, and Firecrawl. Covers online tools, open-source frameworks, CLI tools, and desktop apps with a comparison table and selection guide.
-
-## Contact & Legal
+## Contact & Links
 
 - Website: https://webcrawler.buzz
 - About: https://webcrawler.buzz/about
-- API Documentation: https://webcrawler.buzz/api-docs-public
-- Health Check: https://webcrawler.buzz/api/health
-- Public Stats: https://webcrawler.buzz/api/stats
-- Source Code: https://github.com/devhasibulislam/webcrawler
-- License: MIT (https://github.com/devhasibulislam/webcrawler/blob/master/LICENSE)
-- Security Policy: https://webcrawler.buzz/.well-known/security.txt
+- API Docs: https://webcrawler.buzz/api-docs-public
 - Blog: https://webcrawler.buzz/blogs
+- GitHub: https://github.com/devhasibulislam/webcrawler
+- License: MIT
 - Privacy Policy: https://webcrawler.buzz/privacy-policy
 - Terms of Service: https://webcrawler.buzz/terms-of-service
-- Cookie Policy: https://webcrawler.buzz/cookie-policy
+- Security: https://webcrawler.buzz/.well-known/security.txt
+- Product Hunt: https://www.producthunt.com/products/webcrawler-buzz
 
-## Trust & Transparency
+## Author
 
-WebCrawler.buzz is a fully open-source project built by Hasibul Islam (https://github.com/devhasibulislam). Key trust signals:
-
-- MIT License — 100% of the source code is public on GitHub
-- Featured on Product Hunt (https://www.producthunt.com/products/webcrawler-buzz)
-- No data retention — crawl results auto-delete after 1 hour, CSV exports after 5 minutes
-- Security: Helmet HTTP headers, CORS, rate limiting (200 POST req/15 min), parameterized SQL queries
-- Standard health check endpoint at /api/health (database + Redis connectivity)
-- Public usage statistics endpoint at /api/stats
-- security.txt at /.well-known/security.txt for responsible vulnerability disclosure
-- SECURITY.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md, CHANGELOG.md in the repository
-- Tech stack: Node.js v20+, TypeScript (strict mode), Express.js v5, PostgreSQL (Neon serverless), Redis + BullMQ, Axios, Cheerio, Nodemailer
+Built by Hasibul Islam (https://github.com/devhasibulislam)
