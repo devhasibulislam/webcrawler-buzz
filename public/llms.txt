@@ -26,7 +26,10 @@ WebCrawler.buzz crawls any publicly accessible website using breadth-first searc
 
 ## API
 
-Base URL: https://webcrawler.buzz/api
+Base URL: https://api.webcrawler.buzz/api
+
+Note: Use api.webcrawler.buzz (not webcrawler.buzz) for programmatic access.
+The main domain uses Cloudflare bot protection which blocks automated requests.
 
 - POST /api/crawl — Start a crawl (body: { "url": "https://example.com" })
 - GET /api/crawl/:jobId/progress — Check crawl progress

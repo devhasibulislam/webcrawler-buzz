@@ -63,7 +63,9 @@ One-click export. CSV delivered to your email within minutes. Download links val
 
 ## REST API
 
-Base URL: `https://webcrawler.buzz`
+Base URL: `https://api.webcrawler.buzz`
+
+> **Important:** Use `api.webcrawler.buzz` for all programmatic/automated access. The main domain (webcrawler.buzz) is behind Cloudflare bot protection and will return 403 to non-browser clients.
 
 ### Start a Crawl
 ```

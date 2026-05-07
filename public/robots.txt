@@ -48,5 +48,8 @@ Allow: /
 # See https://webcrawler.buzz/llms.txt (summary)
 # See https://webcrawler.buzz/llms-full.txt (full documentation)
 
+# API access for bots/AI tools (bypasses Cloudflare bot protection):
+# https://api.webcrawler.buzz/api/
+
 # Sitemap
 Sitemap: https://webcrawler.buzz/sitemap.xml
