@@ -10,10 +10,10 @@ export function setupSecurity(app: Express): void {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
+          scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com", "https://static.cloudflareinsights.com"],
           styleSrc: ["'self'", "'unsafe-inline'"],
           imgSrc: ["'self'", "data:", "https://www.googletagmanager.com"],
-          connectSrc: ["'self'", "https://www.google-analytics.com", "https://www.googletagmanager.com"],
+          connectSrc: ["'self'", "https://www.google-analytics.com", "https://www.googletagmanager.com", "https://cloudflareinsights.com"],
           fontSrc: ["'self'"],
           frameSrc: ["'none'"],
           objectSrc: ["'none'"],
