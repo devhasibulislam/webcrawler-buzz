@@ -5,6 +5,7 @@ import express from 'express';
 import compression from 'compression';
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
+import rateLimit from 'express-rate-limit';
 
 import { setupSecurity } from './middleware/security.middleware';
 import { swaggerAuth } from './middleware/swagger-auth.middleware';
@@ -12,6 +13,8 @@ import { swaggerSpec } from './swagger/swagger';
 import crawlerRoutes from './routes/crawler.routes';
 import operationalRoutes from './routes/operational.routes';
 import viewRoutes from './routes/view.routes';
+import { createMcpServer } from './mcp/server';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 
 // Import workers to start processing jobs
 import './queue/crawler.worker';
@@ -54,6 +57,37 @@ app.use('/api-docs', swaggerAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 // API routes
 app.use('/api/crawl', crawlerRoutes);
 app.use('/api', operationalRoutes);
+
+// ── MCP endpoint (public, stateless, no auth) ─────────────────
+// GET /mcp -> docs page
+// POST /mcp -> JSON-RPC over Streamable HTTP
+const mcpLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 120,
+  message: { jsonrpc: '2.0', error: { code: -32000, message: 'Rate limit exceeded' }, id: null },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.get('/mcp', (_req, res) => {
+  res.sendFile(path.join(__dirname, '../public/mcp.html'));
+});
+
+app.post('/mcp', mcpLimiter, async (req, res) => {
+  try {
+    const clientKey = (req.headers['x-forwarded-for'] as string)?.split(',')[0].trim() || req.ip || 'unknown';
+    const server = createMcpServer(clientKey);
+    const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
+    res.on('close', () => { transport.close(); server.close(); });
+    await server.connect(transport);
+    await transport.handleRequest(req, res, req.body);
+  } catch (err: any) {
+    console.error('[MCP]', err?.message || err);
+    if (!res.headersSent) {
+      res.status(500).json({ jsonrpc: '2.0', error: { code: -32603, message: 'Internal error' }, id: null });
+    }
+  }
+});
 
 // View routes (HTML pages)
 app.use('/', viewRoutes);

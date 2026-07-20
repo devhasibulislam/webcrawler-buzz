@@ -3,9 +3,9 @@ import { CsvExport } from '../types';
 
 export const exportService = {
   /**
-   * Create a new CSV export record.
+   * Create a new CSV export record. Email is optional (MCP flow).
    */
-  async createExport(jobId: string, email: string): Promise<CsvExport> {
+  async createExport(jobId: string, email: string | null): Promise<CsvExport> {
     const result = await pool.query(
       `INSERT INTO csv_exports (job_id, email, status)
        VALUES ($1, $2, 'processing')

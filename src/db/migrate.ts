@@ -80,6 +80,11 @@ async function migrate() {
     ON csv_exports (job_id, status);
   `);
 
+  // csv_exports.email must be nullable (MCP export flow allows email-less exports)
+  await pool.query(`
+    ALTER TABLE csv_exports ALTER COLUMN email DROP NOT NULL;
+  `);
+
   console.log('Migrations complete.');
   await pool.end();
 }

@@ -77,21 +77,23 @@ export const exportWorker = new Worker(
         throw new Error(`Export record ${exportId} not found`);
       }
 
-      // 6. Send download link via email
+      // 6. Send download link via email (skip if email not provided — MCP flow)
       const baseUrl = process.env.APP_BASE_URL || 'http://localhost:5005';
       const downloadUrl = `${baseUrl}/api/crawl/${jobId}/download/${exportId}`;
 
-      await emailService.sendExportReadyEmail(
-        exportRecord.email,
-        crawlJob.domain,
-        pages.length,
-        downloadUrl
-      );
-
-      // 7. Mark as sent
-      await exportService.updateExport(exportId, 'sent');
-
-      console.log(`[ExportWorker] Export ${exportId} completed and email sent to ${exportRecord.email}`);
+      if (exportRecord.email) {
+        await emailService.sendExportReadyEmail(
+          exportRecord.email,
+          crawlJob.domain,
+          pages.length,
+          downloadUrl
+        );
+        await exportService.updateExport(exportId, 'sent');
+        console.log(`[ExportWorker] Export ${exportId} completed and email sent to ${exportRecord.email}`);
+      } else {
+        // No email requested — mark completed; download URL fetched via MCP get_csv_export
+        console.log(`[ExportWorker] Export ${exportId} completed (no email requested)`);
+      }
     } catch (err: any) {
       console.error(`[ExportWorker] Export ${exportId} failed:`, err.message);
       throw err;

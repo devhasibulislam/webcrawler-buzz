@@ -52,7 +52,7 @@ export type ExportStatus = 'processing' | 'completed' | 'sent';
 export interface CsvExport {
   id: string;
   job_id: string;
-  email: string;
+  email?: string | null;
   file_path?: string;
   status: ExportStatus;
   created_at: Date;
