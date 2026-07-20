@@ -20,8 +20,7 @@
           '<img src="/webcrawler-logo-192.png" srcset="/webcrawler-logo-384.png 2x" alt="WebCrawler.buzz — Free Online Web Crawler" class="h-8 sm:h-10" width="192" height="40">' +
         '</picture>' +
       '</a>' +
-      '<nav class="text-xs sm:text-sm text-gray-600 space-x-3 sm:space-x-4" aria-label="Main navigation">' +
-        navLink('/', 'Home') +
+      '<nav class="text-sm text-gray-600 space-x-4" aria-label="Main navigation">' +
         navLink('/blogs', 'Blog') +
         navLink('/mcp', 'MCP') +
       '</nav>' +
