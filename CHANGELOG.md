@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.7] - 2026-07-20
+
+### Added
+- Public MCP (Model Context Protocol) server at `/mcp` with 7 tools: `start_crawl`, `decide_duplicate`, `get_crawl_progress`, `get_crawl_results`, `set_notify_email`, `request_csv_export`, `get_csv_export`
+- MCP documentation page at `/mcp` with copy-paste install snippets for Claude, Cursor, VS Code, and Codex
+- New blog post: "Connect WebCrawler.buzz to Claude, Cursor, and VS Code with One URL (MCP)"
+- Hero section MCP promo pill on the home page linking to `/mcp`
+- Per-IP anti-abuse guards on `set_notify_email` and email-based `request_csv_export` (max 5 per hour per IP)
+- Sitemap entries for `/mcp` and the new blog post
+
+### Changed
+- BullMQ queues now use `webcrawler:` key prefix to align with Redis ACL isolation on shared Redis instances
+- MCP transport switched to sessioned Streamable HTTP for Claude Desktop / Claude.ai compatibility
+- Nginx `/mcp` location added with `proxy_buffering off` for SSE support
+- CI/CD workflow now packages `package-lock.json` and runs DB migrations on the VPS after deploy
+- Rate limit for `/mcp` set to 300 requests per 15 min per IP
+- CSV export `email` column made nullable (MCP export flow allows email-less exports)
+- Version bump from 1.2.7 to 2.2.7
+
+### Fixed
+- `.env` URL-encoding for `@` in `DATABASE_URL` and `REDIS_URL` (`%40`)
+- BullMQ `IRedisClient` type cast for `.ping()` in health check
+- `/mcp` docs page now includes the site-standard header, footer, and responsive styling to match the rest of the site
+
 ## [1.2.7] - 2026-05-07
 
 ### Fixed
