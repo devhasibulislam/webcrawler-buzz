@@ -22,16 +22,17 @@
   <link rel="stylesheet" href="/styles.css" />
   <style>
     body { font-family: 'Google Sans', system-ui, -apple-system, sans-serif; }
-    pre { background:#0f172a; color:#e2e8f0; padding:14px 16px; border-radius:10px; overflow-x:auto; font-size:13px; line-height:1.55; }
-    code { font-family: ui-monospace, Menlo, monospace; }
-    .url-pill { user-select:all; }
+    pre { background:#0f172a; color:#e2e8f0; padding:12px 14px; border-radius:10px; overflow-x:auto; font-size:12px; line-height:1.55; white-space:pre; -webkit-overflow-scrolling:touch; max-width:100%; }
+    @media (min-width: 640px) { pre { font-size:13px; padding:14px 16px; } }
+    code { font-family: ui-monospace, Menlo, monospace; word-break: break-word; }
+    .url-pill { user-select:all; word-break: break-all; }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
   <header class="bg-white shadow-sm">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/"><picture><source type="image/webp" srcset="/webcrawler-logo-192.webp 1x, /webcrawler-logo-384.webp 2x"><img src="/webcrawler-logo-192.png" srcset="/webcrawler-logo-384.png 2x" alt="WebCrawler.buzz — Free Online Web Crawler" class="h-10" width="192" height="40"></picture></a>
-      <nav class="text-sm text-gray-600 space-x-4" aria-label="Main navigation">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
+      <a href="/" class="flex-shrink-0"><picture><source type="image/webp" srcset="/webcrawler-logo-192.webp 1x, /webcrawler-logo-384.webp 2x"><img src="/webcrawler-logo-192.png" srcset="/webcrawler-logo-384.png 2x" alt="WebCrawler.buzz — Free Online Web Crawler" class="h-8 sm:h-10" width="192" height="40"></picture></a>
+      <nav class="text-xs sm:text-sm text-gray-600 space-x-2 sm:space-x-4" aria-label="Main navigation">
         <a href="/" class="hover:text-gray-800">Home</a>
         <a href="/blogs" class="hover:text-gray-800">Blog</a>
         <a href="/about" class="hover:text-gray-800">About</a>
@@ -43,18 +44,18 @@
   <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full">
     <div class="text-center mb-10">
       <p class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-4 uppercase tracking-wide">🤖 AI Integration</p>
-      <h1 class="text-4xl font-bold text-gray-800 mb-4">WebCrawler.buzz — MCP Server</h1>
-      <p class="text-lg text-gray-600 max-w-2xl mx-auto">Public <a href="https://modelcontextprotocol.io" class="text-blue-600 underline" target="_blank" rel="noopener">Model Context Protocol</a> server. No auth, no API key. Plug the URL below into any MCP-compatible client and your AI can crawl any website for you.</p>
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4">WebCrawler.buzz — MCP Server</h1>
+      <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">Public <a href="https://modelcontextprotocol.io" class="text-blue-600 underline" target="_blank" rel="noopener">Model Context Protocol</a> server. No auth, no API key. Plug the URL below into any MCP-compatible client and your AI can crawl any website for you.</p>
     </div>
 
-    <section class="bg-white rounded-2xl shadow border border-gray-200 p-5 sm:p-8 mb-8 text-center">
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-4 sm:p-8 mb-6 sm:mb-8 text-center">
       <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Endpoint</h2>
-      <p class="url-pill inline-block bg-gray-100 text-gray-900 font-mono px-4 py-2 rounded-lg text-lg">https://webcrawler.buzz/mcp</p>
-      <p class="text-gray-500 text-sm mt-4">Transport: <strong>Streamable HTTP</strong> · Rate limit: 300 requests / 15 min / IP</p>
+      <p class="url-pill inline-block max-w-full bg-gray-100 text-gray-900 font-mono px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base md:text-lg">https://webcrawler.buzz/mcp</p>
+      <p class="text-gray-500 text-xs sm:text-sm mt-4">Transport: <strong>Streamable HTTP</strong> · Rate limit: 300 req / 15 min / IP</p>
     </section>
 
-    <section class="bg-white rounded-2xl shadow border border-gray-200 p-5 sm:p-8 mb-8">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Install snippets</h2>
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-4 sm:p-8 mb-6 sm:mb-8">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Install snippets</h2>
 
       <h3 class="text-lg font-semibold text-gray-800 mb-2">Claude Desktop / Claude.ai</h3>
       <p class="text-gray-600 text-sm mb-3">Settings → <em>Connectors</em> → <em>Add custom connector</em>. Paste:</p>
@@ -87,8 +88,8 @@ URL:  https://webcrawler.buzz/mcp</pre>
       <p class="text-gray-600 text-sm">Any client that supports remote Streamable-HTTP MCP servers works with the same URL.</p>
     </section>
 
-    <section class="bg-white rounded-2xl shadow border border-gray-200 p-5 sm:p-8 mb-8">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Tools exposed</h2>
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-4 sm:p-8 mb-6 sm:mb-8">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Tools exposed</h2>
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
           <thead>
@@ -110,8 +111,8 @@ URL:  https://webcrawler.buzz/mcp</pre>
       </div>
     </section>
 
-    <section class="bg-white rounded-2xl shadow border border-gray-200 p-5 sm:p-8 mb-8">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4">Try it in Claude</h2>
+    <section class="bg-white rounded-2xl shadow border border-gray-200 p-4 sm:p-8 mb-6 sm:mb-8">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Try it in Claude</h2>
       <p class="text-gray-600 mb-4">After connecting, try prompts like:</p>
       <ul class="list-disc list-inside space-y-2 text-gray-700">
         <li><em>"Crawl https://example.com and give me a summary of every page."</em></li>
