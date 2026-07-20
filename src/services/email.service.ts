@@ -1,4 +1,9 @@
 import nodemailer from 'nodemailer';
+import dns from 'dns';
+
+// VPS advertises AAAA (IPv6) records but has no IPv6 egress, causing ENETUNREACH
+// on smtp.gmail.com. Force IPv4 for all DNS lookups in this process.
+dns.setDefaultResultOrder('ipv4first');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -8,8 +13,6 @@ const transporter = nodemailer.createTransport({
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
-  // Force IPv4 — VPS advertises AAAA but has no IPv6 egress, causing ENETUNREACH.
-  family: 4,
 } as any);
 
 // Verify SMTP connection on startup
