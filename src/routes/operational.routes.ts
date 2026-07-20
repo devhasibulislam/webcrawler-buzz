@@ -56,7 +56,7 @@ router.get('/health', async (_req: Request, res: Response): Promise<void> => {
   // Check Redis (via BullMQ queue ping)
   try {
     const { crawlerQueue } = await import('../queue/crawler.queue');
-    const client = await crawlerQueue.client;
+    const client: any = await crawlerQueue.client;
     const pong = await client.ping();
     health.services.redis = {
       status: pong === 'PONG' ? 'ok' : 'error',
