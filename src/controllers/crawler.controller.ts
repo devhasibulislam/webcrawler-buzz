@@ -61,8 +61,7 @@ export const crawlerController = {
           domain: rootDomain,
         },
         {
-          attempts: 3,
-          backoff: { type: 'exponential', delay: 5000 },
+          attempts: 1,
           removeOnComplete: true,
           removeOnFail: false,
         }
@@ -126,8 +125,7 @@ export const crawlerController = {
           domain: domain,
         },
         {
-          attempts: 3,
-          backoff: { type: 'exponential', delay: 5000 },
+          attempts: 1,
           removeOnComplete: true,
           removeOnFail: false,
         }

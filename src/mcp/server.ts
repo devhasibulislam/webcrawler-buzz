@@ -65,7 +65,7 @@ export function createMcpServer(clientKey: string): McpServer {
       }
       const job = await jobService.createJob(domain, url);
       await crawlerQueue.add('crawl-job', { jobId: job.id, startUrl: url, domain }, {
-        attempts: 3, backoff: { type: 'exponential', delay: 5000 },
+        attempts: 1,
         removeOnComplete: true, removeOnFail: false,
       });
       return {
@@ -101,7 +101,7 @@ export function createMcpServer(clientKey: string): McpServer {
       }
       const newJob = await jobService.createJob(domain, `https://${domain}`);
       await crawlerQueue.add('crawl-job', { jobId: newJob.id, startUrl: `https://${domain}`, domain }, {
-        attempts: 3, backoff: { type: 'exponential', delay: 5000 },
+        attempts: 1,
         removeOnComplete: true, removeOnFail: false,
       });
       return { content: [{ type: 'text', text: JSON.stringify({
