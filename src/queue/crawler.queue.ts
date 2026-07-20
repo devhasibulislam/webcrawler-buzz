@@ -8,6 +8,7 @@ export const crawlerQueue = new Queue('crawler', {
     password: extractRedisPassword(),
     maxRetriesPerRequest: null,
   },
+  prefix: 'webcrawler',
 });
 
 function extractRedisUsername(): string | undefined {

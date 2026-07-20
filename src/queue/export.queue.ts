@@ -13,4 +13,5 @@ function getRedisConfig() {
 
 export const exportQueue = new Queue('csv-export', {
   connection: getRedisConfig(),
+  prefix: 'webcrawler',
 });

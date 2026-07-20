@@ -22,6 +22,7 @@ export const crawlerWorker = new Worker(
     connection: getRedisConfig(),
     concurrency: 5,
     removeOnComplete: { count: 0 },
+    prefix: 'webcrawler',
   }
 );
 

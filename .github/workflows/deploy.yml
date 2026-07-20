@@ -55,6 +55,7 @@ jobs:
           cp -r public deploy-package/
           touch deploy-package/tmp/exports/.gitkeep
           cp package.json deploy-package/
+          cp package-lock.json deploy-package/
           cp ecosystem.config.cjs deploy-package/
           tar -czf deploy.tar.gz -C deploy-package .
 
@@ -65,6 +66,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT }}
           source: deploy.tar.gz
           target: /tmp
 
@@ -75,6 +77,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT }}
           script: |
             set -e
 
@@ -125,6 +128,9 @@ jobs:
 
             cd "$APP_DIR"
             npm install --omit=dev --ignore-scripts=false
+
+            # Run DB migrations (idempotent)
+            node dist/db/migrate.js
 
             # Ensure logs directory exists
             mkdir -p "$APP_DIR/logs"
