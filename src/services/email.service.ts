@@ -8,10 +8,9 @@ const transporter = nodemailer.createTransport({
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
-  // Force IPv4 — many VPS providers advertise AAAA but have no IPv6 egress,
-  // causing ENETUNREACH on the IPv6 address that DNS returns first.
+  // Force IPv4 — VPS advertises AAAA but has no IPv6 egress, causing ENETUNREACH.
   family: 4,
-});
+} as any);
 
 // Verify SMTP connection on startup
 transporter.verify()
