@@ -15,6 +15,8 @@ import operationalRoutes from './routes/operational.routes';
 import viewRoutes from './routes/view.routes';
 import { createMcpServer } from './mcp/server';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
+import { randomUUID } from 'crypto';
 
 // Import workers to start processing jobs
 import './queue/crawler.worker';
@@ -58,34 +60,94 @@ app.use('/api-docs', swaggerAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 app.use('/api/crawl', crawlerRoutes);
 app.use('/api', operationalRoutes);
 
-// ── MCP endpoint (public, stateless, no auth) ─────────────────
-// GET /mcp -> docs page
-// POST /mcp -> JSON-RPC over Streamable HTTP
+// ── MCP endpoint (public, sessioned Streamable HTTP, no auth) ─
+// GET /mcp (browser) -> docs page
+// POST /mcp -> JSON-RPC (initialize creates session; subsequent requests carry mcp-session-id)
+// GET /mcp (with mcp-session-id) -> SSE stream for server-initiated notifications
+// DELETE /mcp -> terminate session
 const mcpLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 120,
+  max: 300,
   message: { jsonrpc: '2.0', error: { code: -32000, message: 'Rate limit exceeded' }, id: null },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-app.get('/mcp', (_req, res) => {
-  res.sendFile(path.join(__dirname, '../public/mcp.html'));
-});
+const mcpTransports = new Map<string, StreamableHTTPServerTransport>();
 
 app.post('/mcp', mcpLimiter, async (req, res) => {
   try {
     const clientKey = (req.headers['x-forwarded-for'] as string)?.split(',')[0].trim() || req.ip || 'unknown';
-    const server = createMcpServer(clientKey);
-    const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
-    res.on('close', () => { transport.close(); server.close(); });
-    await server.connect(transport);
+    const sessionId = req.headers['mcp-session-id'] as string | undefined;
+    let transport = sessionId ? mcpTransports.get(sessionId) : undefined;
+
+    if (!transport && isInitializeRequest(req.body)) {
+      transport = new StreamableHTTPServerTransport({
+        sessionIdGenerator: () => randomUUID(),
+        onsessioninitialized: (sid) => {
+          mcpTransports.set(sid, transport!);
+        },
+      });
+      transport.onclose = () => {
+        if (transport?.sessionId) mcpTransports.delete(transport.sessionId);
+      };
+      const server = createMcpServer(clientKey);
+      await server.connect(transport);
+    }
+
+    if (!transport) {
+      res.status(400).json({
+        jsonrpc: '2.0',
+        error: { code: -32000, message: 'No valid session. Send an initialize request first.' },
+        id: null,
+      });
+      return;
+    }
+
     await transport.handleRequest(req, res, req.body);
   } catch (err: any) {
-    console.error('[MCP]', err?.message || err);
+    console.error('[MCP POST]', err?.message || err);
     if (!res.headersSent) {
       res.status(500).json({ jsonrpc: '2.0', error: { code: -32603, message: 'Internal error' }, id: null });
     }
+  }
+});
+
+app.get('/mcp', async (req, res) => {
+  const sessionId = req.headers['mcp-session-id'] as string | undefined;
+  const transport = sessionId ? mcpTransports.get(sessionId) : undefined;
+
+  // Browser or curl without a session -> serve docs page
+  if (!transport) {
+    const accept = String(req.headers.accept || '');
+    if (accept.includes('text/event-stream')) {
+      res.status(400).json({ jsonrpc: '2.0', error: { code: -32000, message: 'Missing or invalid session' }, id: null });
+      return;
+    }
+    res.sendFile(path.join(__dirname, '../public/mcp.html'));
+    return;
+  }
+
+  try {
+    await transport.handleRequest(req, res);
+  } catch (err: any) {
+    console.error('[MCP GET]', err?.message || err);
+    if (!res.headersSent) res.status(500).end();
+  }
+});
+
+app.delete('/mcp', async (req, res) => {
+  const sessionId = req.headers['mcp-session-id'] as string | undefined;
+  const transport = sessionId ? mcpTransports.get(sessionId) : undefined;
+  if (!transport) {
+    res.status(400).json({ jsonrpc: '2.0', error: { code: -32000, message: 'Missing session' }, id: null });
+    return;
+  }
+  try {
+    await transport.handleRequest(req, res);
+  } catch (err: any) {
+    console.error('[MCP DELETE]', err?.message || err);
+    if (!res.headersSent) res.status(500).end();
   }
 });
 
