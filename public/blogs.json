@@ -6,7 +6,13 @@
     "meta_title": "What Is a Web Crawler? A Beginner's Complete Guide | WebCrawler.buzz",
     "meta_description": "Learn what a web crawler is, how it discovers and indexes pages, and why understanding crawlers matters for SEO and website visibility.",
     "category": "Basics",
-    "tags": ["web crawler", "spider bot", "SEO basics", "how it works", "indexing"],
+    "tags": [
+      "web crawler",
+      "spider bot",
+      "SEO basics",
+      "how it works",
+      "indexing"
+    ],
     "author": "WebCrawler Team",
     "published_at": "2025-01-10",
     "read_time_minutes": 6,
@@ -46,7 +52,13 @@
     "meta_title": "Why Every Website Owner Needs to Crawl Their Domain | WebCrawler.buzz",
     "meta_description": "Discover why crawling your domain is critical for SEO. Find broken links, missing titles, redirect chains, and slow pages before they cost you traffic.",
     "category": "SEO",
-    "tags": ["SEO audit", "domain crawl", "broken links", "technical SEO", "website health"],
+    "tags": [
+      "SEO audit",
+      "domain crawl",
+      "broken links",
+      "technical SEO",
+      "website health"
+    ],
     "author": "WebCrawler Team",
     "published_at": "2025-01-18",
     "read_time_minutes": 7,
@@ -82,7 +94,14 @@
     "meta_title": "How Web Crawlers Directly Impact Your SEO Rankings | WebCrawler.buzz",
     "meta_description": "Understanding how web crawlers work is the foundation of technical SEO. Learn how crawl budget, indexability, and site structure affect your Google rankings.",
     "category": "SEO",
-    "tags": ["SEO", "crawl budget", "Googlebot", "indexing", "technical SEO", "rankings"],
+    "tags": [
+      "SEO",
+      "crawl budget",
+      "Googlebot",
+      "indexing",
+      "technical SEO",
+      "rankings"
+    ],
     "author": "WebCrawler Team",
     "published_at": "2025-01-26",
     "read_time_minutes": 8,
@@ -122,7 +141,13 @@
     "meta_title": "Web Crawler vs Site Audit Tools: Which Do You Need? | WebCrawler.buzz",
     "meta_description": "Confused about web crawlers vs SEO site audit tools? Compare crawlers with tools like Screaming Frog and learn which fits your workflow.",
     "category": "Tools",
-    "tags": ["site audit", "web crawler", "SEO tools", "Screaming Frog", "comparison"],
+    "tags": [
+      "site audit",
+      "web crawler",
+      "SEO tools",
+      "Screaming Frog",
+      "comparison"
+    ],
     "author": "WebCrawler Team",
     "published_at": "2025-02-04",
     "read_time_minutes": 6,
@@ -162,7 +187,14 @@
     "meta_title": "How to Do a Technical SEO Audit with a Domain Crawler | WebCrawler.buzz",
     "meta_description": "Step-by-step guide to performing a technical SEO audit using a domain crawler. Find broken pages, redirect issues, and missing meta tags in minutes.",
     "category": "How-To",
-    "tags": ["technical SEO", "SEO audit", "how to", "broken links", "redirect audit", "step by step"],
+    "tags": [
+      "technical SEO",
+      "SEO audit",
+      "how to",
+      "broken links",
+      "redirect audit",
+      "step by step"
+    ],
     "author": "WebCrawler Team",
     "published_at": "2025-02-14",
     "read_time_minutes": 9,
@@ -210,7 +242,13 @@
     "meta_title": "10 Best Free Web Crawler Tools in 2026 — Compared and Ranked | WebCrawler.buzz",
     "meta_description": "Compare the 10 best free web crawler tools in 2026. From browser-based crawlers to open-source spiders — find the right tool for SEO audits and site mapping.",
     "category": "Tools",
-    "tags": ["free web crawler", "best web crawler", "open source", "SEO crawler", "web crawler comparison"],
+    "tags": [
+      "free web crawler",
+      "best web crawler",
+      "open source",
+      "SEO crawler",
+      "web crawler comparison"
+    ],
     "author": "WebCrawler Team",
     "published_at": "2026-04-17",
     "read_time_minutes": 12,
@@ -273,6 +311,66 @@
         }
       ],
       "conclusion": "The best free web crawler is the one that matches your skill level and your specific use case. If you just want to crawl a website online and see results immediately — WebCrawler.buzz does that with zero friction. If you are a developer who needs full control — Scrapy, Crawlee, and Colly are all excellent open-source options. The tools have gotten so good in 2026 that there is genuinely no reason to pay for basic website crawling unless you need enterprise-scale volume or AI-powered extraction. Start with a free tool, see what you learn, and upgrade only if your needs outgrow it."
+    }
+  },
+  {
+    "id": 7,
+    "slug": "connect-webcrawler-to-claude-via-mcp",
+    "title": "Connect WebCrawler.buzz to Claude, Cursor, and VS Code with One URL (MCP)",
+    "meta_title": "Connect WebCrawler.buzz to Claude, Cursor & VS Code via MCP | WebCrawler.buzz",
+    "meta_description": "Plug WebCrawler.buzz into any MCP-compatible AI client — Claude, Cursor, VS Code, Codex — with a single URL. No API key. Crawl any website straight from your chat.",
+    "category": "Integrations",
+    "tags": [
+      "MCP",
+      "Model Context Protocol",
+      "Claude",
+      "Cursor",
+      "VS Code",
+      "AI agents",
+      "integration"
+    ],
+    "author": "WebCrawler Team",
+    "published_at": "2026-07-20",
+    "read_time_minutes": 6,
+    "cover_image": "/og-image.png",
+    "excerpt": "WebCrawler.buzz now speaks the Model Context Protocol. Paste one URL into Claude, Cursor, or VS Code and your AI assistant can crawl entire websites, summarize pages, and export CSV reports — all without leaving the chat.",
+    "content": {
+      "intro": "Model Context Protocol (MCP) is quickly becoming the standard way for AI assistants to talk to external tools. WebCrawler.buzz now ships a public MCP server at https://webcrawler.buzz/mcp — no auth, no API key, no rate-limit gymnastics for legitimate use. Connect it once in your AI client of choice and your assistant gains seven crawling tools it can call on your behalf.",
+      "sections": [
+        {
+          "heading": "What Is MCP and Why Should You Care?",
+          "body": "MCP (Model Context Protocol) is an open standard that lets AI clients like Claude, Cursor, VS Code Copilot, and Codex discover and call external tools in a typed, safe way. Instead of every product inventing its own plugin system, MCP gives one common protocol — so a single server URL works everywhere.\n\nFor you, the practical upside is simple: no browser tabs to juggle, no copying URLs back and forth, no downloading CSVs manually. Just tell your AI 'crawl example.com and summarize what you find' and it happens inline."
+        },
+        {
+          "heading": "The Endpoint",
+          "body": "There is exactly one thing to remember:\n\nhttps://webcrawler.buzz/mcp\n\nGET that URL in a browser and you get the docs page. POST to it and you speak MCP over Streamable HTTP. Public. Stateless. No key required."
+        },
+        {
+          "heading": "Connect It in 30 Seconds — Claude Desktop",
+          "body": "Open Claude Desktop, go to Settings, click Connectors, then Add custom connector. Name it 'webcrawler.buzz' and paste https://webcrawler.buzz/mcp as the URL. Save. Done. Open a new chat and you should see the webcrawler-buzz connector with seven tools ready to use.\n\nTry a prompt like 'Use webcrawler.buzz to crawl https://example.com and tell me every unique page title you find.' Claude will call start_crawl, poll progress, fetch results, and summarize — all on its own."
+        },
+        {
+          "heading": "Cursor Config",
+          "body": "Add this to ~/.cursor/mcp.json:\n\n{\n  \"mcpServers\": {\n    \"webcrawler-buzz\": {\n      \"type\": \"http\",\n      \"url\": \"https://webcrawler.buzz/mcp\"\n    }\n  }\n}\n\nRestart Cursor. The seven tools appear in the tool picker."
+        },
+        {
+          "heading": "VS Code Copilot Chat Config",
+          "body": "Add this to .vscode/mcp.json in your workspace:\n\n{\n  \"servers\": {\n    \"webcrawler-buzz\": {\n      \"type\": \"http\",\n      \"url\": \"https://webcrawler.buzz/mcp\"\n    }\n  }\n}\n\nReload the window. Copilot Chat picks it up automatically."
+        },
+        {
+          "heading": "The Seven Tools You Get",
+          "body": "start_crawl — kick off a crawl by URL, returns a job_id immediately.\n\ndecide_duplicate — when a domain was already crawled, choose to reuse the results or start fresh.\n\nget_crawl_progress — poll status without blocking.\n\nget_crawl_results — paginated page results with URL, title, meta description, HTTP status, response time, link counts, indexability.\n\nset_notify_email — for long crawls, register the user's email so they get pinged when it finishes and can close the chat safely.\n\nrequest_csv_export — generate a downloadable CSV of the results. Email is optional; the download URL is always returned.\n\nget_csv_export — poll for the export and receive the download URL when ready."
+        },
+        {
+          "heading": "How Long Crawls Are Handled Without Boring You",
+          "body": "AI chats have short attention spans — an LLM will not sit and wait an hour for a big crawl to finish. So the MCP server tells the assistant to poll at most three times over about 30 seconds, and if the crawl is still running, offer you two graceful exits: either provide your email so we can notify you when it is done, or come back to the chat later with the job_id and pick up where you left off. Either way, you never have to sit and stare at a spinner."
+        },
+        {
+          "heading": "For Very Large Crawls, Prefer the CSV Path",
+          "body": "If a crawl finds tens of thousands of pages, iterating through them page-by-page in chat is neither efficient nor useful — no assistant can meaningfully summarize 50,000 URLs. For crawls that big, ask the assistant to request a CSV export. You will get a single download link, and you can open the file in a spreadsheet or feed it into another tool for deeper analysis."
+        }
+      ],
+      "conclusion": "MCP turns webcrawler.buzz from a website you have to visit into a capability your favorite AI assistant just has. Connect it once and forget it is there — the next time you ask 'what pages does this site have?' your assistant will just know. Free, public, no signup. Paste the URL and start crawling from wherever you already work."
     }
   }
 ]
