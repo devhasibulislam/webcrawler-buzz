@@ -33,6 +33,9 @@ RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force
 COPY --from=builder --chown=app:nodejs /app/dist    ./dist
 COPY --from=builder --chown=app:nodejs /app/public  ./public
 
+# Runtime writable dirs (BullMQ export worker writes CSVs here)
+RUN mkdir -p /app/tmp/exports && chown -R app:nodejs /app/tmp
+
 USER app
 EXPOSE 5005
 HEALTHCHECK --interval=30s --timeout=5s --start-period=45s --retries=3 \
