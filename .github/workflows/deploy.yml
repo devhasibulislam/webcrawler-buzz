@@ -89,10 +89,12 @@ jobs:
             docker image prune -f
       - name: Smoke test
         run: |
-          for i in {1..18}; do
+          # Poll the health endpoint through Cloudflare. Accept 200 only; ignore
+          # transient 5xx / 000 while Traefik picks up the new container.
+          for i in {1..24}; do
             sleep 10
-            code=$(curl -sk -o /dev/null -w "%{http_code}" https://webcrawler.buzz/ || echo "000")
+            code=$(curl -sk -o /dev/null -w "%{http_code}" https://webcrawler.buzz/api/health || echo "000")
             echo "attempt $i → $code"
-            [[ "$code" =~ ^(200|301|302|307|308)$ ]] && exit 0
+            [[ "$code" == "200" ]] && exit 0
           done
           exit 1

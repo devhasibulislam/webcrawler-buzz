@@ -4,6 +4,10 @@ import rateLimit from 'express-rate-limit';
 import { Express, Request } from 'express';
 
 export function setupSecurity(app: Express): void {
+  // 0. Trust the first proxy hop (Traefik / Cloudflare) so req.ip and
+  //    X-Forwarded-For are honoured. Required for express-rate-limit accuracy.
+  app.set('trust proxy', 1);
+
   // 1. Helmet — HTTP security headers
   app.use(
     helmet({
