@@ -59,7 +59,7 @@ export function startJobCleanupCron(): void {
           }
         }
 
-        // Delete job row — cascade removes crawled_pages + csv_exports
+        // Delete job row, cascade removes crawled_pages + csv_exports
         await jobService.deleteJob(job.id);
         console.log(`[Cron] Deleted expired job: ${job.id} (${job.domain}, status: ${job.status})`);
       }

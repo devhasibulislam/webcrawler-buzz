@@ -145,7 +145,7 @@ export const viewController = {
         {
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          name: 'Blog — WebCrawler.buzz',
+          name: 'Blog, WebCrawler.buzz',
           description:
             'Guides on web crawling, technical SEO, site audits, and getting the most out of your domain crawler.',
           url: 'https://webcrawler.buzz/blogs',

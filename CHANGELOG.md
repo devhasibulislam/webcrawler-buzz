@@ -118,7 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Google Search Console "Couldn't fetch" errors for `/sitemap.xml`, `/llms.txt`, and `/llms-full.txt`
 - Added explicit Express routes for `/sitemap.xml`, `/llms.txt`, `/llms-full.txt` with correct `Content-Type` headers (`application/xml` and `text/plain`)
-- Files were previously only served via `express.static` — requests could fall through to the catch-all 404 handler behind Cloudflare + Nginx
+- Files were previously only served via `express.static`, requests could fall through to the catch-all 404 handler behind Cloudflare + Nginx
 
 ### Changed
 - Version bump from 1.2.0 to 1.2.1
@@ -127,17 +127,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `/about` page with project transparency, tech stack, and author info
-- `/api-docs-public` — public read-only API documentation page
-- `GET /api/health` — health check endpoint (DB + Redis status)
-- `GET /api/stats` — public usage statistics endpoint
+- `/api-docs-public`, public read-only API documentation page
+- `GET /api/health`, health check endpoint (DB + Redis status)
+- `GET /api/stats`, public usage statistics endpoint
 - Custom 404 error page
-- `/.well-known/security.txt` — security contact file
-- `/humans.txt` — humans.txt standard
-- `LICENSE` — MIT License file
-- `CONTRIBUTING.md` — contribution guidelines
-- `CODE_OF_CONDUCT.md` — community code of conduct
-- `SECURITY.md` — security policy and vulnerability reporting
-- `CHANGELOG.md` — this file
+- `/.well-known/security.txt`, security contact file
+- `/humans.txt`, humans.txt standard
+- `LICENSE`, MIT License file
+- `CONTRIBUTING.md`, contribution guidelines
+- `CODE_OF_CONDUCT.md`, community code of conduct
+- `SECURITY.md`, security policy and vulnerability reporting
+- `CHANGELOG.md`, this file
 - Navigation links to About page across all pages
 - Updated sitemap.xml with new pages
 

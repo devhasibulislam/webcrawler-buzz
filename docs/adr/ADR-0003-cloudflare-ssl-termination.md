@@ -22,6 +22,6 @@ Use Cloudflare in Full (Strict) mode with an Origin Certificate on the Nginx rev
 - **Positive:** Free DDoS protection and CDN without additional infrastructure.
 - **Positive:** No certificate renewal automation needed on the VPS (Origin Certificates last 15 years).
 - **Positive:** Reduces direct traffic to the VPS.
-- **Negative:** Adds dependency on Cloudflare — if their proxy is misconfigured, the site goes down.
+- **Negative:** Adds dependency on Cloudflare, if their proxy is misconfigured, the site goes down.
 - **Negative:** Real client IPs require `CF-Connecting-IP` header extraction (important for rate limiting).
 - **Negative:** Cannot serve the site without Cloudflare in the path (Origin Certificate is not publicly trusted).

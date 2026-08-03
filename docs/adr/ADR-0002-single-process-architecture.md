@@ -19,8 +19,8 @@ Run everything in a single Node.js process managed by PM2 (`fork` mode, 1 instan
 
 ## Consequences
 
-- **Positive:** Simple deployment — one artifact, one PM2 app, one set of logs.
-- **Positive:** Workers share the same connection pool and memory space — lower resource usage.
+- **Positive:** Simple deployment, one artifact, one PM2 app, one set of logs.
+- **Positive:** Workers share the same connection pool and memory space, lower resource usage.
 - **Positive:** No inter-process communication complexity.
 - **Negative:** A crash in a worker can theoretically affect the HTTP server (mitigated by PM2 auto-restart and BullMQ's error handling).
 - **Negative:** Cannot scale workers independently of the API server. If crawl load increases significantly, this ADR should be revisited.

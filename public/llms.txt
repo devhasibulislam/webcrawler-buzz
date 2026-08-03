@@ -31,17 +31,17 @@ Base URL: https://api.webcrawler.buzz/api
 Note: Use api.webcrawler.buzz (not webcrawler.buzz) for programmatic access.
 The main domain uses Cloudflare bot protection which blocks automated requests.
 
-- POST /api/crawl — Start a crawl (body: { "url": "https://example.com" })
-- GET /api/crawl/:jobId/progress — Check crawl progress
-- GET /api/crawl/:jobId — Get paginated results
-- POST /api/crawl/:jobId/export — Request CSV export (body: { "email": "..." })
-- GET /api/health — Service health check
-- GET /api/stats — Public usage statistics
+- POST /api/crawl, Start a crawl (body: { "url": "https://example.com" })
+- GET /api/crawl/:jobId/progress, Check crawl progress
+- GET /api/crawl/:jobId, Get paginated results
+- POST /api/crawl/:jobId/export, Request CSV export (body: { "email": "..." })
+- GET /api/health, Service health check
+- GET /api/stats, Public usage statistics
 
 ## Key Details
 
 - Completely free, no registration, no API key needed
-- Works from any browser — no desktop install
+- Works from any browser, no desktop install
 - Results auto-expire after 1 hour; CSV exports expire after 5 minutes
 - Rate limit: 200 POST requests per 15 minutes per IP
 - Crawl concurrency: 5 simultaneous jobs
@@ -67,9 +67,9 @@ WebCrawler.buzz publishes guides on web crawling, technical SEO, and site auditi
 - What Is a Web Crawler? A Beginner's Complete Guide: https://webcrawler.buzz/blogs/what-is-a-web-crawler
 - Why Every Website Owner Needs to Crawl Their Domain at Least Once: https://webcrawler.buzz/blogs/why-every-website-owner-needs-a-domain-crawler
 - How Web Crawlers Directly Impact Your SEO Rankings: https://webcrawler.buzz/blogs/how-web-crawlers-impact-seo
-- Web Crawler vs. Site Audit Tools — What Is the Difference: https://webcrawler.buzz/blogs/web-crawler-vs-site-audit-tools
+- Web Crawler vs. Site Audit Tools, What Is the Difference: https://webcrawler.buzz/blogs/web-crawler-vs-site-audit-tools
 - How to Do a Complete Technical SEO Audit Using a Domain Crawler: https://webcrawler.buzz/blogs/how-to-do-a-technical-seo-audit-with-a-domain-crawler
-- 10 Best Free Web Crawler Tools in 2026 — Compared and Ranked: https://webcrawler.buzz/blogs/best-free-web-crawler-tools
+- 10 Best Free Web Crawler Tools in 2026, Compared and Ranked: https://webcrawler.buzz/blogs/best-free-web-crawler-tools
 
 ## Links
 
@@ -88,10 +88,10 @@ WebCrawler.buzz publishes guides on web crawling, technical SEO, and site auditi
 
 ## Trust & Transparency
 
-- Open source under MIT License — full code on GitHub
+- Open source under MIT License, full code on GitHub
 - Built by Hasibul Islam (https://github.com/devhasibulislam)
 - Featured on Product Hunt: https://www.producthunt.com/products/webcrawler-buzz
-- No data retention — crawl results auto-delete after 1 hour
+- No data retention, crawl results auto-delete after 1 hour
 - Security: Helmet, CORS, rate limiting, parameterized SQL queries
 - Standard health check and public stats endpoints
 - security.txt at /.well-known/security.txt for responsible disclosure

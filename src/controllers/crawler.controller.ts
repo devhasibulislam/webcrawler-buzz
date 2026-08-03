@@ -11,7 +11,7 @@ import { StartCrawlRequest, DecideRequest, NotifyRequest, ExportRequest } from '
 
 export const crawlerController = {
   /**
-   * POST /api/crawl — Start a new crawl or detect duplicate domain.
+   * POST /api/crawl, Start a new crawl or detect duplicate domain.
    */
   async startCrawl(req: Request, res: Response): Promise<void> {
     try {
@@ -80,7 +80,7 @@ export const crawlerController = {
   },
 
   /**
-   * POST /api/crawl/decide — Handle duplicate domain decision.
+   * POST /api/crawl/decide, Handle duplicate domain decision.
    */
   async decide(req: Request, res: Response): Promise<void> {
     try {
@@ -114,7 +114,7 @@ export const crawlerController = {
         return;
       }
 
-      // re-crawl — create new job
+      // re-crawl, create new job
       const newJob = await jobService.createJob(domain, `https://${domain}`);
 
       await crawlerQueue.add(
@@ -144,7 +144,7 @@ export const crawlerController = {
   },
 
   /**
-   * POST /api/crawl/:job_id/notify — Save email for notification.
+   * POST /api/crawl/:job_id/notify, Save email for notification.
    */
   async notify(req: Request, res: Response): Promise<void> {
     try {
@@ -189,7 +189,7 @@ export const crawlerController = {
   },
 
   /**
-   * GET /api/crawl/:job_id/progress — Lightweight progress polling.
+   * GET /api/crawl/:job_id/progress, Lightweight progress polling.
    */
   async getProgress(req: Request, res: Response): Promise<void> {
     try {
@@ -224,7 +224,7 @@ export const crawlerController = {
   },
 
   /**
-   * GET /api/crawl/:job_id — Paginated results.
+   * GET /api/crawl/:job_id, Paginated results.
    */
   async getResults(req: Request, res: Response): Promise<void> {
     try {
@@ -266,7 +266,7 @@ export const crawlerController = {
   },
 
   /**
-   * POST /api/crawl/:job_id/export — Request a CSV export (sends download link via email).
+   * POST /api/crawl/:job_id/export, Request a CSV export (sends download link via email).
    */
   async requestExport(req: Request, res: Response): Promise<void> {
     try {
@@ -325,7 +325,7 @@ export const crawlerController = {
   },
 
   /**
-   * GET /api/crawl/:job_id/export/status — Check export status (for button state).
+   * GET /api/crawl/:job_id/export/status, Check export status (for button state).
    */
   async getExportStatus(req: Request, res: Response): Promise<void> {
     try {
@@ -351,7 +351,7 @@ export const crawlerController = {
   },
 
   /**
-   * GET /api/crawl/:job_id/download/:export_id — Serve the CSV file.
+   * GET /api/crawl/:job_id/download/:export_id, Serve the CSV file.
    */
   async downloadExport(req: Request, res: Response): Promise<void> {
     try {

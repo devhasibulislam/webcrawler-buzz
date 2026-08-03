@@ -13,7 +13,7 @@ router.get('/privacy-policy', viewController.privacyPolicy);
 router.get('/terms-of-service', viewController.termsOfService);
 router.get('/cookie-policy', viewController.cookiePolicy);
 
-// SEO / LLM files — explicit routes with correct Content-Type headers
+// SEO / LLM files, explicit routes with correct Content-Type headers
 // Include trailing-slash variants so bots never hit the 404 catch-all
 router.get(['/sitemap.xml', '/sitemap.xml/'], viewController.sitemapXml);
 router.get(['/robots.txt', '/robots.txt/'], viewController.robotsTxt);

@@ -14,7 +14,7 @@ export const crawlerService = {
    * BFS crawl starting from startUrl, scoped to the given domain.
    */
   async crawl(jobId: string, startUrl: string, domain: string): Promise<void> {
-    console.log(`[Crawler] Starting crawl for job ${jobId} — domain: ${domain}`);
+    console.log(`[Crawler] Starting crawl for job ${jobId}, domain: ${domain}`);
 
     // 1. Reset counters and old data (safe for BullMQ retries)
     await jobService.resetJobForCrawl(jobId);
@@ -88,7 +88,7 @@ export const crawlerService = {
             metaDescription =
               $('meta[name="description"]').attr('content')?.trim() || undefined;
 
-            // Indexability — check meta robots
+            // Indexability, check meta robots
             const robotsMeta = $('meta[name="robots"]').attr('content') || '';
             if (robotsMeta.toLowerCase().includes('noindex')) {
               isIndexable = false;
@@ -116,7 +116,7 @@ export const crawlerService = {
             });
           }
         } catch (fetchErr: any) {
-          // Page fetch error — record with status_code = 0
+          // Page fetch error, record with status_code = 0
           responseTimeMs = Date.now() - startTime;
           console.warn(
             `[Crawler] Failed to fetch ${currentUrl}: ${fetchErr.message}`
@@ -148,7 +148,7 @@ export const crawlerService = {
 
         // Log progress every 25 pages
         if (visited.size % 25 === 0) {
-          console.log(`[Crawler] Job ${jobId} — ${visited.size} pages crawled, ${queue.length} in queue`);
+          console.log(`[Crawler] Job ${jobId}, ${visited.size} pages crawled, ${queue.length} in queue`);
         }
 
         // Small delay to keep event loop responsive for HTTP requests

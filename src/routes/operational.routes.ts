@@ -85,7 +85,7 @@ router.get('/health', async (_req: Request, res: Response): Promise<void> => {
  */
 router.get('/stats', async (_req: Request, res: Response): Promise<void> => {
   try {
-    // Total crawl jobs ever created (approximate — some may have been cleaned up)
+    // Total crawl jobs ever created (approximate, some may have been cleaned up)
     const jobsResult = await pool.query(
       `SELECT
         COUNT(*)::int AS total_jobs,

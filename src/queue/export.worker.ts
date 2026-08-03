@@ -77,7 +77,7 @@ export const exportWorker = new Worker(
         throw new Error(`Export record ${exportId} not found`);
       }
 
-      // 6. Send download link via email (skip if email not provided — MCP flow)
+      // 6. Send download link via email (skip if email not provided, MCP flow)
       const baseUrl = process.env.APP_BASE_URL || 'http://localhost:5005';
       const downloadUrl = `${baseUrl}/api/crawl/${jobId}/download/${exportId}`;
 
@@ -91,7 +91,7 @@ export const exportWorker = new Worker(
         await exportService.updateExport(exportId, 'sent');
         console.log(`[ExportWorker] Export ${exportId} completed and email sent to ${exportRecord.email}`);
       } else {
-        // No email requested — mark completed; download URL fetched via MCP get_csv_export
+        // No email requested, mark completed; download URL fetched via MCP get_csv_export
         console.log(`[ExportWorker] Export ${exportId} completed (no email requested)`);
       }
     } catch (err: any) {

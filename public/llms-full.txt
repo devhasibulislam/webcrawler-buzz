@@ -1,4 +1,4 @@
-# WebCrawler.buzz — Full Technical Documentation
+# WebCrawler.buzz: Full Technical Documentation
 
 > Free web-based website crawler for SEO audits. Crawls any publicly accessible domain and returns structured page-level data.
 > Website: https://webcrawler.buzz
@@ -12,14 +12,14 @@ No registration required. No API key needed. Paste a URL, click "Start Crawl," a
 
 ## How It Works
 
-1. **Submit a URL** — Enter any website URL on the homepage
-2. **Duplicate Detection** — If the domain was already crawled recently, you can view existing results or start a fresh re-crawl
-3. **BFS Crawling** — The crawler visits every discoverable page on the domain, staying within the root domain scope
-4. **Real-Time Progress** — Live progress bar with percentage updates (polls every 5 seconds)
-5. **Tracking URL** — Shareable bookmark link to check progress or results anytime
-6. **Email Notification** — Optionally enter your email to get notified when the crawl completes
-7. **View Results** — Paginated table with all crawled pages and their SEO data
-8. **Export CSV** — Export full results as a CSV file, delivered via email
+1. **Submit a URL**, Enter any website URL on the homepage
+2. **Duplicate Detection**, If the domain was already crawled recently, you can view existing results or start a fresh re-crawl
+3. **BFS Crawling**, The crawler visits every discoverable page on the domain, staying within the root domain scope
+4. **Real-Time Progress**, Live progress bar with percentage updates (polls every 5 seconds)
+5. **Tracking URL**, Shareable bookmark link to check progress or results anytime
+6. **Email Notification**, Optionally enter your email to get notified when the crawl completes
+7. **View Results**, Paginated table with all crawled pages and their SEO data
+8. **Export CSV**, Export full results as a CSV file, delivered via email
 
 ## Data Collected Per Page
 
@@ -47,7 +47,7 @@ Completely free. No account, no API keys, no page limits per crawl.
 Live progress bar updates every 5 seconds showing pages crawled vs. total discovered.
 
 ### Shareable Tracking URLs
-Each crawl gets a unique URL. Bookmark it or share it — works across devices and sessions.
+Each crawl gets a unique URL. Bookmark it or share it, works across devices and sessions.
 
 ### Duplicate Domain Detection
 If a domain was recently crawled, you can view existing results or start a fresh crawl.
@@ -167,7 +167,7 @@ Response 200: { "total_jobs": 1234, "total_pages_crawled": 56789, "unique_domain
 
 - Crawl results auto-delete after 1 hour
 - CSV export files auto-delete after 5 minutes
-- No permanent data storage — all results are ephemeral
+- No permanent data storage, all results are ephemeral
 
 ## Technical Stack
 
@@ -252,7 +252,7 @@ All published at https://webcrawler.buzz/blogs
    Published: 2025-02-14 | 9 min read
    Step-by-step: crawl domain, fix 404s, audit redirects, check titles, verify indexability, find slow pages.
 
-6. **10 Best Free Web Crawler Tools in 2026 — Compared and Ranked**
+6. **10 Best Free Web Crawler Tools in 2026, Compared and Ranked**
    https://webcrawler.buzz/blogs/best-free-web-crawler-tools
    Published: 2026-04-17 | 12 min read
    Compares WebCrawler.buzz, Screaming Frog, Scrapy, Crawlee, Colly, Katana, and others with comparison table.

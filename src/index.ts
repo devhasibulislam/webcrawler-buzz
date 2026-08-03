@@ -27,14 +27,14 @@ import { startExportCleanupCron, startJobCleanupCron } from './cron/export-clean
 const app = express();
 const PORT = parseInt(process.env.PORT || '5005', 10);
 
-// Behind Traefik + Cloudflare — trust one proxy hop so req.ip / X-Forwarded-For
+// Behind Traefik + Cloudflare, trust one proxy hop so req.ip / X-Forwarded-For
 // resolve to the real client IP (needed for express-rate-limit accuracy).
 app.set('trust proxy', 1);
 
 // Compression middleware (gzip/brotli)
 app.use(compression());
 
-// SEO-critical files — served before security/static middleware so bots always get them
+// SEO-critical files, served before security/static middleware so bots always get them
 // These need explicit Cache-Control with s-maxage so Cloudflare edge caches them
 app.get(['/robots.txt', '/robots.txt/'], (_req, res) => {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -57,7 +57,7 @@ app.use(express.urlencoded({ extended: true }));
 // Static files (serve .well-known for AI plugin discovery)
 app.use(express.static(path.join(__dirname, '../public'), { dotfiles: 'allow' }));
 
-// Swagger docs — protected by Basic Auth
+// Swagger docs, protected by Basic Auth
 app.use('/api-docs', swaggerAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // API routes
@@ -158,7 +158,7 @@ app.delete('/mcp', async (req, res) => {
 // View routes (HTML pages)
 app.use('/', viewRoutes);
 
-// Global error handlers — keep the server alive
+// Global error handlers, keep the server alive
 process.on('uncaughtException', (err) => {
   console.error('[Process] Uncaught exception:', err);
 });

@@ -1,4 +1,4 @@
-# Copilot Instructions — webcrawler-buzz
+# Copilot Instructions, webcrawler-buzz
 
 ## VPS Access (Production Server)
 

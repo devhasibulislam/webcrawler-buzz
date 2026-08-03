@@ -1,4 +1,4 @@
-# Domain Glossary — webcrawler.buzz
+# Domain Glossary, webcrawler.buzz
 
 This file defines the bounded vocabulary of the project. Use these terms consistently in code, tests, issues, and documentation.
 

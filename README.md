@@ -5,7 +5,7 @@
 <h3 align="center">Free & Open-Source Website Crawler</h3>
 
 <p align="center">
-  Crawl any website. Discover every page. Get SEO data — all from your browser, for free.
+  Crawl any website. Discover every page. Get SEO data, all from your browser, for free.
 </p>
 
 <p align="center">
@@ -34,13 +34,13 @@
 
 ## What is WebCrawler.buzz?
 
-**WebCrawler.buzz** is a production-grade, open-source domain crawler that discovers every publicly accessible page on any website and extracts rich SEO data. Paste a URL, hit crawl — get a full report with page titles, meta descriptions, HTTP status codes, response times, indexability, and more.
+**WebCrawler.buzz** is a production-grade, open-source domain crawler that discovers every publicly accessible page on any website and extracts rich SEO data. Paste a URL, hit crawl, get a full report with page titles, meta descriptions, HTTP status codes, response times, indexability, and more.
 
-- **No signup required** — just paste a URL and go
-- **No page limits** — crawl entire domains, no matter the size
-- **Background processing** — close the tab, come back later via your tracking link
-- **Email notifications** — get notified when crawls complete
-- **CSV export** — download your results as a spreadsheet
+- **No signup required**, just paste a URL and go
+- **No page limits**, crawl entire domains, no matter the size
+- **Background processing**, close the tab, come back later via your tracking link
+- **Email notifications**, get notified when crawls complete
+- **CSV export**, download your results as a spreadsheet
 
 ### Who is this for?
 
@@ -55,18 +55,18 @@
 
 | Feature                    | Description                                                                                                              |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| 🔍 **BFS Crawling**        | Breadth-first search scoped to root domain — no depth limit                                                              |
+| 🔍 **BFS Crawling**        | Breadth-first search scoped to root domain, no depth limit                                                              |
 | 📊 **Rich SEO Data**       | Title, meta description, status code, response time, content type, page size, link counts, redirect chains, indexability |
 | 📈 **Real-Time Progress**  | Live progress bar polling every 5 seconds                                                                                |
 | 🔗 **Tracking URLs**       | Shareable bookmarkable links to check progress/results anytime                                                           |
 | 📧 **Email Notifications** | Optional email alerts when crawls complete                                                                               |
 | 📥 **CSV Export**          | Export full results as CSV, delivered via email                                                                          |
 | ♻️ **Duplicate Detection** | Already crawled that domain? Re-use results or re-crawl fresh                                                            |
-| 🧹 **Auto-Cleanup**        | Ephemeral data — crawls auto-delete after 1 hour, exports after 5 min                                                    |
+| 🧹 **Auto-Cleanup**        | Ephemeral data, crawls auto-delete after 1 hour, exports after 5 min                                                    |
 | 🔒 **Security**            | Helmet, CORS, rate limiting, input validation                                                                            |
 | 📖 **API Docs**            | Full OpenAPI/Swagger documentation                                                                                       |
-| 💚 **Health Check**        | `GET /api/health` — standard health endpoint                                                                             |
-| 📊 **Public Stats**        | `GET /api/stats` — live transparency stats                                                                               |
+| 💚 **Health Check**        | `GET /api/health`, standard health endpoint                                                                             |
+| 📊 **Public Stats**        | `GET /api/stats`, live transparency stats                                                                               |
 
 ---
 
@@ -75,7 +75,7 @@
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    Client (Browser)                     │
-│          Pure HTML/CSS/JS — Tailwind CSS CDN            │
+│          Pure HTML/CSS/JS, Tailwind CSS CDN            │
 └──────────────┬──────────────────────────┬───────────────┘
                │  POST /api/crawl         │  GET /api/crawl/:id/progress
                ▼                          ▼
@@ -104,7 +104,7 @@
 | Language  | TypeScript (strict mode)                              |
 | Framework | Express.js v5                                         |
 | Database  | PostgreSQL via [Neon](https://neon.tech) (serverless) |
-| DB Client | `pg` (node-postgres) — raw parameterized queries      |
+| DB Client | `pg` (node-postgres), raw parameterized queries      |
 | Job Queue | [BullMQ](https://docs.bullmq.io) + Redis              |
 | Crawling  | `axios` + `cheerio`                                   |
 | Email     | Nodemailer + Gmail SMTP                               |
@@ -120,8 +120,8 @@
 ### Prerequisites
 
 - **Node.js** v20 or higher
-- **PostgreSQL** database (we use [Neon](https://neon.tech) — free tier works)
-- **Redis** instance (we use [Redis Cloud](https://redis.com/cloud/) — free tier works)
+- **PostgreSQL** database (we use [Neon](https://neon.tech), free tier works)
+- **Redis** instance (we use [Redis Cloud](https://redis.com/cloud/), free tier works)
 - **Gmail** account with [App Password](https://support.google.com/accounts/answer/185833) for email notifications
 
 ### 1. Clone & Install
@@ -235,7 +235,7 @@ curl -X POST https://webcrawler.buzz/api/crawl \
 ```
 webcrawler.buzz/
 ├── src/
-│   ├── index.ts                    # Express entry — middleware, routes, workers, crons
+│   ├── index.ts                    # Express entry, middleware, routes, workers, crons
 │   ├── routes/
 │   │   ├── crawler.routes.ts       # /api/crawl/** API routes (Swagger-documented)
 │   │   └── view.routes.ts          # HTML page routes
@@ -280,13 +280,13 @@ webcrawler.buzz/
 
 ## 🔒 Security
 
-- **Helmet** — HTTP security headers on every response
-- **CORS** — restricted to configured origin
-- **Rate Limiting** — 200 POST requests per 15 minutes per IP
-- **Input Validation** — all user inputs validated before processing
-- **Parameterized Queries** — no SQL injection possible
-- **Auto-Cleanup** — no persistent user data; crawls expire in 1 hour
-- **Responsible Disclosure** — see [SECURITY.md](SECURITY.md)
+- **Helmet**, HTTP security headers on every response
+- **CORS**, restricted to configured origin
+- **Rate Limiting**, 200 POST requests per 15 minutes per IP
+- **Input Validation**, all user inputs validated before processing
+- **Parameterized Queries**, no SQL injection possible
+- **Auto-Cleanup**, no persistent user data; crawls expire in 1 hour
+- **Responsible Disclosure**, see [SECURITY.md](SECURITY.md)
 
 ---
 
@@ -298,13 +298,13 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
-This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
+This project is licensed under the **MIT License**, see [LICENSE](LICENSE) for details.
 
 ---
 
 ## 👤 Author
 
-**Hasibul Islam** — Full-Stack Developer
+**Hasibul Islam**, Full-Stack Developer
 
 - GitHub: [@devhasibulislam](https://github.com/devhasibulislam)
 - Email: [devhasibulislam@gmail.com](mailto:devhasibulislam@gmail.com)

@@ -4,7 +4,7 @@ import rateLimit from 'express-rate-limit';
 import { Express, Request } from 'express';
 
 export function setupSecurity(app: Express): void {
-  // 1. Helmet — HTTP security headers
+  // 1. Helmet, HTTP security headers
   app.use(
     helmet({
       contentSecurityPolicy: {
@@ -29,7 +29,7 @@ export function setupSecurity(app: Express): void {
     })
   );
 
-  // 2. CORS — open for API routes (public API), restrict frontend pages to own domain
+  // 2. CORS, open for API routes (public API), restrict frontend pages to own domain
   const allowedOrigin = process.env.ALLOWED_ORIGIN || 'http://localhost:5005';
   app.use(
     cors({
@@ -44,7 +44,7 @@ export function setupSecurity(app: Express): void {
     })
   );
 
-  // 3. Rate limiting — API endpoints
+  // 3. Rate limiting, API endpoints
   // POST: 60 requests / 15 min / IP (crawl starts, exports, notifications)
   app.use(
     '/api/',

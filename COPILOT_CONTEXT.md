@@ -1,4 +1,4 @@
-# 🕷️ Domain Crawler — VS Code Copilot Context File
+# 🕷️ Domain Crawler, VS Code Copilot Context File
 
 > Place this file in your project root as `COPILOT_CONTEXT.md`
 > OR copy contents into `.github/copilot-instructions.md` so Copilot always reads it automatically.
@@ -15,12 +15,12 @@ Backed by **Neon PostgreSQL** for storage and **Redis + BullMQ** for persistent 
 
 1. User pastes any URL on the homepage and clicks "Start Crawl"
 2. Server immediately creates a job and returns a **tracking URL** (e.g. `/results?job_id=abc-123`)
-3. That tracking URL is shown on screen right away — user can copy/bookmark it immediately
-4. BullMQ pushes the crawl job into Redis queue — crawl starts in background
-5. Frontend polls for progress every 5 seconds — shows real-time progress bar (0→100%)
-6. If crawl takes longer than a random 5–10 seconds → UI shows "Notify me" email form
+3. That tracking URL is shown on screen right away, user can copy/bookmark it immediately
+4. BullMQ pushes the crawl job into Redis queue, crawl starts in background
+5. Frontend polls for progress every 5 seconds, shows real-time progress bar (0→100%)
+6. If crawl takes longer than a random 5-10 seconds → UI shows "Notify me" email form
 7. When crawl finishes → if email was given, send notification with the **same tracking URL**
-8. User can close the browser at any time — crawl keeps running on the server
+8. User can close the browser at any time, crawl keeps running on the server
 9. User returns via tracking URL (bookmarked or from email) → sees full results table
 
 ---
@@ -34,11 +34,11 @@ Backed by **Neon PostgreSQL** for storage and **Redis + BullMQ** for persistent 
 | Framework  | Express.js v5 (API + static HTML)                        |
 | Styling    | Tailwind CSS (CDN) + Google Sans (Google Fonts CDN)      |
 | Database   | PostgreSQL via Neon (serverless)                         |
-| DB Client  | `pg` (node-postgres) — raw parameterized queries         |
+| DB Client  | `pg` (node-postgres), raw parameterized queries         |
 | Job Queue  | BullMQ + Redis (RedisLabs)                               |
 | Crawling   | `axios` + `cheerio`                                      |
 | Email      | Nodemailer + Gmail SMTP (App Password)                   |
-| API Docs   | Swagger UI — protected by HTTP Basic Auth                |
+| API Docs   | Swagger UI, protected by HTTP Basic Auth                |
 | Security   | `helmet`, `express-rate-limit`, `cors`, input validation |
 | CSV Export | BullMQ export queue + worker, `node-cron` cleanup        |
 | Linting    | ESLint + `@typescript-eslint`                            |
@@ -67,12 +67,12 @@ GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
 SWAGGER_USERNAME=admin
 SWAGGER_PASSWORD=your_strong_swagger_password
 
-# CORS — your VPS domain/IP for production, localhost for dev
+# CORS, your VPS domain/IP for production, localhost for dev
 ALLOWED_ORIGIN=http://localhost:5005
 ```
 
 > ⚠️ Gmail App Password: Google Account → Security → 2-Step Verification → App Passwords
-> ⚠️ Never commit .env to git — add it to .gitignore
+> ⚠️ Never commit .env to git, add it to .gitignore
 
 ---
 
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS csv_exports (
 );
 ```
 
-> CSV exports are ephemeral — a cron job deletes files + records older than 5 minutes.
+> CSV exports are ephemeral, a cron job deletes files + records older than 5 minutes.
 
 ---
 
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS csv_exports (
 ```
 domain-crawler/
 ├── src/
-│   ├── index.ts                          # Express entry — registers middleware, routes, BullMQ workers, cron
+│   ├── index.ts                          # Express entry, registers middleware, routes, BullMQ workers, cron
 │   ├── routes/
 │   │   ├── crawler.routes.ts             # /api/crawl/** API routes
 │   │   ├── operational.routes.ts         # /api/health + /api/stats endpoints
@@ -150,17 +150,17 @@ domain-crawler/
 │   │   ├── crawler.controller.ts         # API request/response logic
 │   │   └── view.controller.ts            # res.sendFile for HTML pages + blog SSR + 404
 │   ├── services/
-│   │   ├── crawler.service.ts            # BFS crawl logic — runs inside BullMQ worker
+│   │   ├── crawler.service.ts            # BFS crawl logic, runs inside BullMQ worker
 │   │   ├── job.service.ts                # DB CRUD for crawl_jobs + crawled_pages
 │   │   ├── email.service.ts              # Nodemailer send logic
 │   │   └── export.service.ts             # DB CRUD for csv_exports table
 │   ├── queue/
-│   │   ├── crawler.queue.ts              # BullMQ Queue definition — crawl jobs (producer)
-│   │   ├── crawler.worker.ts             # BullMQ Worker — crawl jobs (consumer, concurrency: 5)
-│   │   ├── export.queue.ts               # BullMQ Queue definition — CSV export jobs (producer)
-│   │   └── export.worker.ts              # BullMQ Worker — CSV export jobs (consumer, concurrency: 2)
+│   │   ├── crawler.queue.ts              # BullMQ Queue definition, crawl jobs (producer)
+│   │   ├── crawler.worker.ts             # BullMQ Worker, crawl jobs (consumer, concurrency: 5)
+│   │   ├── export.queue.ts               # BullMQ Queue definition, CSV export jobs (producer)
+│   │   └── export.worker.ts              # BullMQ Worker, CSV export jobs (consumer, concurrency: 2)
 │   ├── cron/
-│   │   └── export-cleanup.ts             # node-cron job — deletes expired exports every minute
+│   │   └── export-cleanup.ts             # node-cron job, deletes expired exports every minute
 │   ├── middleware/
 │   │   ├── security.middleware.ts        # Helmet, CORS, rate limiter
 │   │   └── swagger-auth.middleware.ts    # HTTP Basic Auth for /api-docs
@@ -174,9 +174,9 @@ domain-crawler/
 │   └── types/
 │       └── index.ts                      # Shared TypeScript interfaces
 ├── public/
-│   ├── index.html                        # Home page — main crawler UI
+│   ├── index.html                        # Home page, main crawler UI
 │   ├── results.html                      # Results table (tracking URL page)
-│   ├── about.html                        # About page — project info, author, tech stack, trust signals
+│   ├── about.html                        # About page, project info, author, tech stack, trust signals
 │   ├── api-docs-public.html              # Public API documentation page
 │   ├── 404.html                          # Custom 404 page
 │   ├── blogs.html                        # Blog listing template
@@ -222,7 +222,7 @@ Validates URL, creates job in DB, pushes to BullMQ queue, returns tracking URL i
 { "url": "https://amplifying.ai/research/some-page" }
 ```
 
-**Response — new domain (HTTP 201):**
+**Response, new domain (HTTP 201):**
 
 ```json
 {
@@ -233,7 +233,7 @@ Validates URL, creates job in DB, pushes to BullMQ queue, returns tracking URL i
 }
 ```
 
-**Response — domain already crawled (HTTP 200):**
+**Response, domain already crawled (HTTP 200):**
 
 ```json
 {
@@ -266,7 +266,7 @@ User decision for duplicate domain.
 
 ### `POST /api/crawl/:job_id/notify`
 
-Saves email to `crawl_jobs.notify_email`. Called after 5–10s threshold on frontend.
+Saves email to `crawl_jobs.notify_email`. Called after 5-10s threshold on frontend.
 
 **Request:**
 
@@ -284,7 +284,7 @@ Saves email to `crawl_jobs.notify_email`. Called after 5–10s threshold on fron
 
 ### `GET /api/crawl/:job_id/progress`
 
-Lightweight polling endpoint — called every 5 seconds by frontend.
+Lightweight polling endpoint, called every 5 seconds by frontend.
 
 **Response (running):**
 
@@ -317,12 +317,12 @@ Lightweight polling endpoint — called every 5 seconds by frontend.
 
 ### `GET /api/crawl/:job_id`
 
-Full paginated results — called once crawl is complete to load results table.
+Full paginated results, called once crawl is complete to load results table.
 
 **Query Parameters:**
 
-- `page` — page number (default: 1)
-- `limit` — rows per page: `50` | `100` | `500` | `1000` (default: 50)
+- `page`, page number (default: 1)
+- `limit`, rows per page: `50` | `100` | `500` | `1000` (default: 50)
 
 **Response:**
 
@@ -346,7 +346,7 @@ Full paginated results — called once crawl is complete to load results table.
 
 ### `POST /api/crawl/:job_id/export`
 
-Request a CSV export — generates CSV in background, emails download link to user.
+Request a CSV export, generates CSV in background, emails download link to user.
 
 **Request:**
 
@@ -364,7 +364,7 @@ Request a CSV export — generates CSV in background, emails download link to us
 }
 ```
 
-**Response — already in progress (HTTP 200):**
+**Response, already in progress (HTTP 200):**
 
 ```json
 {
@@ -378,7 +378,7 @@ Request a CSV export — generates CSV in background, emails download link to us
 
 ### `GET /api/crawl/:job_id/export/status`
 
-Check export status — used by frontend to control export button state.
+Check export status, used by frontend to control export button state.
 
 **Response (active):**
 
@@ -408,7 +408,7 @@ Download the generated CSV file. Returns `404` if not found, `410` if expired/de
 
 ### `GET /api/health`
 
-Health check endpoint — returns database and Redis connectivity status.
+Health check endpoint, returns database and Redis connectivity status.
 
 **Response (HTTP 200):**
 
@@ -429,7 +429,7 @@ Health check endpoint — returns database and Redis connectivity status.
 
 ### `GET /api/stats`
 
-Public usage statistics — anonymized data for transparency.
+Public usage statistics, anonymized data for transparency.
 
 **Response:**
 
@@ -445,9 +445,9 @@ Public usage statistics — anonymized data for transparency.
 
 ---
 
-## 🖥️ Frontend Pages (Pure HTML — served by Express)
+## 🖥️ Frontend Pages (Pure HTML, served by Express)
 
-### `/` → `public/index.html` — Home Page
+### `/` → `public/index.html`, Home Page
 
 - Google Sans + Tailwind CSS via CDN
 - Large centered URL input box
@@ -456,19 +456,19 @@ Public usage statistics — anonymized data for transparency.
   - **Immediately show the tracking URL** on screen in a highlighted box:
     > 🔗 Your tracking link: `http://your-domain:5005/results?job_id=abc-123`
     > "Bookmark this! You can come back anytime even if you close the tab."
-  - Show live progress bar (0→100%) — polls `GET /api/crawl/:job_id/progress` every 5 seconds
+  - Show live progress bar (0→100%), polls `GET /api/crawl/:job_id/progress` every 5 seconds
   - Show live counter: "23 of 61 pages crawled..."
-- **After random 5–10 seconds, if still running** → animated card slides in:
+- **After random 5-10 seconds, if still running** → animated card slides in:
   > "⏳ This might take a while. Want an email when it's done?"
   > `[email input]` `[Notify Me]` button → calls `POST /api/crawl/:job_id/notify`
 - When progress hits 100% → auto-redirect to `/results?job_id=abc-123`
 - Duplicate domain modal: "Already crawled! Re-crawl fresh or view existing results?"
 - Footer: links to Privacy Policy, Terms of Service, Cookie Policy
 
-### `/results` → `public/results.html` — Results / Tracking Page
+### `/results` → `public/results.html`, Results / Tracking Page
 
 - Reads `?job_id=xxx` from URL query string
-- **Works at any time** — if crawl is still running, shows live progress bar (polls every 5s)
+- **Works at any time**, if crawl is still running, shows live progress bar (polls every 5s)
 - When complete → renders full 12-column **paginated** results table
 - Rows-per-page selector: 50 / 100 / 500 / 1000
 - Pagination controls with page numbers
@@ -483,11 +483,11 @@ Public usage statistics — anonymized data for transparency.
 
 ### `/cookie-policy` → `public/cookie-policy.html`
 
-- All three have placeholder content — user replaces later
+- All three have placeholder content, user replaces later
 - Cookie Policy is for future Google AdSense compliance
 - Consistent header/footer with Home page
 
-### `/about` → `public/about.html` — About Page
+### `/about` → `public/about.html`, About Page
 
 - Project description, tech stack, how it works, author info
 - Links to GitHub repo, MIT License, CONTRIBUTING.md
@@ -495,21 +495,21 @@ Public usage statistics — anonymized data for transparency.
 - Trust signals grid (open source, no data retention, free, security policy, API docs, Product Hunt)
 - JSON-LD structured data (AboutPage + SoftwareApplication)
 
-### `/api-docs-public` → `public/api-docs-public.html` — Public API Docs
+### `/api-docs-public` → `public/api-docs-public.html`, Public API Docs
 
 - Full REST API reference with request/response examples
 - All endpoints documented with JSON samples
 - Rate limit info
 - No authentication required to view
 
-### 404 → `public/404.html` — Custom Error Page
+### 404 → `public/404.html`, Custom Error Page
 
 - Branded 404 page with navigation back to Home, Blog, About
 - Returned by catch-all route in view.routes.ts
 
 ---
 
-## 📊 Results Table — 12 Columns
+## 📊 Results Table, 12 Columns
 
 | #   | Column           | Source                                        |
 | --- | ---------------- | --------------------------------------------- |
@@ -528,11 +528,11 @@ Public usage statistics — anonymized data for transparency.
 
 ---
 
-## ⚙️ BullMQ + Redis — Job Queue Architecture
+## ⚙️ BullMQ + Redis, Job Queue Architecture
 
 ### Why BullMQ?
 
-- Crawl jobs survive VPS restarts — they live in Redis, not memory
+- Crawl jobs survive VPS restarts, they live in Redis, not memory
 - If worker crashes mid-crawl, BullMQ automatically retries the job
 - Jobs are processed one at a time per domain (no duplicate crawls)
 
@@ -607,7 +607,7 @@ await crawlerQueue.add(
 
 ---
 
-## 📈 Progress Bar — Accurate Calculation
+## 📈 Progress Bar, Accurate Calculation
 
 **Formula:**
 
@@ -651,7 +651,7 @@ const interval = setInterval(async () => {
 
 ```
 1. Crawl starts → tracking URL shown on screen immediately
-2. Frontend timer: Math.floor(Math.random() * 5000) + 5000 ms (5–10 seconds)
+2. Frontend timer: Math.floor(Math.random() * 5000) + 5000 ms (5-10 seconds)
 3. Timer fires, status still "running" → show email notification card
 4. User enters email → POST /api/crawl/:job_id/notify
 5. Backend saves email to crawl_jobs.notify_email
@@ -687,14 +687,14 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD, // App Password only — NOT real Gmail password
+    pass: process.env.GMAIL_APP_PASSWORD, // App Password only, NOT real Gmail password
   },
 });
 ```
 
 ---
 
-## 🕷️ Crawler — BFS Algorithm (`src/services/crawler.service.ts`)
+## 🕷️ Crawler, BFS Algorithm (`src/services/crawler.service.ts`)
 
 ```
 crawl(jobId, startUrl, domain):
@@ -702,7 +702,7 @@ crawl(jobId, startUrl, domain):
   2. queue = [startUrl], visited = new Set(), queued = new Set([startUrl])
   3. UPDATE crawl_jobs SET total_pages_queued = 1 (first URL)
   4. While queue not empty:
-       a. Dequeue URL — skip if already in visited
+       a. Dequeue URL, skip if already in visited
        b. Mark as visited, record start time
        c. Fetch with axios (follow redirects, capture redirect_url)
        d. Record: status_code, content_type, page_size_bytes, response_time_ms
@@ -727,9 +727,9 @@ crawl(jobId, startUrl, domain):
 
 ---
 
-## 🔐 API Security — 4 Layers
+## 🔐 API Security, 4 Layers
 
-### 1. Helmet.js — HTTP Security Headers
+### 1. Helmet.js, HTTP Security Headers
 
 ```typescript
 import helmet from "helmet";
@@ -740,14 +740,14 @@ app.use(
 );
 ```
 
-### 2. CORS — Restrict to Own Domain
+### 2. CORS, Restrict to Own Domain
 
 ```typescript
 import cors from "cors";
 app.use(cors({ origin: process.env.ALLOWED_ORIGIN }));
 ```
 
-### 3. Rate Limiting — 200 POST requests / 15 min / IP
+### 3. Rate Limiting, 200 POST requests / 15 min / IP
 
 ```typescript
 import rateLimit from "express-rate-limit";
@@ -762,7 +762,7 @@ app.use(
 );
 ```
 
-### 4. Input Validation — on `POST /api/crawl`
+### 4. Input Validation, on `POST /api/crawl`
 
 - Must be a non-empty string
 - Must start with `http://` or `https://`
@@ -772,10 +772,10 @@ app.use(
 
 ---
 
-## 📖 Swagger UI — Protected Docs
+## 📖 Swagger UI, Protected Docs
 
 - URL: `http://your-vps-ip:5005/api-docs`
-- Protected by HTTP Basic Auth — browser shows login popup
+- Protected by HTTP Basic Auth, browser shows login popup
 - Credentials stored in `.env` as `SWAGGER_USERNAME` and `SWAGGER_PASSWORD`
 
 ### Middleware (`src/middleware/swagger-auth.middleware.ts`)
@@ -818,12 +818,12 @@ app.use(
 
 ## 🔒 Domain Rules
 
-- Strip `www.` before any comparison — `www.amplifying.ai` === `amplifying.ai`
+- Strip `www.` before any comparison, `www.amplifying.ai` === `amplifying.ai`
 - ✅ Crawl: `amplifying.ai/*` and `www.amplifying.ai/*`
-- ❌ Skip: `blog.amplifying.ai` (subdomain — blocked in v1)
+- ❌ Skip: `blog.amplifying.ai` (subdomain, blocked in v1)
 - ❌ Skip: external domains, `mailto:`, `tel:`, `javascript:`, `#`-only hrefs
 - ❌ Skip: already visited URLs (Set-based dedup)
-- ❌ Don't follow links inside non-HTML responses (images, PDFs) — record metadata only
+- ❌ Don't follow links inside non-HTML responses (images, PDFs), record metadata only
 
 ---
 
@@ -969,21 +969,21 @@ export interface ProgressResponse {
 
 ---
 
-## 🖥️ VS Code Setup Guide — Start to End
+## 🖥️ VS Code Setup Guide, Start to End
 
-### Step 1 — Install VS Code Extensions
+### Step 1, Install VS Code Extensions
 
 Open Extensions panel (`Ctrl+Shift+X`) and install:
 
-- **GitHub Copilot** — AI inline code suggestions
-- **GitHub Copilot Chat** — chat with Copilot (`Ctrl+Shift+I`)
-- **ESLint** — catches TypeScript errors while typing
-- **Prettier** — auto-formats code on save
-- **REST Client** — test APIs inside VS Code without Postman
+- **GitHub Copilot**, AI inline code suggestions
+- **GitHub Copilot Chat**, chat with Copilot (`Ctrl+Shift+I`)
+- **ESLint**, catches TypeScript errors while typing
+- **Prettier**, auto-formats code on save
+- **REST Client**, test APIs inside VS Code without Postman
 
 ---
 
-### Step 2 — Create Your Project
+### Step 2, Create Your Project
 
 ```bash
 mkdir domain-crawler && cd domain-crawler
@@ -993,9 +993,9 @@ npm init -y
 
 ---
 
-### Step 3 — Give Copilot Your Context
+### Step 3, Give Copilot Your Context
 
-**Option A — Automatic (recommended):**
+**Option A, Automatic (recommended):**
 
 ```bash
 mkdir .github
@@ -1004,7 +1004,7 @@ cp COPILOT_CONTEXT.md .github/copilot-instructions.md
 
 Copilot reads this file automatically for every suggestion in the project. No extra steps.
 
-**Option B — Manual via Copilot Chat:**
+**Option B, Manual via Copilot Chat:**
 
 - Open Copilot Chat (`Ctrl+Shift+I`)
 - Click paperclip 📎 → attach `COPILOT_CONTEXT.md`
@@ -1012,9 +1012,9 @@ Copilot reads this file automatically for every suggestion in the project. No ex
 
 ---
 
-### Step 4 — Set Up Neon MCP Server in VS Code
+### Step 4, Set Up Neon MCP Server in VS Code
 
-The Neon MCP lets Copilot Chat **talk to your database directly** — run queries, check schema, debug issues without leaving VS Code.
+The Neon MCP lets Copilot Chat **talk to your database directly**, run queries, check schema, debug issues without leaving VS Code.
 
 **4a. Create `.vscode/mcp.json` in your project root:**
 
@@ -1051,7 +1051,7 @@ The Neon MCP lets Copilot Chat **talk to your database directly** — run querie
 
 ---
 
-### Step 5 — Install All Dependencies
+### Step 5, Install All Dependencies
 
 ```bash
 npm install axios bullmq cheerio cors dotenv express express-rate-limit helmet node-cron nodemailer pg swagger-jsdoc swagger-ui-express uuid
@@ -1061,16 +1061,16 @@ npm install -D @types/cors @types/express @types/node @types/node-cron @types/no
 
 ---
 
-### Step 6 — Configure `.env`
+### Step 6, Configure `.env`
 
 ```bash
 cp .env.example .env
-# Fill in all values — see Environment Variables section above
+# Fill in all values, see Environment Variables section above
 ```
 
 ---
 
-### Step 7 — Run DB Migration
+### Step 7, Run DB Migration
 
 ```bash
 npm run migrate
@@ -1079,7 +1079,7 @@ npm run migrate
 
 ---
 
-### Step 8 — Start Dev Server
+### Step 8, Start Dev Server
 
 ```bash
 npm run dev
@@ -1089,7 +1089,7 @@ npm run dev
 
 ---
 
-### Step 9 — Test APIs with REST Client
+### Step 9, Test APIs with REST Client
 
 Create `test.http` in project root:
 
@@ -1127,35 +1127,35 @@ Click **"Send Request"** above each block to test directly in VS Code.
 
 ---
 
-## ✅ Copilot Rules — Always Follow These
+## ✅ Copilot Rules, Always Follow These
 
-1. **Port is always 5005** — never 3000 or any other
-2. **Tracking URL returned immediately** on `POST /api/crawl` — before crawl even starts
-3. **Same tracking URL sent in email** — it's always `/results?job_id=:id`
-4. **BullMQ + Redis for all jobs** — never use in-memory queues or setTimeout for crawling
-5. **Redis connection** — URL manually parsed with `new URL()`, passed as `{host, port, password}` config to BullMQ (no `ioredis` dependency). `maxRetriesPerRequest: null` required by BullMQ
-6. **Progress formula** — `Math.round((total_pages_found / total_pages_queued) * 100)`
-7. **Guard divide-by-zero** — if `total_pages_queued === 0` return `progress_percent: 0`
-8. **`total_pages_queued` updates in real-time** — increments as new URLs are discovered during crawl
-9. **Parameterized SQL only** — never string-concatenated DB queries
-10. **www. normalization** — always strip `www.` before domain comparison
-11. **Subdomains blocked** — `blog.domain.com` is out of scope in v1
-12. **Duplicate domain check** — always query DB first, prompt user before starting new crawl
-13. **Email threshold** — `Math.floor(Math.random() * 5000) + 5000` ms on frontend
-14. **Nodemailer + Gmail App Password** — never real Gmail password
-15. **Swagger behind Basic Auth** — credentials always from `.env`
-16. **All 4 security layers** — Helmet, CORS, rate limit, input validation always active
-17. **12 metadata columns** — always collect all fields per crawled page
-18. **Fail gracefully** — page fetch error → record `status_code = 0`, continue crawl
-19. **Frontend is pure HTML** — Tailwind CDN + Google Sans CDN, no build step, no React
-20. **5 HTML pages** — Home, Results, Privacy Policy, Terms of Service, Cookie Policy
-21. **Polling interval is 5 seconds** — both `index.html` and `results.html` poll progress every 5s
-22. **Rate limit skips GET** — only POST requests are rate-limited (200/15min). GET requests (progress polling) are exempt
-23. **Helmet CSP disabled** — `contentSecurityPolicy: false` to allow CDN scripts
-24. **CSV export pipeline** — separate BullMQ queue (`csv-export`), worker (concurrency: 2), `csv_exports` DB table, 5-min expiry, cron cleanup every minute
-25. **Results are paginated** — `GET /api/crawl/:job_id` accepts `?page=` and `?limit=` (50/100/500/1000)
-26. **ESLint configured** — `eslint.config.cjs` (flat config) with `@typescript-eslint`, run via `npm run lint`
-27. **Express v5** — project uses Express `^5.2.1`, not v4
+1. **Port is always 5005**, never 3000 or any other
+2. **Tracking URL returned immediately** on `POST /api/crawl`, before crawl even starts
+3. **Same tracking URL sent in email**, it's always `/results?job_id=:id`
+4. **BullMQ + Redis for all jobs**, never use in-memory queues or setTimeout for crawling
+5. **Redis connection**, URL manually parsed with `new URL()`, passed as `{host, port, password}` config to BullMQ (no `ioredis` dependency). `maxRetriesPerRequest: null` required by BullMQ
+6. **Progress formula**, `Math.round((total_pages_found / total_pages_queued) * 100)`
+7. **Guard divide-by-zero**, if `total_pages_queued === 0` return `progress_percent: 0`
+8. **`total_pages_queued` updates in real-time**, increments as new URLs are discovered during crawl
+9. **Parameterized SQL only**, never string-concatenated DB queries
+10. **www. normalization**, always strip `www.` before domain comparison
+11. **Subdomains blocked**, `blog.domain.com` is out of scope in v1
+12. **Duplicate domain check**, always query DB first, prompt user before starting new crawl
+13. **Email threshold**, `Math.floor(Math.random() * 5000) + 5000` ms on frontend
+14. **Nodemailer + Gmail App Password**, never real Gmail password
+15. **Swagger behind Basic Auth**, credentials always from `.env`
+16. **All 4 security layers**, Helmet, CORS, rate limit, input validation always active
+17. **12 metadata columns**, always collect all fields per crawled page
+18. **Fail gracefully**, page fetch error → record `status_code = 0`, continue crawl
+19. **Frontend is pure HTML**, Tailwind CDN + Google Sans CDN, no build step, no React
+20. **5 HTML pages**, Home, Results, Privacy Policy, Terms of Service, Cookie Policy
+21. **Polling interval is 5 seconds**, both `index.html` and `results.html` poll progress every 5s
+22. **Rate limit skips GET**, only POST requests are rate-limited (200/15min). GET requests (progress polling) are exempt
+23. **Helmet CSP disabled**, `contentSecurityPolicy: false` to allow CDN scripts
+24. **CSV export pipeline**, separate BullMQ queue (`csv-export`), worker (concurrency: 2), `csv_exports` DB table, 5-min expiry, cron cleanup every minute
+25. **Results are paginated**, `GET /api/crawl/:job_id` accepts `?page=` and `?limit=` (50/100/500/1000)
+26. **ESLint configured**, `eslint.config.cjs` (flat config) with `@typescript-eslint`, run via `npm run lint`
+27. **Express v5**, project uses Express `^5.2.1`, not v4
 
 ---
 

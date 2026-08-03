@@ -86,22 +86,22 @@ npm run dev
 
 ## Pull Request Process
 
-1. **Branch from `main`** — create a feature or fix branch
-2. **Write clear commits** — use [Conventional Commits](https://www.conventionalcommits.org/) format:
+1. **Branch from `main`**, create a feature or fix branch
+2. **Write clear commits**, use [Conventional Commits](https://www.conventionalcommits.org/) format:
    - `feat:` for new features
    - `fix:` for bug fixes
    - `docs:` for documentation changes
    - `refactor:` for code restructuring
    - `chore:` for maintenance tasks
-3. **Test your changes** — make sure the app runs correctly
-4. **Update documentation** — if your change affects the API or user-facing behavior
-5. **Open a PR** — describe what you changed and why
+3. **Test your changes**, make sure the app runs correctly
+4. **Update documentation**, if your change affects the API or user-facing behavior
+5. **Open a PR**, describe what you changed and why
 
 ## Style Guide
 
 ### TypeScript
 
-- **Strict mode** is enabled — no `any` unless absolutely necessary
+- **Strict mode** is enabled, no `any` unless absolutely necessary
 - Use `async/await` over raw Promises
 - Use parameterized queries for all database operations (never string concatenation)
 - Add JSDoc comments to exported functions

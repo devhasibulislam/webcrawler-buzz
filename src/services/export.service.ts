@@ -81,7 +81,7 @@ export const exportService = {
   },
 
   /**
-   * Get all exports for a specific job (for job cleanup — need file paths before cascade delete).
+   * Get all exports for a specific job (for job cleanup, need file paths before cascade delete).
    */
   async getExpiredExportsByJobId(jobId: string): Promise<CsvExport[]> {
     const result = await pool.query(

@@ -1,4 +1,4 @@
-# VPS Deployment Guide — webcrawler.buzz
+# VPS Deployment Guide, webcrawler.buzz
 
 > Ubuntu 24.04 on Contabo VPS (167.86.124.99)
 
@@ -210,7 +210,7 @@ ufw enable          # type 'y' to confirm
 ufw status
 ```
 
-> PostgreSQL (5432) and Redis (6379) are NOT exposed — localhost only.
+> PostgreSQL (5432) and Redis (6379) are NOT exposed, localhost only.
 
 ---
 
@@ -345,6 +345,6 @@ redis-cli -u 'redis://webcrawler:webcrawler@123@localhost:6379' ping
 | Service           | Port    | Auth                        | Public?        |
 | ----------------- | ------- | --------------------------- | -------------- |
 | Nginx             | 80, 443 | Cloudflare Origin Cert      | Yes            |
-| Node.js (Express) | 5005    | —                           | No (localhost) |
+| Node.js (Express) | 5005    |,                           | No (localhost) |
 | PostgreSQL        | 5432    | webcrawler / webcrawler@123 | No (localhost) |
 | Redis             | 6379    | ACL user: webcrawler / webcrawler@123 | No (localhost) |

@@ -8,13 +8,13 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MCP Server — Connect WebCrawler.buzz to Claude, Cursor &amp; VS Code</title>
+  <title>MCP Server, Connect WebCrawler.buzz to Claude, Cursor &amp; VS Code</title>
   <meta name="description" content="Public MCP (Model Context Protocol) server for WebCrawler.buzz. Plug it into Claude, Cursor, VS Code, or Codex with a single URL and crawl any website from your AI chat." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://webcrawler.buzz/mcp" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="MCP Server — WebCrawler.buzz" />
+  <meta property="og:title" content="MCP Server, WebCrawler.buzz" />
   <meta property="og:description" content="Connect WebCrawler.buzz to Claude, Cursor, VS Code, or Codex via MCP. No auth, no API key." />
   <meta property="og:url" content="https://webcrawler.buzz/mcp" />
   <meta property="og:image" content="https://webcrawler.buzz/og-image.png" />
@@ -31,7 +31,7 @@
 <body class="bg-gray-50 min-h-screen flex flex-col">
   <header class="bg-white shadow-sm">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
-      <a href="/" class="flex-shrink-0"><picture><source type="image/webp" srcset="/webcrawler-logo-192.webp 1x, /webcrawler-logo-384.webp 2x"><img src="/webcrawler-logo-192.png" srcset="/webcrawler-logo-384.png 2x" alt="WebCrawler.buzz — Free Online Web Crawler" class="h-8 sm:h-10"></picture></a>
+      <a href="/" class="flex-shrink-0"><picture><source type="image/webp" srcset="/webcrawler-logo-192.webp 1x, /webcrawler-logo-384.webp 2x"><img src="/webcrawler-logo-192.png" srcset="/webcrawler-logo-384.png 2x" alt="WebCrawler.buzz: Free Online Web Crawler" class="h-8 sm:h-10"></picture></a>
       <nav class="text-xs sm:text-sm text-gray-600 space-x-2 sm:space-x-4" aria-label="Main navigation">
         <a href="/" class="hover:text-gray-800">Home</a>
         <a href="/blogs" class="hover:text-gray-800">Blog</a>
@@ -44,7 +44,7 @@
   <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full">
     <div class="text-center mb-10">
       <p class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-4 uppercase tracking-wide">🤖 AI Integration</p>
-      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4">WebCrawler.buzz — MCP Server</h1>
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4">WebCrawler.buzz: MCP Server</h1>
       <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">Public <a href="https://modelcontextprotocol.io" class="text-blue-600 underline" target="_blank" rel="noopener">Model Context Protocol</a> server. No auth, no API key. Plug the URL below into any MCP-compatible client and your AI can crawl any website for you.</p>
     </div>
 
@@ -104,7 +104,7 @@ URL:  https://webcrawler.buzz/mcp</pre>
             <tr class="border-b border-gray-100"><td class="py-2 pr-4"><code>get_crawl_progress</code></td><td class="py-2">Poll progress. Non-blocking.</td></tr>
             <tr class="border-b border-gray-100"><td class="py-2 pr-4"><code>get_crawl_results</code></td><td class="py-2">Fetch paginated page results (URL, title, meta, status, etc.).</td></tr>
             <tr class="border-b border-gray-100"><td class="py-2 pr-4"><code>set_notify_email</code></td><td class="py-2">Register email so the user gets a notification when a slow crawl finishes.</td></tr>
-            <tr class="border-b border-gray-100"><td class="py-2 pr-4"><code>request_csv_export</code></td><td class="py-2">Generate CSV of results. Email is optional — download URL is always returned.</td></tr>
+            <tr class="border-b border-gray-100"><td class="py-2 pr-4"><code>request_csv_export</code></td><td class="py-2">Generate CSV of results. Email is optional, download URL is always returned.</td></tr>
             <tr><td class="py-2 pr-4"><code>get_csv_export</code></td><td class="py-2">Poll export status; returns download URL when ready.</td></tr>
           </tbody>
         </table>

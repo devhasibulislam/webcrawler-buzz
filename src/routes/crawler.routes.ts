@@ -22,9 +22,9 @@ const router = Router();
  *                 example: "https://amplifying.ai"
  *     responses:
  *       201:
- *         description: Crawl started — new domain
+ *         description: Crawl started, new domain
  *       200:
- *         description: Domain already crawled — prompt user
+ *         description: Domain already crawled, prompt user
  *       400:
  *         description: Invalid URL
  */

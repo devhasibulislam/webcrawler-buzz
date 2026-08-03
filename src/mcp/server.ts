@@ -37,7 +37,7 @@ export function createMcpServer(clientKey: string): McpServer {
   // ── Tool 1: start_crawl ──────────────────────────────────────
   server.tool(
     'start_crawl',
-    'Start crawling every page of a website. NON-BLOCKING — returns job_id immediately. ' +
+    'Start crawling every page of a website. NON-BLOCKING, returns job_id immediately. ' +
       'Do NOT wait for completion. Follow this flow: (1) call get_crawl_progress up to 3 times ' +
       'spaced ~10s apart; (2) if status is "completed", call get_crawl_results; (3) if still ' +
       'running after ~30s, tell the user the crawl is large and offer them to either ' +
@@ -192,7 +192,7 @@ export function createMcpServer(clientKey: string): McpServer {
   // ── Tool 6: request_csv_export ───────────────────────────────
   server.tool(
     'request_csv_export',
-    'Generate a CSV export of the crawl results. Email is OPTIONAL — the download URL will always ' +
+    'Generate a CSV export of the crawl results. Email is OPTIONAL, the download URL will always ' +
       'be returned by get_csv_export once ready. Only pass an email if the user explicitly wants ' +
       'the link emailed too.',
     {
