@@ -17,7 +17,7 @@
       '<a href="/" class="flex-shrink-0" aria-label="WebCrawler.buzz home">' +
         '<picture>' +
           '<source type="image/webp" srcset="/webcrawler-logo-192.webp 1x, /webcrawler-logo-384.webp 2x">' +
-          '<img src="/webcrawler-logo-192.png" srcset="/webcrawler-logo-384.png 2x" alt="WebCrawler.buzz — Free Online Web Crawler" class="h-8 sm:h-10" width="192" height="40">' +
+          '<img src="/webcrawler-logo-192.png" srcset="/webcrawler-logo-384.png 2x" alt="WebCrawler.buzz — Free Online Web Crawler" class="h-8 sm:h-10">' +
         '</picture>' +
       '</a>' +
       '<nav class="text-sm text-gray-600 space-x-4" aria-label="Main navigation">' +
