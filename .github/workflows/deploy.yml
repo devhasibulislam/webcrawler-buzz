@@ -1,142 +1,98 @@
-name: Deploy Crawler
+name: Deploy to VPS
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+  workflow_dispatch:
 
 concurrency:
-  group: deploy-${{ github.ref }}
-  cancel-in-progress: true
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  IMAGE_WEB: ghcr.io/${{ github.repository_owner }}/webcrawler-buzz-web
 
 jobs:
-  build-and-deploy:
+  check:
     runs-on: ubuntu-latest
-
+    env:
+      HUSKY: "0"
     steps:
-      # ── Step 1: Checkout code ──────────────────────
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # ── Step 2: Setup Node.js ──────────────────────
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
 
-      # ── Step 3: Install ALL dependencies (for build) ─
-      - name: Install dependencies
-        run: npm ci
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_tag: ${{ steps.meta.outputs.image_tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: meta
+        run: echo "image_tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_WEB }}:${{ steps.meta.outputs.image_tag }}
+            ${{ env.IMAGE_WEB }}:latest
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,scope=web,mode=max
 
-      # ── Step 4: Lint ───────────────────────────────
-      - name: Lint
-        run: npm run lint
-
-      # ── Step 5: Run unit tests ─────────────────────
-      - name: Test
-        run: npm test
-
-      # ── Step 6: Build TypeScript + Tailwind CSS ────
-      - name: Build
-        run: npm run build
-
-      # ── Step 7: Package deployment artifact ────────
-      # Only ship what's needed at runtime:
-      #   dist/        → compiled JS
-      #   public/      → static HTML, CSS, fonts, etc.
-      #   tmp/exports/ → ensure exports dir exists
-      #   package.json → for production npm install on VPS
-      #   ecosystem.config.cjs → PM2 config
-      - name: Create deployment package
-        run: |
-          mkdir -p deploy-package/tmp/exports
-          cp -r dist deploy-package/
-          cp -r public deploy-package/
-          touch deploy-package/tmp/exports/.gitkeep
-          cp package.json deploy-package/
-          cp package-lock.json deploy-package/
-          cp ecosystem.config.cjs deploy-package/
-          tar -czf deploy.tar.gz -C deploy-package .
-
-      # ── Step 8: Upload artifact to VPS ─────────────
-      - name: Copy artifact to VPS
-        uses: appleboy/scp-action@v0.1.7
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          port: ${{ secrets.VPS_PORT }}
-          source: deploy.tar.gz
-          target: /tmp
-
-      # ── Step 9: Deploy on VPS ──────────────────────
-      - name: Deploy on VPS
-        uses: appleboy/ssh-action@v1.2.0
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_DEPLOY_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT }}
+          source: "deploy/docker-compose.yaml"
+          target: "/opt/webcrawler-buzz/"
+          strip_components: 1
+      - uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          port: ${{ secrets.VPS_PORT }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_DEPLOY_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT }}
           script: |
-            set -e
-
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-
-            APP_DIR="/root/webcrawler-buzz"
-
-            # Backup current node_modules to avoid full reinstall
-            if [ -d "$APP_DIR/node_modules" ]; then
-              mv "$APP_DIR/node_modules" /tmp/crawler-node-modules-backup 2>/dev/null || true
-            fi
-
-            # Preserve .env
-            if [ -f "$APP_DIR/.env" ]; then
-              cp "$APP_DIR/.env" /tmp/crawler-env-backup
-            fi
-
-            # Preserve existing exports (user downloads)
-            if [ -d "$APP_DIR/tmp/exports" ]; then
-              mkdir -p /tmp/crawler-exports-backup
-              cp -r "$APP_DIR/tmp/exports/"* /tmp/crawler-exports-backup/ 2>/dev/null || true
-            fi
-
-            # Clean old dist and public (keep logs)
-            rm -rf "$APP_DIR/dist" "$APP_DIR/public"
-            mkdir -p "$APP_DIR"
-
-            # Extract new build
-            tar -xzf /tmp/deploy.tar.gz -C "$APP_DIR"
-            rm -f /tmp/deploy.tar.gz
-
-            # Restore .env
-            if [ -f /tmp/crawler-env-backup ]; then
-              mv /tmp/crawler-env-backup "$APP_DIR/.env"
-            fi
-
-            # Restore exports
-            if [ -d /tmp/crawler-exports-backup ]; then
-              cp -r /tmp/crawler-exports-backup/* "$APP_DIR/tmp/exports/" 2>/dev/null || true
-              rm -rf /tmp/crawler-exports-backup
-            fi
-
-            # Restore node_modules, then install production deps only
-            if [ -d /tmp/crawler-node-modules-backup ]; then
-              mv /tmp/crawler-node-modules-backup "$APP_DIR/node_modules"
-            fi
-
-            cd "$APP_DIR"
-            npm install --omit=dev --ignore-scripts=false
-
-            # Run DB migrations (idempotent)
-            node dist/db/migrate.js
-
-            # Ensure logs directory exists
-            mkdir -p "$APP_DIR/logs"
-
-            # Restart app via PM2
-            pm2 restart webcrawler-buzz --update-env || pm2 start ecosystem.config.cjs --env production
-            pm2 save
-
-            echo "WebCrawler deployment completed!"
+            set -euo pipefail
+            cd /opt/webcrawler-buzz
+            [ -f deploy/docker-compose.yaml ] && mv -f deploy/docker-compose.yaml docker-compose.yaml || true
+            rm -rf deploy 2>/dev/null || true
+            docker network inspect web >/dev/null 2>&1 || docker network create web
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            export IMAGE_TAG=${{ needs.build.outputs.image_tag }}
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker image prune -f
+      - name: Smoke test
+        run: |
+          for i in {1..18}; do
+            sleep 10
+            code=$(curl -sk -o /dev/null -w "%{http_code}" https://webcrawler.buzz/ || echo "000")
+            echo "attempt $i → $code"
+            [[ "$code" =~ ^(200|301|302|307|308)$ ]] && exit 0
+          done
+          exit 1
