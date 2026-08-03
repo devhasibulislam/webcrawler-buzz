@@ -39,9 +39,7 @@
       '</a>' +
     '</div>' +
     '&copy; 2026 Domain Crawler &middot; ' +
-    '<a href="/" class="hover:text-gray-800">Home</a> &middot; ' +
     '<a href="/about" class="hover:text-gray-800">About</a> &middot; ' +
-    '<a href="/mcp" class="hover:text-gray-800">MCP</a> &middot; ' +
     '<a href="/privacy-policy" class="hover:text-gray-800">Privacy Policy</a> &middot; ' +
     '<a href="/terms-of-service" class="hover:text-gray-800">Terms of Service</a> &middot; ' +
     '<a href="/cookie-policy" class="hover:text-gray-800">Cookie Policy</a>';
