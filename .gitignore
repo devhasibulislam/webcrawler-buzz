@@ -2,10 +2,7 @@ node_modules/
 dist/
 tmp/
 
-# secrets & certs
-.env
-.env.*
-!.env.example
+# certs (still never commit these)
 deploy/certs/*.crt
 deploy/certs/*.key
 
