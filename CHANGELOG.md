@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.8] - 2026-08-04
+
+### Added
+- Docker-based production deployment to Contabo VPS (169.58.104.249) behind shared Traefik reverse proxy, replacing the previous PM2/nvm setup.
+- `docs/DEPLOYMENT_PLAYBOOK.md`: reusable, end-to-end playbook capturing the whole VPS shape (shared Traefik + host-installed Postgres 16 + Redis 7 + `host.docker.internal` bridge + GHCR-backed CI/CD).
+- OCI `org.opencontainers.image.source` label on every image so `docker image prune` on the shared VPS only touches this project's dangling layers.
+- Sparse-checkout in the deploy job: runner pulls only `deploy/` (about 2 KB) instead of the whole repo.
+
+### Changed
+- `.dockerignore` switched from blacklist to strict allowlist. Build context shrunk from about 30 MB to about 1.3 MB; new files added to the repo default to excluded.
+- Traefik router now serves both `webcrawler.buzz` and `api.webcrawler.buzz` from the same container, with a `www.` -> apex 308 redirect.
+- Express now sets `trust proxy = 1` so `req.ip` resolves to the real Cloudflare client IP and `express-rate-limit` keys by client instead of Traefik container IP.
+- Dockerfile pre-creates `/app/tmp/exports` with `app:nodejs` ownership so the non-root runner can write CSVs on first boot.
+- Export button on the results page now resets as soon as the worker moves past the `processing` status, instead of staying stuck on "Exporting..." for the 5-minute server-side cooldown.
+- Footer no longer duplicates Home and MCP links that already appear in the header.
+- Header logo uses natural aspect ratio (`class="h-10"` only, no forced width/height attributes).
+- Humanized prose across all public pages, blogs, dev docs, and code comments: 693 em/en dashes replaced with commas, colons, or hyphens per Wikipedia's "Signs of AI writing" guide.
+
+### Removed
+- `VPS_DEPLOYMENT.md` (old PM2/nvm guide, superseded by `docs/DEPLOYMENT_PLAYBOOK.md`).
+- `ecosystem.config.cjs` (PM2 config, no longer used).
+- `.agents/` (430 vendor Copilot skill files), `skills-lock.json`, and other editor state removed from git history.
+- `.env` file untracked from git; secrets are shipped to the VPS manually via `scp`.
+
+### Fixed
+- `EACCES: permission denied, mkdir '/app/tmp/exports'` on container startup.
+- `ERR_ERL_UNEXPECTED_X_FORWARDED_FOR` from `express-rate-limit` behind Traefik.
+- Redis on `172.17.0.1` initially refused connections until Docker's `docker0` bridge came up; documented the bind ordering fix in the playbook.
+
 ## [2.2.7] - 2026-07-20
 
 ### Added
