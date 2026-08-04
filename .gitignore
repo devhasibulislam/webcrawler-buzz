@@ -8,3 +8,11 @@ tmp/
 !.env.example
 deploy/certs/*.crt
 deploy/certs/*.key
+
+# editor/agent workspace config (per-user, not project code)
+.vscode/
+.agents/
+skills-lock.json
+
+# backups
+*.bak

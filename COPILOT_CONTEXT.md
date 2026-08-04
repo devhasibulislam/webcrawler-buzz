@@ -9,7 +9,9 @@
 
 A **production-grade background domain crawler** built with **Express.js + TypeScript**.
 Serves both the **REST API** and **pure HTML/CSS frontend** from the same server.
-Backed by **Neon PostgreSQL** for storage and **Redis + BullMQ** for persistent job queueing.
+Backed by **self-hosted PostgreSQL 16** for storage and **self-hosted Redis 7 + BullMQ** for persistent job queueing.
+
+> Deployed to a Contabo VPS (`169.58.104.249`) as a single Docker container behind shared Traefik. See [docs/DEPLOYMENT_PLAYBOOK.md](./docs/DEPLOYMENT_PLAYBOOK.md).
 
 ### Core User Flow
 
@@ -33,9 +35,9 @@ Backed by **Neon PostgreSQL** for storage and **Redis + BullMQ** for persistent 
 | Language   | TypeScript (strict mode)                                 |
 | Framework  | Express.js v5 (API + static HTML)                        |
 | Styling    | Tailwind CSS (CDN) + Google Sans (Google Fonts CDN)      |
-| Database   | PostgreSQL via Neon (serverless)                         |
+| Database   | PostgreSQL 16 (host apt install, reached via `host.docker.internal`) |
 | DB Client  | `pg` (node-postgres), raw parameterized queries         |
-| Job Queue  | BullMQ + Redis (RedisLabs)                               |
+| Job Queue  | BullMQ + Redis 7 (host apt install, ACL user with `webcrawler:*` prefix) |
 | Crawling   | `axios` + `cheerio`                                      |
 | Email      | Nodemailer + Gmail SMTP (App Password)                   |
 | API Docs   | Swagger UI, protected by HTTP Basic Auth                |
@@ -53,11 +55,11 @@ Backed by **Neon PostgreSQL** for storage and **Redis + BullMQ** for persistent 
 PORT=5005
 APP_BASE_URL=http://your-vps-ip:5005
 
-# Neon PostgreSQL
-DATABASE_URL=postgresql://neondb_owner:npg_Q9XoxGikB1zh@ep-lively-wind-aig1wf10-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+# PostgreSQL (self-hosted on VPS, reached via docker host-gateway in prod; localhost in dev)
+DATABASE_URL=postgresql://webcrawler:webcrawler%40123@host.docker.internal:5432/webcrawler
 
-# Redis (RedisLabs)
-REDIS_URL=redis://default:HAVAwCLzvP72FeBSbTYkNEARuGwLiRuL@redis-18584.c325.us-east-1-4.ec2.cloud.redislabs.com:18584
+# Redis (self-hosted on VPS with ACL user 'webcrawler' restricted to 'webcrawler:*' keys)
+REDIS_URL=redis://webcrawler:webcrawler%40123@host.docker.internal:6379
 
 # Gmail (Nodemailer)
 GMAIL_USER=your_gmail@gmail.com
@@ -76,7 +78,7 @@ ALLOWED_ORIGIN=http://localhost:5005
 
 ---
 
-## 🗄️ Database Schema (Neon PostgreSQL)
+## 🗄️ Database Schema (PostgreSQL 16)
 
 ### Table: `crawl_jobs`
 
