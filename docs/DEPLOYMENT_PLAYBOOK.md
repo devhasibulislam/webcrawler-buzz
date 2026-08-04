@@ -263,6 +263,10 @@ jobs:
           tags: |
             ${{ env.IMAGE_WEB }}:${{ steps.meta.outputs.image_tag }}
             ${{ env.IMAGE_WEB }}:latest
+          # OCI label lets the deploy step prune ONLY this project's dangling
+          # images on the shared VPS instead of every project's.
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
           cache-from: type=gha,scope=web
           cache-to: type=gha,scope=web,mode=max
 
@@ -270,7 +274,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      # Sparse-checkout the deploy dir only. Deploy job doesn't need src/,
+      # tests, docs, or anything else on the runner. Saves ~30 MB on cold cache.
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            deploy
+          sparse-checkout-cone-mode: false
       - uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -289,14 +299,13 @@ jobs:
           script: |
             set -euo pipefail
             cd /opt/<yourapp>
-            [ -f deploy/docker-compose.yaml ] && mv -f deploy/docker-compose.yaml docker-compose.yaml || true
-            rm -rf deploy 2>/dev/null || true
             docker network inspect web >/dev/null 2>&1 || docker network create web
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             export IMAGE_TAG=${{ needs.build.outputs.image_tag }}
             docker compose pull
             docker compose up -d --remove-orphans
-            docker image prune -f
+            # Scoped prune: only THIS project's dangling images.
+            docker image prune -f --filter "label=org.opencontainers.image.source=https://github.com/${{ github.repository }}"
       - name: Smoke test
         run: |
           for i in {1..24}; do

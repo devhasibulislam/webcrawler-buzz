@@ -53,6 +53,8 @@ jobs:
           tags: |
             ${{ env.IMAGE_WEB }}:${{ steps.meta.outputs.image_tag }}
             ${{ env.IMAGE_WEB }}:latest
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
           cache-from: type=gha,scope=web
           cache-to: type=gha,scope=web,mode=max
 
@@ -60,7 +62,12 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      # Sparse-checkout: pull only the deploy dir onto the runner, not the whole repo.
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            deploy
+          sparse-checkout-cone-mode: false
       - uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -79,14 +86,13 @@ jobs:
           script: |
             set -euo pipefail
             cd /opt/webcrawler-buzz
-            [ -f deploy/docker-compose.yaml ] && mv -f deploy/docker-compose.yaml docker-compose.yaml || true
-            rm -rf deploy 2>/dev/null || true
             docker network inspect web >/dev/null 2>&1 || docker network create web
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             export IMAGE_TAG=${{ needs.build.outputs.image_tag }}
             docker compose pull
             docker compose up -d --remove-orphans
-            docker image prune -f
+            # Prune only THIS project's dangling images; leave co-hosted apps alone.
+            docker image prune -f --filter "label=org.opencontainers.image.source=https://github.com/${{ github.repository }}"
       - name: Smoke test
         run: |
           for i in {1..24}; do
