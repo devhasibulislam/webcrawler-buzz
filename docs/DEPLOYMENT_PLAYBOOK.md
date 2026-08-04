@@ -105,35 +105,52 @@ Key details that bit us during the first deploy:
 - **`app.set('trust proxy', 1)`** in the Express app is mandatory. Behind Traefik + Cloudflare, `X-Forwarded-For` is set; without it, `express-rate-limit` throws `ERR_ERL_UNEXPECTED_X_FORWARDED_FOR`.
 - **`HEALTHCHECK` must hit a real endpoint** (`/api/health`), not `/`, which may 404 depending on routing.
 
-### 2. `.dockerignore`
+### 2. `.dockerignore` (allowlist model)
 
-```
+Prefer an **allowlist** over blacklist. New files added to the repo default to *excluded* from the build context; you never have to remember to blacklist them.
+
+```dockerignore
+# 1) Exclude everything
+**
+
+# 2) Whitelist only what `npm run build` actually reads
+!package.json
+!package-lock.json
+!tsconfig.json
+!tailwind.config.js
+!src/**
+!public/**
+
+# 3) Prune inside allowed dirs
+public/*.bak
+public/**/*.map
+src/**/*.test.ts
+src/**/*.spec.ts
+
+# 4) Belt-and-suspenders: never leak these even if a rule catches them
+.env
+.env.*
+.git
+.gitignore
+.github
+.vscode
+.agents
 node_modules
 dist
 tmp
 coverage
 test-results
 playwright-report
-.git
-.github
-.vscode
+deploy
+scripts
 docs
 tests
 *.log
-.env
-.env.*
-!.env.example
-README.md
-CHANGELOG.md
-CONTRIBUTING.md
-CODE_OF_CONDUCT.md
-SECURITY.md
-CONTEXT.md
-COPILOT_CONTEXT.md
-VPS_DEPLOYMENT.md
-deploy
-scripts
+*.bak
+skills-lock.json
 ```
+
+Result on `webcrawler.buzz`: build context = ~1.3 MB (just `src/`, `public/`, and 4 configs). Nothing else reaches Docker, so nothing extraneous can end up in a layer.
 
 ### 3. `deploy/docker-compose.yaml`
 
@@ -464,6 +481,15 @@ Run these locally after `gh run watch` finishes:
 KEY=~/.ssh-<yourapp>/deploy_key
 VPS=169.58.104.249
 
+# 1) Only two files should live at /opt/<yourapp>/
+ssh -i $KEY root@$VPS "ls -la /opt/<yourapp>/"
+# expected: exactly `.env` (chmod 600) and `docker-compose.yaml`. Nothing else.
+
+# 2) The running container image should carry only runtime bits
+ssh -i $KEY root@$VPS "docker exec <yourapp>-web ls /app"
+# expected: dist, node_modules, package.json, package-lock.json, public, tmp
+# NOT expected: src, docs, tests, .env, .git, .github, .agents, .vscode
+
 ssh -i $KEY root@$VPS "docker ps | grep <yourapp>"
 # expected: <yourapp>-web  Up ... (healthy)
 
@@ -476,6 +502,23 @@ curl -skI https://www.<yourdomain>/  | head -3
 ssh -i $KEY root@$VPS "docker logs <yourapp>-web --tail=30"
 # expected: no crash loops, migrations complete, SMTP verified if email is used
 ```
+
+### VPS filesystem discipline
+
+The **only** files that live on the VPS per project are:
+
+```
+/opt/<yourapp>/
+├── docker-compose.yaml   ← CI overwrites on every deploy
+└── .env                  ← manually placed once, chmod 600
+```
+
+Nothing else. No `src/`, no cloned repo, no build tools, no dev dependencies, no Node.js installed on the host. Everything runs inside the container image pulled from GHCR. If the VPS dies, rebuilding takes about 10 minutes: run the bootstrap sequence, drop the same two files, `docker compose up -d`.
+
+The **CI/CD workflow enforces this**:
+- `scp` step ships only `deploy/docker-compose.yaml`.
+- The `ssh` step never `git clone`s anything.
+- Container images are built on GitHub's ephemeral runners, not on the VPS.
 
 ---
 
