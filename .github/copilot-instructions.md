@@ -1,58 +1,49 @@
 # Copilot instructions, webcrawler-buzz
 
-## Production VPS (Contabo, shared with smmcare.online)
+## Production VPS (shared, alias `hamzen`)
 
-- Hostname: `vmi3478000`
-- IP: `169.58.104.249`
-- SSH: `ssh -i ~/.ssh-webcrawler-buzz/deploy_key root@169.58.104.249`
-- App dir: `/opt/webcrawler-buzz/`  (only `docker-compose.yaml` + `.env`)
-- Runtime: Docker only. **No PM2, no host Node.js.**
-- Shared reverse proxy: Traefik at `/opt/proxy/` on the `web` external network.
-- Host services (shared across projects): Postgres 16 and Redis 7 installed via apt, reached from containers via `host.docker.internal` (mapped to docker `host-gateway`).
+- Host: `vmi3478000` (169.58.104.249) — also runs `fablo-online`
+- SSH: `ssh hamzen`
+- App dir: `/opt/webcrawler-buzz/` — `releases/<sha>/` folders with symlink `current`
+- Runtime: **native Node 22 + PM2** (no Docker)
+- Reverse proxy: shared host nginx, site at `/etc/nginx/sites-enabled/webcrawler-buzz.conf`
+- SSL: Cloudflare Origin cert `/etc/ssl/webcrawler/webcrawler.buzz.{crt,key}` (valid to 2041)
+- Data services (shared on host):
+  - Postgres 16 on `127.0.0.1:5432` — user `webcrawler`, db `webcrawler`
+  - Redis 7 on `127.0.0.1:6379` — ACL user `webcrawler` with `~webcrawler:*` keyspace
+- BullMQ prefix in code: `webcrawler` (matches Redis ACL)
 
-## Container
+## PM2 process
 
-| Name | Image | Port | Purpose |
-| ---- | ----- | ---- | ------- |
-| `webcrawler-buzz-web` | `ghcr.io/devhasibulislam/webcrawler-buzz-web:<sha>` | `5005/tcp` | Express + BullMQ + cron in one process |
+| Name | Script | Port | Purpose |
+| ---- | ------ | ---- | ------- |
+| `webcrawler-buzz` | `dist/index.js` | `127.0.0.1:5005` | Express + BullMQ + cron in one process |
 
-BullMQ workers run in-process (see ADR-0002). No separate worker container.
+Workers run in-process (see ADR-0002).
 
 ## Common ops
 
 ```bash
-KEY=~/.ssh-webcrawler-buzz/deploy_key
-VPS=169.58.104.249
+ssh hamzen "pm2 status"
+ssh hamzen "pm2 logs webcrawler-buzz --lines 100"
+ssh hamzen "pm2 reload webcrawler-buzz"
+ssh hamzen "nginx -t && systemctl reload nginx"
 
-# Status
-ssh -i $KEY root@$VPS "docker ps | grep webcrawler"
-
-# Logs
-ssh -i $KEY root@$VPS "cd /opt/webcrawler-buzz && docker compose logs -f --tail=100 web"
-
-# Force-restart after .env edit
-ssh -i $KEY root@$VPS "cd /opt/webcrawler-buzz && docker compose up -d --force-recreate web"
-
-# Traefik logs
-ssh -i $KEY root@$VPS "cd /opt/proxy && docker compose logs -f --tail=100 traefik"
-```
-
-Or use the ops helper committed at `scripts/vps-ssh.sh`:
-```bash
-./scripts/vps-ssh.sh status
-./scripts/vps-ssh.sh logs web
-./scripts/vps-ssh.sh restart web
+# Rollback
+ssh hamzen 'prev=$(ls -1dt /opt/webcrawler-buzz/releases/*/ | sed -n 2p) && \
+  ln -sfn "$prev" /opt/webcrawler-buzz/current && \
+  cd /opt/webcrawler-buzz/current && \
+  pm2 delete ecosystem.config.js || true && pm2 start ecosystem.config.js'
 ```
 
 ## Deploy pipeline
 
 Every push to `master` triggers `.github/workflows/deploy.yml`:
 1. `check`: `npm ci && npm run lint && npm test`
-2. `build`: buildx → push `ghcr.io/devhasibulislam/webcrawler-buzz-web:<sha>` and `:latest`
-3. `deploy`: scp compose over SSH, `docker compose pull && up -d`
-4. `smoke test`: 24 attempts × 10s hitting `https://webcrawler.buzz/api/health`
+2. `deploy`: build → tar bundle (`dist/`, `public/`, `package*.json`, `ecosystem.config.js`, `.env.production` → `.env`) → scp to `/opt/webcrawler-buzz/releases/<sha>/` → `npm ci --omit=dev` → `node dist/db/migrate.js` → symlink `current` → `pm2 delete && pm2 start ecosystem.config.js` → prune to last 3 releases
+3. Smoke test: 24 × 10s hitting `https://webcrawler.buzz/api/health`
 
-**Do not run manual `pm2`, `npm`, or `node` on the VPS.** Everything goes through git push.
+`.env.production` is committed and copied to the release as `.env` at deploy time.
 
 ## Reference
 
