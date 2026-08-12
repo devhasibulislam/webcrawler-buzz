@@ -11,7 +11,7 @@ A **production-grade background domain crawler** built with **Express.js + TypeS
 Serves both the **REST API** and **pure HTML/CSS frontend** from the same server.
 Backed by **self-hosted PostgreSQL 16** for storage and **self-hosted Redis 7 + BullMQ** for persistent job queueing.
 
-> Deployed to a Contabo VPS (`169.58.104.249`) as a single Docker container behind shared Traefik. See [docs/DEPLOYMENT_PLAYBOOK.md](./docs/DEPLOYMENT_PLAYBOOK.md).
+> Deployed to a shared VPS (`169.58.104.249`, alias `hamzen`) as a native Node 22 process managed by PM2, behind host nginx. See [.github/copilot-instructions.md](./.github/copilot-instructions.md).
 
 ### Core User Flow
 
@@ -35,7 +35,7 @@ Backed by **self-hosted PostgreSQL 16** for storage and **self-hosted Redis 7 + 
 | Language   | TypeScript (strict mode)                                 |
 | Framework  | Express.js v5 (API + static HTML)                        |
 | Styling    | Tailwind CSS (CDN) + Google Sans (Google Fonts CDN)      |
-| Database   | PostgreSQL 16 (host apt install, reached via `host.docker.internal`) |
+| Database   | PostgreSQL 16 (host apt install, reached via `127.0.0.1:5432`)         |
 | DB Client  | `pg` (node-postgres), raw parameterized queries         |
 | Job Queue  | BullMQ + Redis 7 (host apt install, ACL user with `webcrawler:*` prefix) |
 | Crawling   | `axios` + `cheerio`                                      |
@@ -55,11 +55,11 @@ Backed by **self-hosted PostgreSQL 16** for storage and **self-hosted Redis 7 + 
 PORT=5005
 APP_BASE_URL=http://your-vps-ip:5005
 
-# PostgreSQL (self-hosted on VPS, reached via docker host-gateway in prod; localhost in dev)
-DATABASE_URL=postgresql://webcrawler:webcrawler%40123@host.docker.internal:5432/webcrawler
+# PostgreSQL (self-hosted on VPS, reached on 127.0.0.1 both in prod and dev)
+DATABASE_URL=postgresql://webcrawler:webcrawler%40123@127.0.0.1:5432/webcrawler
 
 # Redis (self-hosted on VPS with ACL user 'webcrawler' restricted to 'webcrawler:*' keys)
-REDIS_URL=redis://webcrawler:webcrawler%40123@host.docker.internal:6379
+REDIS_URL=redis://webcrawler:webcrawler%40123@127.0.0.1:6379
 
 # Gmail (Nodemailer)
 GMAIL_USER=your_gmail@gmail.com

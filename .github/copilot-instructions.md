@@ -47,4 +47,4 @@ Every push to `master` triggers `.github/workflows/deploy.yml`:
 
 ## Reference
 
-Full reusable playbook: [docs/DEPLOYMENT_PLAYBOOK.md](../docs/DEPLOYMENT_PLAYBOOK.md).
+VPS + service credentials: [deploy/secrets/README.md](../deploy/secrets/README.md).

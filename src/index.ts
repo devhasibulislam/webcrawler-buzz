@@ -27,7 +27,7 @@ import { startExportCleanupCron, startJobCleanupCron } from './cron/export-clean
 const app = express();
 const PORT = parseInt(process.env.PORT || '5005', 10);
 
-// Behind Traefik + Cloudflare, trust one proxy hop so req.ip / X-Forwarded-For
+// Behind nginx + Cloudflare, trust one proxy hop so req.ip / X-Forwarded-For
 // resolve to the real client IP (needed for express-rate-limit accuracy).
 app.set('trust proxy', 1);
 
