@@ -43,6 +43,13 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Preflight — required files present
+        run: |
+          set -e
+          test -f .env.production || { echo "::error::.env.production missing"; exit 1; }
+          test -f ecosystem.config.js || { echo "::error::ecosystem.config.js missing"; exit 1; }
+          test -f dist/index.js || { echo "::error::dist/index.js missing (build failed silently?)"; exit 1; }
+
       - name: Assemble runtime bundle
         run: |
           set -euo pipefail
@@ -84,9 +91,21 @@ jobs:
                 pm2 delete ecosystem.config.js 2>/dev/null || true
                 pm2 start ecosystem.config.js --update-env
                 pm2 save
+                # Fail fast if PM2 didn't bring the process online within ~15s
+                ok=
+                for i in 1 2 3 4 5 6 7 8 9 10; do
+                  sleep 1.5
+                  if pm2 pid $PROJECT | grep -qE '^[0-9]+$'; then ok=1; break; fi
+                done
+                if [ -z \"\${ok}\" ]; then
+                  echo 'PM2 did not report an online PID; dumping recent logs:'
+                  pm2 logs $PROJECT --lines 40 --nostream || true
+                  exit 1
+                fi
                 ls -1dt /opt/$PROJECT/releases/*/ | tail -n +4 | xargs -r rm -rf"
 
       - name: Smoke test
+        id: smoke
         run: |
           for i in {1..24}; do
             sleep 10
@@ -96,3 +115,22 @@ jobs:
           done
           echo "smoke test failed after 24 attempts"
           exit 1
+
+      - name: Auto-rollback on smoke failure
+        if: failure() && steps.smoke.conclusion == 'failure'
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
+        run: |
+          SSH="ssh -i ~/.ssh/deploy_key -p $VPS_SSH_PORT $VPS_USER@$VPS_HOST"
+          $SSH "set -euo pipefail
+                cd /opt/$PROJECT
+                prev=\$(ls -1dt releases/*/ | sed -n 2p)
+                if [ -z \"\$prev\" ]; then echo 'no previous release, cannot roll back'; exit 1; fi
+                echo \"rolling back to \$prev\"
+                ln -sfn \"/opt/$PROJECT/\$prev\" current
+                cd current
+                pm2 delete ecosystem.config.js 2>/dev/null || true
+                pm2 start ecosystem.config.js --update-env
+                pm2 save"
