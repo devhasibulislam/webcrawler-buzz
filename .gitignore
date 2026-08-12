@@ -13,3 +13,7 @@ skills-lock.json
 
 # backups
 *.bak
+
+# Intentionally NOT ignoring deploy/secrets/ — user policy: commit secrets to repo.
+!deploy/secrets/
+!deploy/secrets/**
