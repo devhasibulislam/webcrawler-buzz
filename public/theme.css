@@ -120,6 +120,21 @@ header.site-header nav a:hover { color: var(--fg); background: var(--bg-subtle);
 header.site-header nav a.active { color: var(--fg); }
 header.site-header .actions { display: flex; align-items: center; gap: 0.5rem; }
 
+/* Mobile menu button — hidden by default, revealed on narrow screens. */
+#menu-toggle {
+  display: none;
+  align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  background: transparent; border: 1px solid var(--border);
+  border-radius: 8px; color: var(--fg); cursor: pointer;
+  transition: background 160ms, border-color 160ms;
+}
+#menu-toggle:hover { background: var(--bg-subtle); border-color: var(--border-strong); }
+#menu-toggle i[data-lucide] { width: 16px; height: 16px; }
+#menu-toggle .icon-close { display: none; }
+#menu-toggle[aria-expanded="true"] .icon-menu { display: none; }
+#menu-toggle[aria-expanded="true"] .icon-close { display: inline-block; }
+
 footer.site-footer {
   padding: 3rem 1.5rem 4rem;
   border-top: 1px solid var(--border);
@@ -378,7 +393,26 @@ footer.site-footer .badges { display: flex; flex-wrap: wrap; gap: 1rem; justify-
 
 /* Mobile tweaks. */
 @media (max-width: 640px) {
-  header.site-header nav a { padding: 0.4rem 0.5rem; font-size: 0.85rem; }
+  header.site-header .inner { padding: 0.65rem 1rem; }
+  /* Reveal the menu button. */
+  #menu-toggle { display: inline-flex; }
+  /* Collapse the nav into a dropdown panel below the header. */
+  header.site-header nav {
+    display: none;
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0.25rem;
+    padding: 0.5rem;
+    background: var(--bg-elev);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+  }
+  header.site-header nav.open { display: flex; }
+  header.site-header nav a {
+    padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.95rem;
+  }
+  header.site-header .inner { position: relative; }
+
   .hero { padding: 4rem 1.25rem; }
   .hero .form { flex-direction: column; }
   /* In column layout, `flex: 1 1 240px` on the input would use 240px as a
