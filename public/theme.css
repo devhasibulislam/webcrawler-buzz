@@ -146,6 +146,14 @@ footer.site-footer .badges { display: flex; flex-wrap: wrap; gap: 1rem; justify-
   border-radius: 999px;
   font-size: 0.8rem; font-weight: 500;
   color: var(--fg);
+  max-width: 100%;
+  white-space: nowrap;
+}
+.pill > span { overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 640px) {
+  /* Hide the long trailing detail on narrow screens so the pill stays on one line. */
+  .pill .pill-more { display: none; }
+  .pill { font-size: 0.75rem; padding: 0.3rem 0.7rem; }
 }
 .pill .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--fg); }
 
