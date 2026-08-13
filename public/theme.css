@@ -299,18 +299,35 @@ video, iframe, embed { max-width: 100%; }
 /* Buttons inside prose (e.g. blog-post CTAs) shouldn't inherit the underline / muted color. */
 .prose a.btn { color: var(--btn-fg); text-decoration: none; }
 .prose a.btn.btn-secondary { color: var(--fg); }
-.prose code { background: var(--bg-code); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; }
+.prose code { background: var(--bg-code); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 0.88em; overflow-wrap: anywhere; }
 .prose pre {
   background: var(--bg-code); color: var(--fg);
   border: 1px solid var(--border); border-radius: 10px;
-  padding: 1rem 1.25rem; overflow-x: auto; margin: 1.25rem 0;
+  padding: 1rem 1.25rem;
+  overflow-x: auto; max-width: 100%;
+  margin: 1.5rem 0;
+  font-size: 0.875rem; line-height: 1.6;
+  tab-size: 2;
 }
-.prose pre code { background: none; border: 0; padding: 0; }
-.prose table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.9rem; }
-.prose th, .prose td { padding: 0.65rem 0.85rem; border: 1px solid var(--border); text-align: left; }
+.prose pre code { background: none; border: 0; padding: 0; font-size: inherit; white-space: pre; }
+.prose table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.925rem; display: block; overflow-x: auto; }
+.prose th, .prose td { padding: 0.65rem 0.85rem; border: 1px solid var(--border); text-align: left; vertical-align: top; }
 .prose thead { background: var(--bg-subtle); }
-.prose blockquote { margin: 1.25rem 0; padding: 0.75rem 1.25rem; border-left: 3px solid var(--border-strong); color: var(--fg-muted); }
+.prose thead th { font-weight: 600; }
+.prose blockquote { margin: 1.5rem 0; padding: 0.75rem 1.25rem; border-left: 3px solid var(--border-strong); color: var(--fg-muted); font-style: italic; }
+.prose blockquote p:first-child { margin-top: 0; }
+.prose blockquote p:last-child { margin-bottom: 0; }
 .prose hr { margin: 2.5rem 0; }
+.prose strong { color: var(--fg); font-weight: 600; }
+.prose em { color: var(--fg); font-style: italic; }
+.prose img { border-radius: 10px; margin: 1.5rem 0; border: 1px solid var(--border); }
+.prose figure { margin: 1.5rem 0; }
+.prose figure figcaption { font-size: 0.85rem; color: var(--fg-subtle); text-align: center; margin-top: 0.5rem; }
+/* GitHub-style task lists (marked emits <input type="checkbox">). */
+.prose ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0; }
+.prose li input[type="checkbox"] { margin-right: 0.5rem; }
+/* Heading anchor links (marked emits <h2 id="..."> — allow smooth scroll from TOC). */
+.prose h2, .prose h3 { scroll-margin-top: 5rem; }
 
 /* FAQ (details/summary). */
 .faq { display: grid; gap: 0.75rem; max-width: 720px; margin: 0 auto; }

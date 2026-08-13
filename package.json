@@ -45,6 +45,7 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.3.0",
     "helmet": "^8.1.0",
+    "marked": "^18.0.9",
     "node-cron": "^4.2.1",
     "nodemailer": "^8.0.1",
     "pg": "^8.20.0",

@@ -1,6 +1,15 @@
 import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
+import { marked } from 'marked';
+
+// Marked is configured once, at module load, with GitHub-flavoured defaults
+// so a section body written in Markdown renders full rich text: fenced code
+// blocks, tables, task lists, autolinks, and hard line breaks.
+marked.setOptions({
+  gfm: true,
+  breaks: false,
+});
 
 // ── Blog helpers ──────────────────────────────────────────────
 interface BlogSection {
@@ -47,25 +56,47 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-// Convert a section body into HTML: paragraphs, with runs of "N. ..." lines
-// grouped into <ol>. Blank lines split blocks. Mirrors the client-side rule.
-function textToParagraphs(text: string): string {
-  return text
-    .split(/\n\n+/)
-    .map((block) => {
-      const trimmed = block.trim();
-      if (!trimmed) return '';
-      const lines = trimmed.split('\n').map((l) => l.trim()).filter(Boolean);
-      const allNumbered = lines.length > 1 && lines.every((l) => /^\d+\.\s+/.test(l));
-      if (allNumbered) {
-        return `<ol>${lines
-          .map((l) => `<li>${escHtml(l.replace(/^\d+\.\s+/, ''))}</li>`)
-          .join('')}</ol>`;
+// Wrap raw code-looking blocks in fenced-code markers so legacy plain-text
+// section bodies (no Markdown fences) still render as proper <pre><code>.
+// A "code block" is a run of consecutive non-blank lines whose first non-space
+// char is one of `{[<` (JSON, HTML, XML) or that start with a known shell tool.
+function autoFenceCodeBlocks(text: string): string {
+  const lines = text.split('\n');
+  const out: string[] = [];
+  let i = 0;
+  const SHELL_START =
+    /^\s*(npm|npx|yarn|pnpm|bun|bunx|curl|wget|git|docker|sudo|cat|echo|codex\s+mcp|claude\s+mcp|export|kubectl)\b/;
+  while (i < lines.length) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    const firstChar = trimmed[0];
+    const isCodeStart =
+      trimmed.length > 0 &&
+      (firstChar === '{' || firstChar === '[' || firstChar === '<' || SHELL_START.test(trimmed));
+    // Don't re-fence content the author already fenced.
+    if (isCodeStart && !text.slice(0, text.indexOf(line)).endsWith('```\n')) {
+      const buf: string[] = [];
+      // Consume until a blank line (end of block).
+      while (i < lines.length && lines[i].trim() !== '') {
+        buf.push(lines[i]);
+        i++;
       }
-      return `<p>${escHtml(trimmed).replace(/\n/g, '<br/>')}</p>`;
-    })
-    .filter(Boolean)
-    .join('\n        ');
+      const first = buf[0].trim()[0];
+      const lang = first === '{' || first === '[' ? 'json' : first === '<' ? 'html' : 'bash';
+      out.push('```' + lang);
+      out.push(...buf);
+      out.push('```');
+    } else {
+      out.push(line);
+      i++;
+    }
+  }
+  return out.join('\n');
+}
+
+// Render a section body (Markdown or legacy plain text) into rich HTML.
+function renderMarkdown(text: string): string {
+  return marked.parse(autoFenceCodeBlocks(text || ''), { async: false }) as string;
 }
 
 // ── Controller ────────────────────────────────────────────────
@@ -208,12 +239,14 @@ export const viewController = {
       const templatePath = path.join(__dirname, '../../public/blog-post.html');
       let html = fs.readFileSync(templatePath, 'utf-8');
 
-      // Build sections HTML (bare tags — `.prose` styles them).
+      // Build sections HTML (bare tags — `.prose` styles them). Bodies pass
+      // through the Markdown pipeline so fenced code, lists, links, tables,
+      // and emphasis all render.
       const sectionsHtml = post.content.sections
         .map(
           (s) => `
         <h2>${escHtml(s.heading)}</h2>
-        ${textToParagraphs(s.body)}`
+        ${renderMarkdown(s.body)}`
         )
         .join('\n');
 
