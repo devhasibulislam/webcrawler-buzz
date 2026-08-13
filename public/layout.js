@@ -2,6 +2,10 @@
 // Injects theme.css, sets data-theme before paint, wires the toggle,
 // and paints the site header + footer into every page.
 (function () {
+  // Pick up ?v= from our own script tag so bumping the version busts the CSS cache too.
+  var ver = (document.currentScript && (document.currentScript.src.match(/[?&]v=([^&]+)/) || [])[1]) || '';
+  var verQ = ver ? '?v=' + ver : '';
+
   // ── 1. Theme init (must happen before paint). ───────────────
   var THEME_KEY = 'theme';
   function currentTheme() {
@@ -16,7 +20,7 @@
   if (!document.querySelector('link[data-theme-css]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/theme.css';
+    link.href = '/theme.css' + verQ;
     link.setAttribute('data-theme-css', '');
     document.head.appendChild(link);
   }

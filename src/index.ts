@@ -54,8 +54,17 @@ setupSecurity(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files (serve .well-known for AI plugin discovery)
-app.use(express.static(path.join(__dirname, '../public'), { dotfiles: 'allow' }));
+// Static files (serve .well-known for AI plugin discovery).
+// HTML is never cached at the edge so a fresh deploy is picked up immediately;
+// JS/CSS are versioned via ?v= query strings, so we let the browser cache them.
+app.use(express.static(path.join(__dirname, '../public'), {
+  dotfiles: 'allow',
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  },
+}));
 
 // Swagger docs, protected by Basic Auth
 app.use('/api-docs', swaggerAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
