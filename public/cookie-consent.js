@@ -86,55 +86,39 @@
   }
 
   // ── Cookie consent banner ──────────────────────────────────────
-  // NOTE: the element id must not match common ad/cookie-banner blocklists
-  // (Brave shields, uBlock Origin easylist-cookie, etc.), which hide anything
-  // matching #cookie*, #*consent*, .cookie-*, and similar patterns. Users
-  // reported the banner never appearing until this id was renamed.
+  // The element id must not match common ad/cookie-banner blocklists
+  // (Brave shields, uBlock Origin easylist-cookie), which hide anything
+  // matching #cookie*, #*consent*, .cookie-*. `wcb-notice-bar` sits outside
+  // those patterns. Styles live in theme.css so the banner picks up light/dark
+  // tokens automatically and looks like the rest of the site.
   function showBanner() {
-    // Belt-and-braces: if a previous banner still exists in the DOM, drop it first.
     var existing = document.getElementById('wcb-notice-bar');
     if (existing) existing.remove();
 
     var banner = document.createElement('div');
     banner.id = 'wcb-notice-bar';
     banner.setAttribute('role', 'dialog');
-    banner.setAttribute('aria-label', 'Cookie consent');
-    banner.style.cssText =
-      'position:fixed;bottom:0;left:0;right:0;z-index:9999;' +
-      'background:#1f2937;color:#f3f4f6;' +
-      'padding:16px 24px;' +
-      'display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;' +
-      'box-shadow:0 -4px 12px rgba(0,0,0,0.15);' +
-      'font-family:Google Sans,system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.5;';
-
+    banner.setAttribute('aria-label', 'Cookie preferences');
     banner.innerHTML =
-      '<div style="flex:1;min-width:240px;background:#1f2937;color:#f3f4f6;">' +
-        '<p style="margin:0;color:#f3f4f6;background:#1f2937;">' +
-          'We use cookies for <strong style="color:#ffffff;background:#1f2937;">Google Analytics</strong> (anonymous usage stats) and <strong style="color:#ffffff;background:#1f2937;">Google AdSense</strong> (ads that help keep this tool free). ' +
-          'You can accept, reject, or read more in our ' +
-          '<a href="/cookie-policy" style="color:#93c5fd;background:#1f2937;text-decoration:underline;">Cookie Policy</a>.' +
-        '</p>' +
+      '<div class="wcb-notice-head">' +
+        '<i data-lucide="cookie" aria-hidden="true"></i>' +
+        '<span>Cookie preferences</span>' +
       '</div>' +
-      '<div style="display:flex;gap:8px;flex-shrink:0;">' +
-        '<button id="cc-reject" style="' +
-          'padding:8px 20px;background:transparent;border:1px solid #6b7280;color:#f3f4f6;' +
-          'border-radius:8px;cursor:pointer;font-size:14px;font-family:inherit;transition:background .15s;' +
-        '">Reject</button>' +
-        '<button id="cc-accept" style="' +
-          'padding:8px 20px;background:#2563eb;border:none;color:#fff;' +
-          'border-radius:8px;cursor:pointer;font-size:14px;font-family:inherit;transition:background .15s;' +
-        '">Accept</button>' +
+      '<p>' +
+        'We use cookies for <strong>Google Analytics</strong> (anonymous usage stats) and ' +
+        '<strong>Google AdSense</strong> (ads that help keep this tool free). ' +
+        'Read more in our <a href="/cookie-policy">Cookie Policy</a>.' +
+      '</p>' +
+      '<div class="wcb-notice-actions">' +
+        '<button type="button" id="cc-reject" class="btn btn-secondary">Reject</button>' +
+        '<button type="button" id="cc-accept" class="btn">Accept</button>' +
       '</div>';
 
     document.body.appendChild(banner);
+    if (window.lucide) window.lucide.createIcons();
 
     var rejectBtn = document.getElementById('cc-reject');
     var acceptBtn = document.getElementById('cc-accept');
-
-    rejectBtn.addEventListener('mouseenter', function () { this.style.background = '#374151'; });
-    rejectBtn.addEventListener('mouseleave', function () { this.style.background = 'transparent'; });
-    acceptBtn.addEventListener('mouseenter', function () { this.style.background = '#1d4ed8'; });
-    acceptBtn.addEventListener('mouseleave', function () { this.style.background = '#2563eb'; });
 
     acceptBtn.addEventListener('click', function () {
       localStorage.setItem(CONSENT_KEY, 'accepted');

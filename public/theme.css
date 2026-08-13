@@ -308,6 +308,57 @@ footer.site-footer .badges { display: flex; flex-wrap: wrap; gap: 1rem; justify-
 .progress { height: 4px; background: var(--bg-code); border-radius: 999px; overflow: hidden; }
 .progress > div { height: 100%; background: var(--fg); transition: width 0.4s cubic-bezier(0.23,1,0.32,1); }
 
+/* Cookie / privacy notice. Floating card that matches the site design. */
+#wcb-notice-bar {
+  position: fixed;
+  z-index: 60;
+  left: 1rem; right: 1rem; bottom: 1rem;
+  max-width: 480px;
+  margin: 0 auto 0 auto;
+  padding: 1.15rem 1.25rem 1.15rem;
+  background: var(--bg-elev);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-md), 0 20px 40px -20px rgb(0 0 0 / 0.35);
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  animation: wcb-notice-in 320ms cubic-bezier(0.23,1,0.32,1) both;
+}
+@media (min-width: 720px) {
+  /* Anchor to the bottom-right on wider screens instead of centering. */
+  #wcb-notice-bar { left: auto; right: 1.25rem; bottom: 1.25rem; margin: 0; }
+}
+@keyframes wcb-notice-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+#wcb-notice-bar .wcb-notice-head {
+  display: flex; align-items: center; gap: 0.55rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600; color: var(--fg);
+}
+#wcb-notice-bar .wcb-notice-head i[data-lucide] { width: 16px; height: 16px; color: var(--fg-muted); }
+#wcb-notice-bar p {
+  margin: 0 0 1rem;
+  color: var(--fg-muted);
+  font-size: 0.875rem;
+}
+#wcb-notice-bar a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--border-strong); }
+#wcb-notice-bar a:hover { text-decoration-color: var(--fg); }
+#wcb-notice-bar .wcb-notice-actions {
+  display: flex; gap: 0.5rem; justify-content: flex-end;
+}
+#wcb-notice-bar .btn {
+  padding: 0.5rem 0.95rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+}
+@media (prefers-reduced-motion: reduce) {
+  #wcb-notice-bar { animation: none; }
+}
+
 /* Reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
