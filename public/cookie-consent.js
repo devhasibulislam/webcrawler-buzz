@@ -86,9 +86,17 @@
   }
 
   // ── Cookie consent banner ──────────────────────────────────────
+  // NOTE: the element id must not match common ad/cookie-banner blocklists
+  // (Brave shields, uBlock Origin easylist-cookie, etc.), which hide anything
+  // matching #cookie*, #*consent*, .cookie-*, and similar patterns. Users
+  // reported the banner never appearing until this id was renamed.
   function showBanner() {
+    // Belt-and-braces: if a previous banner still exists in the DOM, drop it first.
+    var existing = document.getElementById('wcb-notice-bar');
+    if (existing) existing.remove();
+
     var banner = document.createElement('div');
-    banner.id = 'cookie-consent-banner';
+    banner.id = 'wcb-notice-bar';
     banner.setAttribute('role', 'dialog');
     banner.setAttribute('aria-label', 'Cookie consent');
     banner.style.cssText =
