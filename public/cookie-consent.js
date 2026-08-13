@@ -2,6 +2,8 @@
   'use strict';
 
   var GA_ID = 'G-NE3SYMYFJF';
+  // TODO: replace with your real AdSense publisher ID once approved (format: ca-pub-XXXXXXXXXXXXXXXX)
+  var ADSENSE_ID = 'ca-pub-XXXXXXXXXXXXXXXX';
   var CONSENT_KEY = 'cookie_consent';
 
   // ── Consent state ──────────────────────────────────────────────
@@ -9,9 +11,9 @@
 
   if (consent === 'accepted') {
     loadGA();
+    loadAds();
   }
 
-  // Show banner only when no choice has been made
   if (!consent) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', showBanner);
@@ -39,7 +41,6 @@
 
   // ── Remove GA cookies + script on rejection ────────────────────
   function removeGA() {
-    // Delete known GA cookies
     var cookies = document.cookie.split(';');
     for (var i = 0; i < cookies.length; i++) {
       var name = cookies[i].split('=')[0].trim();
@@ -49,13 +50,35 @@
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
       }
     }
-
-    // Remove GA script if loaded
     var gaScript = document.getElementById('ga-script');
     if (gaScript) gaScript.remove();
-
-    // Clear dataLayer
     window.dataLayer = [];
+  }
+
+  // ── Load Google AdSense (only after consent) ───────────────────
+  function loadAds() {
+    if (!ADSENSE_ID || ADSENSE_ID.indexOf('XXXX') !== -1) return; // not configured yet
+    if (document.getElementById('adsense-script')) return;
+
+    var s = document.createElement('script');
+    s.id = 'adsense-script';
+    s.async = true;
+    s.crossOrigin = 'anonymous';
+    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + ADSENSE_ID;
+    document.head.appendChild(s);
+  }
+
+  // ── Remove AdSense cookies + script on rejection ───────────────
+  function removeAds() {
+    var adCookieNames = ['__gads', '__gpi', '__eoi', 'IDE', 'DSID', 'FLC', 'AID', 'TAID'];
+    for (var i = 0; i < adCookieNames.length; i++) {
+      var name = adCookieNames[i];
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=' + location.hostname;
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.' + location.hostname;
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+    }
+    var adScript = document.getElementById('adsense-script');
+    if (adScript) adScript.remove();
   }
 
   // ── Cookie consent banner ──────────────────────────────────────
@@ -75,8 +98,9 @@
     banner.innerHTML =
       '<div style="flex:1;min-width:240px;">' +
         '<p style="margin:0;">' +
-          'We use <strong>Google Analytics</strong> to understand how visitors use our site — anonymous page-view stats only, no personal profiling. ' +
-          '<a href="/cookie-policy" style="color:#93c5fd;text-decoration:underline;">Cookie Policy</a>' +
+          'We use cookies for <strong>Google Analytics</strong> (anonymous usage stats) and <strong>Google AdSense</strong> (ads that help keep this tool free). ' +
+          'You can accept, reject, or read more in our ' +
+          '<a href="/cookie-policy" style="color:#93c5fd;text-decoration:underline;">Cookie Policy</a>.' +
         '</p>' +
       '</div>' +
       '<div style="display:flex;gap:8px;flex-shrink:0;">' +
@@ -92,7 +116,6 @@
 
     document.body.appendChild(banner);
 
-    // Hover effects
     var rejectBtn = document.getElementById('cc-reject');
     var acceptBtn = document.getElementById('cc-accept');
 
@@ -101,30 +124,30 @@
     acceptBtn.addEventListener('mouseenter', function () { this.style.background = '#1d4ed8'; });
     acceptBtn.addEventListener('mouseleave', function () { this.style.background = '#2563eb'; });
 
-    // Accept
     acceptBtn.addEventListener('click', function () {
       localStorage.setItem(CONSENT_KEY, 'accepted');
       banner.remove();
       loadGA();
+      loadAds();
     });
 
-    // Reject
     rejectBtn.addEventListener('click', function () {
       localStorage.setItem(CONSENT_KEY, 'rejected');
       banner.remove();
       removeGA();
+      removeAds();
     });
   }
 
-  // ── Expose helper so the cookie-policy page can offer a "manage" button ──
   window.CookieConsent = {
     reset: function () {
       localStorage.removeItem(CONSENT_KEY);
       removeGA();
+      removeAds();
       showBanner();
     },
     getStatus: function () {
-      return localStorage.getItem(CONSENT_KEY); // 'accepted' | 'rejected' | null
+      return localStorage.getItem(CONSENT_KEY);
     }
   };
 })();
