@@ -1,6 +1,6 @@
 {
   "name": "webcrawler.buzz",
-  "version": "2.2.8",
+  "version": "2.3.8",
   "description": "🕷️ A domain crawler that discovers every page of any website — built with Express.js, TypeScript, BullMQ, and Neon PostgreSQL.",
   "main": "dist/index.js",
   "scripts": {

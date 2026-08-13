@@ -246,8 +246,12 @@ footer.site-footer .badges { display: flex; flex-wrap: wrap; gap: 1rem; justify-
 .prose h2 { font-size: 1.5rem; margin: 2.5rem 0 1rem; }
 .prose h3 { font-size: 1.15rem; margin: 2rem 0 0.75rem; }
 .prose p  { color: var(--fg-muted); margin-bottom: 1.15rem; }
-.prose ul, .prose ol { margin: 1rem 0 1.15rem 1.25rem; color: var(--fg-muted); }
-.prose li { margin-bottom: 0.4rem; }
+.prose ul, .prose ol { margin: 1rem 0 1.15rem 1.5rem; padding-left: 0.25rem; color: var(--fg-muted); }
+.prose ul { list-style: disc; }
+.prose ol { list-style: decimal; }
+.prose ul ul { list-style: circle; }
+.prose li { margin-bottom: 0.4rem; padding-left: 0.25rem; }
+.prose li::marker { color: var(--fg-subtle); }
 .prose a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--border-strong); }
 .prose a:hover { text-decoration-color: var(--fg); }
 /* Buttons inside prose (e.g. blog-post CTAs) shouldn't inherit the underline / muted color. */

@@ -1,13 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#2563eb"/>
-      <stop offset="100%" style="stop-color:#1d4ed8"/>
-    </linearGradient>
-  </defs>
-
   <!-- Blue rounded square background -->
-  <rect x="0" y="0" width="32" height="32" rx="7" ry="7" fill="url(#bg)"/>
+  <rect x="0" y="0" width="32" height="32" rx="7" ry="7" fill="#2563eb"/>
 
   <!-- Web spokes — 8 directions from center 16,15 -->
   <line x1="16" y1="15" x2="16" y2="4"    stroke="white" stroke-width="0.7" opacity="0.45"/>

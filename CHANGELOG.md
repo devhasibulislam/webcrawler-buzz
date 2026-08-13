@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.8] - 2026-08-14
+
+### Added
+- Full modern favicon set: adaptive `favicon.svg`, multi-res `favicon.ico` (16/32/48), 180x180 `apple-touch-icon.png`, 192x192 and 512x512 PWA icons, Safari pinned-tab `mask-icon.svg`, and a `site.webmanifest`.
+- `theme-color` meta tags per light/dark scheme so the mobile browser chrome matches the active theme.
+- Preloader on every HTML page that sets `data-theme` synchronously from `localStorage` or `prefers-color-scheme` before first paint, then fades out on `load`.
+- Lucide icon library CDN wired through `layout.js` and used in every card grid, brand mark, back-link, and export button.
+- Live `cookieconsentchange` custom event so the "Current: accepted / rejected / no choice yet" label on the cookie policy page updates the moment consent changes (no page reload).
+- CSS rule that stretches an orphaned last card across the whole row in `.grid-3` layouts, so the MCP tools grid no longer leaves an empty cell in the last row.
+
+### Changed
+- Full monochrome, Vercel-style redesign of every public page: new design tokens, cards, hero, `.prose` typography, and consistent spacing across index, about, mcp, blogs, blog-post, results, 404, and legal pages.
+- Header brand mark and every card icon now render via Lucide instead of ad-hoc SVGs or emoji glyphs.
+- Every unicode arrow (`<-`, `->`) and emoji glyph (`download`) in link and button labels replaced with proper Lucide icons.
+- `.prose` back-links and CTA buttons no longer inherit the underline / muted color from `.prose a`, so buttons inside blog posts render with the correct button colors.
+- Cookie consent banner code fires `cookieconsentchange` on accept, reject, and reset, so any listener (including the cookie-policy page's status label) stays in sync across tabs and after `CookieConsent.reset()`.
+- `.prose ul` and `.prose ol` restore `list-style: disc` / `list-style: decimal` after Tailwind Preflight's global `list-style: none`, so the legal pages (privacy policy, cookie policy, terms of service) show proper bullets and numbers again.
+
+### Fixed
+- Theme toggle no longer breaks under Helmet's CSP: moved from inline `onclick` to `addEventListener` in `layout.js`.
+- Blog list and blog post pages now read the correct JSON fields (`published_at`, `content.intro`, `content.sections`, `content.conclusion`) instead of the outdated `date` / `body` names, so posts render their full body.
+- `<!-- {{OG_ARTICLE_TAGS}} -->` placeholder no longer leaks into the rendered HTML when hitting `/blog-post.html?slug=` directly.
+
 ## [2.2.8] - 2026-08-04
 
 ### Added

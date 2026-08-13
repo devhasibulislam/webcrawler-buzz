@@ -22,6 +22,10 @@
     }
   }
 
+  function fireChange() {
+    try { window.dispatchEvent(new CustomEvent('cookieconsentchange')); } catch (e) {}
+  }
+
   // ── Load Google Analytics 4 ────────────────────────────────────
   function loadGA() {
     if (document.getElementById('ga-script')) return;
@@ -129,6 +133,7 @@
       banner.remove();
       loadGA();
       loadAds();
+      fireChange();
     });
 
     rejectBtn.addEventListener('click', function () {
@@ -136,6 +141,7 @@
       banner.remove();
       removeGA();
       removeAds();
+      fireChange();
     });
   }
 
@@ -144,6 +150,7 @@
       localStorage.removeItem(CONSENT_KEY);
       removeGA();
       removeAds();
+      fireChange();
       showBanner();
     },
     getStatus: function () {
