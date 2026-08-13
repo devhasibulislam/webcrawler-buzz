@@ -49,6 +49,8 @@
     .article-body p { margin-bottom: 1rem; line-height: 1.8; }
     .article-body h2 { margin-top: 2.5rem; margin-bottom: 1rem; }
   </style>
+  <link rel="stylesheet" href="/theme.css?v=2.3.8" data-theme-css />
+
 </head>
 <body>
   <div id="wcb-preloader" aria-hidden="true">
@@ -79,7 +81,26 @@
       setTimeout(hide,6000);
     })();
   </script>
-  <header></header>
+  <header class="site-header">
+  <div class="inner">
+    <a href="/" class="brand">
+      <i data-lucide="radar" class="brand-mark"></i>
+      <span>webcrawler</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/blogs">Blog</a>
+      <a href="/mcp">MCP</a>
+      <a href="/about">About</a>
+    </nav>
+    <div class="actions">
+      <button id="theme-toggle" type="button" aria-label="Toggle theme">
+        <i data-lucide="moon" class="icon-moon"></i>
+        <i data-lucide="sun" class="icon-sun"></i>
+      </button>
+    </div>
+  </div>
+</header>
   <main class="section">
     <div class="container-narrow">
       <a href="/blogs" style="display:inline-flex;align-items:center;gap:0.35rem;color:var(--fg-muted);font-size:0.9rem;margin-bottom:2rem;text-decoration:none;">
@@ -90,7 +111,31 @@
       </article>
     </div>
   </main>
-  <footer></footer>
+  <footer class="site-footer">
+  <div class="inner">
+    <div class="badges">
+      <a href="https://www.producthunt.com/products/webcrawler-buzz/reviews/new?utm_source=badge-product_review&utm_medium=badge&utm_source=badge-webcrawler&#0045;buzz" target="_blank" rel="noopener noreferrer">
+        <img src="/ph-product-review.svg" alt="Review WebCrawler.buzz on Product Hunt" width="180" height="39" loading="lazy" />
+      </a>
+      <a href="https://www.producthunt.com/products/webcrawler-buzz?utm_source=badge-follow&utm_medium=badge&utm_source=badge-webcrawler&#0045;buzz" target="_blank" rel="noopener noreferrer">
+        <img src="/ph-follow.svg" alt="Follow WebCrawler.buzz on Product Hunt" width="180" height="39" loading="lazy" />
+      </a>
+      <a href="https://www.producthunt.com/products/webcrawler-buzz/launches/webcrawler-buzz?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-webcrawler-buzz" target="_blank" rel="noopener noreferrer">
+        <img src="/ph-featured.svg" alt="WebCrawler.buzz — Featured on Product Hunt" width="180" height="39" loading="lazy" />
+      </a>
+    </div>
+    <div class="links">
+      <span>&copy; 2026 WebCrawler.buzz</span>
+      <span aria-hidden="true">·</span>
+      <a href="/about">About</a>
+      <a href="/blogs">Blog</a>
+      <a href="/mcp">MCP</a>
+      <a href="/privacy-policy">Privacy</a>
+      <a href="/terms-of-service">Terms</a>
+      <a href="/cookie-policy">Cookies</a>
+    </div>
+  </div>
+</footer>
   <script>
     function fmtDate(iso) {
       if (!iso) return '';

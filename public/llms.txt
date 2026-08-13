@@ -2,97 +2,44 @@
 
 > Free web-based website crawler for SEO audits. Paste a URL, crawl every page, get structured data back. No signup required.
 
-## What It Does
+WebCrawler.buzz crawls any publicly accessible website using breadth-first search and returns structured SEO data for every discovered page: URL, page title, meta description, HTTP status code, response time, content type, page size, link counts, redirect destinations, and indexability. Results auto-expire after 1 hour. Full crawls can be exported as CSV.
 
-WebCrawler.buzz crawls any publicly accessible website using breadth-first search (BFS) and returns structured SEO data for every discovered page.
+## Docs
 
-## Data Collected Per Page
-
-- URL, page title, meta description
-- HTTP status code (200, 301, 404, 500, etc.)
-- Response time in milliseconds
-- Content type and page size in bytes
-- Internal and external link counts
-- Redirect destination URL (if applicable)
-- Indexability status (noindex detection)
-
-## How to Use
-
-1. Go to https://webcrawler.buzz
-2. Paste any URL and click "Start Crawl"
-3. Watch real-time progress or bookmark the tracking URL
-4. View paginated results when complete
-5. Export full report as CSV (delivered via email)
+- [Home](https://webcrawler.buzz): Paste a URL and start a crawl.
+- [API documentation](https://webcrawler.buzz/api-docs-public): Full REST API reference with request/response schemas.
+- [MCP server](https://webcrawler.buzz/mcp): Model Context Protocol integration for Claude, Cursor, Codex, and other AI agents.
+- [About](https://webcrawler.buzz/about): Project background, tech stack, and open-source status.
+- [Full details for LLMs](https://webcrawler.buzz/llms-full.txt): Extended docs including database schema and blog index.
 
 ## API
 
-Base URL: https://api.webcrawler.buzz/api
-
-Note: Use api.webcrawler.buzz (not webcrawler.buzz) for programmatic access.
-The main domain uses Cloudflare bot protection which blocks automated requests.
-
-- POST /api/crawl, Start a crawl (body: { "url": "https://example.com" })
-- GET /api/crawl/:jobId/progress, Check crawl progress
-- GET /api/crawl/:jobId, Get paginated results
-- POST /api/crawl/:jobId/export, Request CSV export (body: { "email": "..." })
-- GET /api/health, Service health check
-- GET /api/stats, Public usage statistics
-
-## Key Details
-
-- Completely free, no registration, no API key needed
-- Works from any browser, no desktop install
-- Results auto-expire after 1 hour; CSV exports expire after 5 minutes
-- Rate limit: 200 POST requests per 15 minutes per IP
-- Crawl concurrency: 5 simultaneous jobs
-- Open source: https://github.com/devhasibulislam/webcrawler (MIT license)
-
-## Full Documentation
-
-For complete technical docs, API schema, database structure, and blog index:
-https://webcrawler.buzz/llms-full.txt
-
-## Links
-
-- Website: https://webcrawler.buzz
-- API Docs: https://webcrawler.buzz/api-docs-public
-- Blog: https://webcrawler.buzz/blogs
-- About: https://webcrawler.buzz/about
-- GitHub: https://github.com/devhasibulislam/webcrawler
+- [POST /api/crawl](https://api.webcrawler.buzz/api/crawl): Start a new crawl. Body `{ "url": "https://example.com" }`.
+- [GET /api/crawl/:jobId/progress](https://api.webcrawler.buzz/api/crawl/JOB_ID/progress): Live progress for a running job.
+- [GET /api/crawl/:jobId](https://api.webcrawler.buzz/api/crawl/JOB_ID): Paginated results for a completed job.
+- [POST /api/crawl/:jobId/export](https://api.webcrawler.buzz/api/crawl/JOB_ID/export): Request a CSV export via email.
+- [GET /api/health](https://webcrawler.buzz/api/health): Service health check.
+- [GET /api/stats](https://webcrawler.buzz/api/stats): Public usage statistics.
 
 ## Blog
 
-WebCrawler.buzz publishes guides on web crawling, technical SEO, and site auditing:
+- [What Is a Web Crawler? A Beginner's Complete Guide](https://webcrawler.buzz/blogs/what-is-a-web-crawler)
+- [Why Every Website Owner Needs to Crawl Their Domain at Least Once](https://webcrawler.buzz/blogs/why-every-website-owner-needs-a-domain-crawler)
+- [How Web Crawlers Directly Impact Your SEO Rankings](https://webcrawler.buzz/blogs/how-web-crawlers-impact-seo)
+- [Web Crawler vs. Site Audit Tools: What Is the Difference](https://webcrawler.buzz/blogs/web-crawler-vs-site-audit-tools)
+- [How to Do a Complete Technical SEO Audit Using a Domain Crawler](https://webcrawler.buzz/blogs/how-to-do-a-technical-seo-audit-with-a-domain-crawler)
+- [10 Best Free Web Crawler Tools in 2026](https://webcrawler.buzz/blogs/best-free-web-crawler-tools)
 
-- What Is a Web Crawler? A Beginner's Complete Guide: https://webcrawler.buzz/blogs/what-is-a-web-crawler
-- Why Every Website Owner Needs to Crawl Their Domain at Least Once: https://webcrawler.buzz/blogs/why-every-website-owner-needs-a-domain-crawler
-- How Web Crawlers Directly Impact Your SEO Rankings: https://webcrawler.buzz/blogs/how-web-crawlers-impact-seo
-- Web Crawler vs. Site Audit Tools, What Is the Difference: https://webcrawler.buzz/blogs/web-crawler-vs-site-audit-tools
-- How to Do a Complete Technical SEO Audit Using a Domain Crawler: https://webcrawler.buzz/blogs/how-to-do-a-technical-seo-audit-with-a-domain-crawler
-- 10 Best Free Web Crawler Tools in 2026, Compared and Ranked: https://webcrawler.buzz/blogs/best-free-web-crawler-tools
+## Trust
 
-## Links
+- [Source code on GitHub](https://github.com/devhasibulislam/webcrawler): MIT-licensed.
+- [MIT license](https://github.com/devhasibulislam/webcrawler/blob/master/LICENSE)
+- [Security policy](https://webcrawler.buzz/.well-known/security.txt): Responsible disclosure contact.
+- [Privacy policy](https://webcrawler.buzz/privacy-policy)
+- [Terms of service](https://webcrawler.buzz/terms-of-service)
+- [Cookie policy](https://webcrawler.buzz/cookie-policy)
 
-- Website: https://webcrawler.buzz
-- About: https://webcrawler.buzz/about
-- API Documentation: https://webcrawler.buzz/api-docs-public
-- Health Check: https://webcrawler.buzz/api/health
-- Public Stats: https://webcrawler.buzz/api/stats
-- Blog: https://webcrawler.buzz/blogs
-- Source Code: https://github.com/devhasibulislam/webcrawler
-- License: MIT (https://github.com/devhasibulislam/webcrawler/blob/master/LICENSE)
-- Security Policy: https://webcrawler.buzz/.well-known/security.txt
-- Privacy Policy: https://webcrawler.buzz/privacy-policy
-- Terms of Service: https://webcrawler.buzz/terms-of-service
-- Cookie Policy: https://webcrawler.buzz/cookie-policy
+## Optional
 
-## Trust & Transparency
-
-- Open source under MIT License, full code on GitHub
-- Built by Hasibul Islam (https://github.com/devhasibulislam)
-- Featured on Product Hunt: https://www.producthunt.com/products/webcrawler-buzz
-- No data retention, crawl results auto-delete after 1 hour
-- Security: Helmet, CORS, rate limiting, parameterized SQL queries
-- Standard health check and public stats endpoints
-- security.txt at /.well-known/security.txt for responsible disclosure
-- Tech stack: Node.js, TypeScript, Express.js v5, PostgreSQL (Neon), Redis (BullMQ), Axios, Cheerio
+- [Featured on Product Hunt](https://www.producthunt.com/products/webcrawler-buzz)
+- [Maintainer: Hasibul Islam](https://github.com/devhasibulislam)
