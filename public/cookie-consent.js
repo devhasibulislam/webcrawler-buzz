@@ -102,7 +102,7 @@
     banner.innerHTML =
       '<div style="flex:1;min-width:240px;">' +
         '<p style="margin:0;">' +
-          'We use cookies for <strong style="color:#ffffff;">Google Analytics</strong> (anonymous usage stats) and <strong style="color:#ffffff;">Google AdSense</strong> (ads that help keep this tool free). ' +
+          'We use cookies for <strong style="color:#ffffff;background-color:#1f2937;">Google Analytics</strong> (anonymous usage stats) and <strong style="color:#ffffff;background-color:#1f2937;">Google AdSense</strong> (ads that help keep this tool free). ' +
           'You can accept, reject, or read more in our ' +
           '<a href="/cookie-policy" style="color:#93c5fd;text-decoration:underline;">Cookie Policy</a>.' +
         '</p>' +
