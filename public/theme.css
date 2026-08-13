@@ -322,4 +322,8 @@ footer.site-footer .badges { display: flex; flex-wrap: wrap; gap: 1rem; justify-
   header.site-header nav a { padding: 0.4rem 0.5rem; font-size: 0.85rem; }
   .hero { padding: 4rem 1.25rem; }
   .hero .form { flex-direction: column; }
+  /* In column layout, `flex: 1 1 240px` on the input would use 240px as a
+     *height* basis and grow, producing a huge blank field. Reset it. */
+  .hero .form .input { flex: 0 0 auto; width: 100%; }
+  .hero .form .btn   { width: 100%; }
 }
