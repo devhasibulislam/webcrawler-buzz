@@ -145,11 +145,12 @@
   </script>
 
   <style>
-    body{font-family:"Google Sans",system-ui,-apple-system,sans-serif}
-    .progress-bar { transition: width 0.4s ease; }
-    .slide-in { animation: slideIn 0.5s ease forwards; }
+    body{font-family:"Google Sans",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+    h1,h2,h3{letter-spacing:-0.015em;}
+    .progress-bar { transition: width .5s cubic-bezier(0.23,1,0.32,1); }
+    .slide-in { animation: slideIn .45s cubic-bezier(0.23,1,0.32,1) forwards; }
     @keyframes slideIn {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes float {
@@ -166,7 +167,7 @@
     details summary::-webkit-details-marker { display: none; }
     details summary { list-style: none; }
     details[open] summary .faq-chevron { transform: rotate(180deg); }
-    .faq-chevron { transition: transform 0.2s ease; }
+    .faq-chevron { transition: transform .2s cubic-bezier(0.23,1,0.32,1); }
     html { scroll-behavior: smooth; }
   </style>
 </head>
