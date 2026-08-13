@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192x192.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WebCrawler.buzz: Crawl Any Website and Audit Every Page for Free</title>
-  <meta name="description" content="Paste any URL and instantly crawl the entire site. Get page titles, meta descriptions, status codes, response times, and indexability data for every page, free, no signup required." />
+  <meta name="description" content="Paste a URL and crawl the whole site. Get page titles, meta descriptions, status codes, response times, and indexability data for every page. Free, no signup." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://webcrawler.buzz/" />
 
@@ -21,7 +21,7 @@
   <!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="WebCrawler.buzz: Crawl Any Website and Audit Every Page for Free" />
-  <meta property="og:description" content="Paste any URL and instantly crawl the entire site. Get page titles, meta descriptions, status codes, response times, and indexability data for every page, free, no signup required." />
+  <meta property="og:description" content="Paste a URL and crawl the whole site. Get page titles, meta descriptions, status codes, response times, and indexability data for every page. Free, no signup." />
   <meta property="og:url" content="https://webcrawler.buzz/" />
   <meta property="og:site_name" content="WebCrawler.buzz" />
   <meta property="og:image" content="https://webcrawler.buzz/og-image.png" />
@@ -32,7 +32,7 @@
   <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="WebCrawler.buzz: Crawl Any Website and Audit Every Page for Free" />
-  <meta name="twitter:description" content="Paste any URL and instantly crawl the entire site. Get page titles, meta descriptions, status codes, response times, and indexability data for every page, free, no signup required." />
+  <meta name="twitter:description" content="Paste a URL and crawl the whole site. Get page titles, meta descriptions, status codes, response times, and indexability data for every page. Free, no signup." />
   <meta name="twitter:image" content="https://webcrawler.buzz/og-image.png" />
 
   <!-- Structured Data (JSON-LD) -->
@@ -81,7 +81,7 @@
         "name": "Is this web crawler really free?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, WebCrawler.buzz is completely free. There is no signup, no credit card, and no hidden fees. Paste any URL and start crawling instantly."
+          "text": "Yes, WebCrawler.buzz is completely free. There is no signup, no credit card, and no hidden fees. Paste a URL and start."
         }
       },
       {
@@ -144,360 +144,264 @@
   }
   </script>
 
-  <style>
-    body{font-family:"Google Sans",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
-    h1,h2,h3{letter-spacing:-0.015em;}
-    .progress-bar { transition: width .5s cubic-bezier(0.23,1,0.32,1); }
-    .slide-in { animation: slideIn .45s cubic-bezier(0.23,1,0.32,1) forwards; }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-    .float-anim { animation: float 3s ease-in-out infinite; }
-    @keyframes pulse-ring {
-      0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.4); }
-      70% { box-shadow: 0 0 0 12px rgba(59,130,246,0); }
-      100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
-    }
-    .pulse-ring:focus-within { animation: pulse-ring 1.5s ease-out infinite; }
-    details summary::-webkit-details-marker { display: none; }
-    details summary { list-style: none; }
-    details[open] summary .faq-chevron { transform: rotate(180deg); }
-    .faq-chevron { transition: transform .2s cubic-bezier(0.23,1,0.32,1); }
-    html { scroll-behavior: smooth; }
-  </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-  <!-- Header -->
-  <header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/"><picture><source type="image/webp" srcset="/webcrawler-logo-192.webp 1x, /webcrawler-logo-384.webp 2x"><img src="/webcrawler-logo-192.png" srcset="/webcrawler-logo-384.png 2x" alt="WebCrawler.buzz: Free Online Web Crawler" class="h-10"></picture></a>
-      <nav class="text-sm text-gray-600 space-x-4" aria-label="Main navigation">
-        <a href="/blogs" class="hover:text-gray-800">Blog</a>
-        <a href="/about" class="hover:text-gray-800">About</a>
-      </nav>
-    </div>
-  </header>
+<body>
+  <div id="wcb-preloader" aria-hidden="true">
+    <div class="wcb-spinner"></div>
+  </div>
+  <style>
+    #wcb-preloader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#ffffff;color:#0a0a0a;transition:opacity 320ms cubic-bezier(0.23,1,0.32,1);}
+    [data-theme='dark'] #wcb-preloader{background:#0a0a0a;color:#fafafa;}
+    @media (prefers-color-scheme: dark){html:not([data-theme='light']) #wcb-preloader{background:#0a0a0a;color:#fafafa;}}
+    #wcb-preloader.done{opacity:0;pointer-events:none;}
+    .wcb-spinner{width:28px;height:28px;border:2px solid rgba(0,0,0,0.12);border-top-color:#0a0a0a;border-radius:999px;animation:wcb-spin 720ms linear infinite;}
+    [data-theme='dark'] .wcb-spinner{border-color:rgba(255,255,255,0.15);border-top-color:#fafafa;}
+    @media (prefers-color-scheme: dark){html:not([data-theme='light']) .wcb-spinner{border-color:rgba(255,255,255,0.15);border-top-color:#fafafa;}}
+    @keyframes wcb-spin{to{transform:rotate(360deg);}}
+    @media (prefers-reduced-motion: reduce){.wcb-spinner{animation:none;border-top-color:transparent;}}
+  </style>
+  <script>
+    (function(){
+      // Sync theme init so preloader matches user's theme on first paint.
+      try{
+        var t=localStorage.getItem('theme');
+        if(t!=='light'&&t!=='dark') t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+        document.documentElement.setAttribute('data-theme',t);
+      }catch(e){}
+      function hide(){var el=document.getElementById('wcb-preloader');if(!el)return;el.classList.add('done');setTimeout(function(){if(el&&el.parentNode)el.parentNode.removeChild(el);},380);}
+      if(document.readyState==='complete')hide();
+      else window.addEventListener('load',hide);
+      setTimeout(hide,6000);
+    })();
+  </script>
+  <header></header>
 
   <main>
-  <!-- Hero / Banner Section -->
-  <section class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white py-20 px-4 relative overflow-hidden">
-    <!-- Decorative blurred circles -->
-    <div class="absolute top-[-80px] left-[-80px] w-64 h-64 bg-blue-400 opacity-20 rounded-full blur-3xl" aria-hidden="true"></div>
-    <div class="absolute bottom-[-60px] right-[-60px] w-80 h-80 bg-indigo-400 opacity-20 rounded-full blur-3xl" aria-hidden="true"></div>
-
-    <div class="max-w-3xl mx-auto text-center relative z-10">
-      <div id="crawl-form-section">
-        <p class="inline-block bg-white/10 text-blue-100 text-sm font-medium px-4 py-1.5 rounded-full mb-6 backdrop-blur-sm">100% Free &middot; No Signup &middot; Instant Results</p>
-        <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">Web Crawler Online, Free Website Crawler</h1>
-        <p class="text-blue-100 text-lg mb-6 max-w-2xl mx-auto">Web crawl online for free, crawl website online and discover every page. This domain crawler online gives you titles, status codes, response times, and indexability data. Paste a URL and start in seconds.</p>
-
-        <a href="/mcp" class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 hover:from-purple-500/50 hover:to-pink-500/50 border border-white/30 text-white text-sm font-semibold px-5 py-2.5 rounded-full mb-8 backdrop-blur-sm transition-all shadow-lg">
-          <span class="text-lg">🤖</span>
-          <span>New: Use it inside Claude, Cursor &amp; VS Code via MCP</span>
-          <span aria-hidden="true">→</span>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="inner">
+        <a href="/mcp" class="pill" aria-label="New: MCP support">
+          <span class="dot"></span>
+          <span>New. MCP support for Claude, Cursor &amp; VS Code</span>
+          <i data-lucide="arrow-right" style="width:14px;height:14px;vertical-align:-2px;" aria-hidden="true"></i>
         </a>
 
-        <form id="crawl-form" class="max-w-xl mx-auto" aria-label="Start website crawl">
-          <div class="flex flex-col sm:flex-row gap-3 pulse-ring rounded-2xl">
-            <input
-              type="url"
-              id="url-input"
-              placeholder="https://example.com"
-              required
-              class="flex-1 px-5 py-4 border-0 rounded-xl text-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-lg"
-            />
-            <button
-              type="submit"
-              id="submit-btn"
-              class="bg-white text-blue-700 hover:bg-blue-50 font-bold px-8 py-4 rounded-xl text-lg transition-colors shadow-lg w-full sm:w-auto"
-            >
-              Start Crawl
-            </button>
-          </div>
+        <h1 class="headline">Crawl any website.<br/>Audit every page.</h1>
+        <p class="subhead">Paste a URL. Get every page on the domain with its title, status code, response time, and indexability. Free, no signup.</p>
+
+        <form id="crawl-form" class="form" aria-label="Start website crawl">
+          <input type="url" id="url-input" class="input" placeholder="https://example.com" required autocomplete="off" />
+          <button type="submit" id="submit-btn" class="btn btn-lg">Start crawl</button>
         </form>
-        <p id="error-msg" class="text-red-300 mt-3 hidden"></p>
-        <p class="text-blue-200 text-sm mt-4">Trusted by SEO professionals, developers &amp; content teams worldwide</p>
-      </div>
+        <p id="error-msg" class="trust" style="display:none;color:var(--fg);"></p>
+        <p class="trust">Used by SEO folks, developers, and content teams.</p>
 
-      <!-- Duplicate Domain Modal -->
-      <div id="duplicate-modal" class="hidden mt-8 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 text-center">
-        <h2 class="text-xl font-semibold text-yellow-200 mb-2">⚠️ Already Crawled!</h2>
-        <p class="text-blue-100 mb-1">Domain: <strong id="dup-domain" class="text-white"></strong></p>
-        <p class="text-blue-100 mb-4">Total pages found: <strong id="dup-pages" class="text-white"></strong></p>
-        <div class="flex gap-3 justify-center flex-wrap">
-          <button id="btn-use-existing" class="bg-white/20 hover:bg-white/30 text-white font-medium px-6 py-2 rounded-xl transition-colors">
-            View Existing Results
-          </button>
-          <button id="btn-re-crawl" class="bg-white text-blue-700 hover:bg-blue-50 font-medium px-6 py-2 rounded-xl transition-colors">
-            Re-crawl Fresh
-          </button>
-        </div>
-      </div>
-
-      <!-- Progress Section -->
-      <div id="progress-section" class="hidden mt-8">
-        <div id="tracking-box" class="bg-white rounded-2xl p-5 mb-6 text-center shadow-lg">
-          <p class="text-gray-700 font-medium mb-1">🔗 Your tracking link:</p>
-          <a id="tracking-url" href="#" target="_blank" class="text-blue-600 underline font-mono text-sm break-all"></a>
-          <p class="text-gray-500 text-xs mt-2">Bookmark this! You can come back anytime even if you close the tab.</p>
-        </div>
-
-        <div class="bg-white/20 rounded-full h-4 overflow-hidden mb-3">
-          <div id="progress-bar" class="progress-bar bg-white h-full rounded-full" style="width: 0%"></div>
-        </div>
-        <p id="progress-text" class="text-blue-100 text-center text-sm">Starting crawl...</p>
-
-        <div id="notify-card" class="hidden slide-in mt-6 bg-white rounded-2xl p-6 shadow-xl text-center">
-          <p class="text-lg font-semibold text-gray-700 mb-2">⏳ This might take a while</p>
-          <p class="text-gray-500 mb-4">Want an email when it's done?</p>
-          <form id="notify-form" class="flex gap-3 justify-center flex-wrap">
-            <input
-              type="email"
-              id="email-input"
-              placeholder="you@example.com"
-              required
-              class="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 w-64 text-gray-800"
-            />
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-xl transition-colors">
-              Notify Me
-            </button>
-          </form>
-          <p id="notify-msg" class="text-green-600 mt-2 hidden text-sm"></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Capabilities Section -->
-  <section class="py-16 px-6 bg-white">
-    <div class="max-w-5xl mx-auto text-center">
-      <h2 class="text-3xl font-bold text-gray-800 mb-3">How This Online Web Crawler Works</h2>
-      <p class="text-gray-500 mb-12 max-w-2xl mx-auto">Three simple steps to web crawl online, paste a URL, watch the website crawler scan in real time, and get a full site crawler report. No software to install.</p>
-
-      <div class="grid md:grid-cols-3 gap-10">
-        <div class="relative">
-          <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 float-anim">1</div>
-          <h3 class="font-semibold text-gray-800 text-lg mb-2">Paste Any URL</h3>
-          <p class="text-gray-500 text-sm">Enter any website URL and hit start. The crawler begins a breadth-first discovery scoped to the entire root domain, no depth limit.</p>
-        </div>
-        <div class="relative">
-          <div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 float-anim" style="animation-delay:0.5s">2</div>
-          <h3 class="font-semibold text-gray-800 text-lg mb-2">Watch Live Progress</h3>
-          <p class="text-gray-500 text-sm">Track your crawl in real time with a live progress bar. Get a bookmark link so you can close the tab and come back anytime.</p>
-        </div>
-        <div class="relative">
-          <div class="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4 float-anim" style="animation-delay:1s">3</div>
-          <h3 class="font-semibold text-gray-800 text-lg mb-2">Get Your Report</h3>
-          <p class="text-gray-500 text-sm">View results in-browser or export the full crawl report as a CSV spreadsheet. Optionally get an email notification when it's done.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- All Features Section -->
-  <section class="py-16 px-6 bg-gray-50">
-    <div class="max-w-5xl mx-auto text-center">
-      <h2 class="text-3xl font-bold text-gray-800 mb-3">All Features, Free Web Crawler Tool Online</h2>
-      <p class="text-gray-500 mb-12 max-w-2xl mx-auto">Everything you need to crawl website online and run a site audit, built into one free website crawler. No signup, no page limits, no software to install.</p>
-
-      <div class="grid md:grid-cols-3 gap-6 text-left">
-        <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-          <div class="text-2xl mb-3">🔍</div>
-          <h3 class="font-semibold text-gray-800 mb-1">Full Domain Discovery</h3>
-          <p class="text-gray-500 text-sm">Breadth-first crawl scoped to the root domain. Every internal page gets found, no depth limit.</p>
-        </div>
-        <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-          <div class="text-2xl mb-3">📊</div>
-          <h3 class="font-semibold text-gray-800 mb-1">SEO Data Per Page</h3>
-          <p class="text-gray-500 text-sm">Page titles, meta descriptions, H1 tags, word counts, all the on-page SEO data you need in one view.</p>
-        </div>
-        <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-          <div class="text-2xl mb-3">🚦</div>
-          <h3 class="font-semibold text-gray-800 mb-1">HTTP Status Codes</h3>
-          <p class="text-gray-500 text-sm">Instantly spot 404s, 301 redirects, 500 server errors, and every other status code across your site.</p>
-        </div>
-        <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-          <div class="text-2xl mb-3">⏱️</div>
-          <h3 class="font-semibold text-gray-800 mb-1">Response Time Tracking</h3>
-          <p class="text-gray-500 text-sm">See how fast each page responds. Find slow pages that hurt user experience and search rankings.</p>
-        </div>
-        <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-          <div class="text-2xl mb-3">🤖</div>
-          <h3 class="font-semibold text-gray-800 mb-1">Indexability Detection</h3>
-          <p class="text-gray-500 text-sm">Detect noindex tags, canonical URLs, and robots directives so you know exactly what search engines see.</p>
-        </div>
-        <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-          <div class="text-2xl mb-3">📥</div>
-          <h3 class="font-semibold text-gray-800 mb-1">CSV Export via Email</h3>
-          <p class="text-gray-500 text-sm">Download your full crawl report as a spreadsheet. The CSV file is generated and delivered to your email.</p>
-        </div>
-        <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-          <div class="text-2xl mb-3">📌</div>
-          <h3 class="font-semibold text-gray-800 mb-1">Bookmark &amp; Resume</h3>
-          <p class="text-gray-500 text-sm">Every crawl gets a unique tracking link. Close your browser, come back later, your results are waiting.</p>
-        </div>
-        <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-          <div class="text-2xl mb-3">🛡️</div>
-          <h3 class="font-semibold text-gray-800 mb-1">Robots.txt Compliant</h3>
-          <p class="text-gray-500 text-sm">The crawler respects robots.txt rules. Pages marked as disallowed by the site owner are never crawled.</p>
-        </div>
-        <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-          <div class="text-2xl mb-3">🔓</div>
-          <h3 class="font-semibold text-gray-800 mb-1">No Signup Required</h3>
-          <p class="text-gray-500 text-sm">Start crawling instantly. No account, no credit card, no trial period. Just paste a URL and go.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Who It's For Section -->
-  <section class="py-16 px-6 bg-white">
-    <div class="max-w-5xl mx-auto text-center">
-      <h2 class="text-3xl font-bold text-gray-800 mb-3">Who Uses This Web Crawler Online?</h2>
-      <p class="text-gray-500 mb-12 max-w-2xl mx-auto">Whether you need a domain crawler for SEO audits or a website crawler test for site migrations, this free web crawler online is built for you.</p>
-
-      <div class="grid md:grid-cols-2 gap-8 text-left max-w-4xl mx-auto">
-        <div class="flex gap-4 items-start bg-blue-50 rounded-2xl p-6 border border-blue-100">
-          <div class="text-3xl flex-shrink-0">🎯</div>
-          <div>
-            <h3 class="font-semibold text-gray-800 text-lg mb-1">SEO Professionals</h3>
-            <p class="text-gray-600 text-sm">Run full site audits in minutes. Find broken pages, missing titles, duplicate meta descriptions, and indexation issues, all from one free crawl.</p>
+        <!-- Duplicate domain notice -->
+        <div id="duplicate-modal" class="card" style="display:none;margin-top:2.5rem;text-align:left;max-width:560px;margin-left:auto;margin-right:auto;">
+          <h3 style="margin-bottom:0.5rem;">Already crawled</h3>
+          <p style="margin-bottom:0.25rem;">Domain: <strong id="dup-domain" style="color:var(--fg);"></strong></p>
+          <p style="margin-bottom:1.25rem;">Total pages found: <strong id="dup-pages" style="color:var(--fg);"></strong></p>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button id="btn-use-existing" class="btn btn-secondary">View existing results</button>
+            <button id="btn-re-crawl" class="btn">Re-crawl fresh</button>
           </div>
         </div>
-        <div class="flex gap-4 items-start bg-indigo-50 rounded-2xl p-6 border border-indigo-100">
-          <div class="text-3xl flex-shrink-0">💻</div>
-          <div>
-            <h3 class="font-semibold text-gray-800 text-lg mb-1">Web Developers</h3>
-            <p class="text-gray-600 text-sm">Debug site migrations, verify redirects, and catch 500 errors before your users do. Test any staging or production URL instantly.</p>
+
+        <!-- Progress -->
+        <div id="progress-section" style="display:none;margin-top:2.5rem;max-width:560px;margin-left:auto;margin-right:auto;text-align:left;">
+          <div class="card" style="margin-bottom:1rem;text-align:center;">
+            <p style="color:var(--fg);font-weight:500;margin-bottom:0.25rem;">Your tracking link</p>
+            <a id="tracking-url" href="#" target="_blank" style="color:var(--fg-muted);font-family:'Geist Mono',monospace;font-size:0.85rem;word-break:break-all;text-decoration:underline;text-underline-offset:3px;"></a>
+            <p style="color:var(--fg-subtle);font-size:0.8rem;margin-top:0.5rem;">Bookmark this. Come back anytime.</p>
           </div>
-        </div>
-        <div class="flex gap-4 items-start bg-green-50 rounded-2xl p-6 border border-green-100">
-          <div class="text-3xl flex-shrink-0">📝</div>
-          <div>
-            <h3 class="font-semibold text-gray-800 text-lg mb-1">Content Managers</h3>
-            <p class="text-gray-600 text-sm">Discover orphan pages, find content that's not indexed, and get a complete inventory of every URL on your site, exportable as CSV.</p>
-          </div>
-        </div>
-        <div class="flex gap-4 items-start bg-purple-50 rounded-2xl p-6 border border-purple-100">
-          <div class="text-3xl flex-shrink-0">🏢</div>
-          <div>
-            <h3 class="font-semibold text-gray-800 text-lg mb-1">Agency Owners</h3>
-            <p class="text-gray-600 text-sm">Generate crawl reports for client websites. Share tracking links, export CSV reports, and deliver insights, no paid tools required.</p>
+          <div class="progress"><div id="progress-bar" style="width:0%"></div></div>
+          <p id="progress-text" style="text-align:center;color:var(--fg-muted);font-size:0.9rem;margin-top:0.75rem;">Starting crawl…</p>
+
+          <div id="notify-card" class="card" style="display:none;margin-top:1.25rem;text-align:center;">
+            <h3 style="margin-bottom:0.35rem;">This might take a while</h3>
+            <p style="margin-bottom:1rem;">Want an email when it's done?</p>
+            <form id="notify-form" style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;">
+              <input type="email" id="email-input" class="input" style="max-width:240px;" placeholder="you@example.com" required />
+              <button type="submit" class="btn">Notify me</button>
+            </form>
+            <p id="notify-msg" style="display:none;color:var(--fg-muted);font-size:0.85rem;margin-top:0.75rem;"></p>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FAQ Section -->
-  <section class="py-16 px-6 bg-gray-50">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="text-3xl font-bold text-gray-800 mb-3 text-center">Frequently Asked Questions</h2>
-      <p class="text-gray-500 mb-10 text-center">Everything you need to know about this web crawler online, the free website crawler tool by WebCrawler.buzz.</p>
-
-      <div class="space-y-3">
-        <details class="bg-white rounded-xl border border-gray-200 overflow-hidden group" open>
-          <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-medium text-gray-800 hover:bg-gray-50">
-            <span>Is this web crawler really free?</span>
-            <svg class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="px-6 pb-4 text-gray-600 text-sm">Yes, this web crawler online is completely free. WebCrawler.buzz has no signup, no credit card, and no hidden fees. Paste any URL and start your web crawl online instantly.</div>
-        </details>
-
-        <details class="bg-white rounded-xl border border-gray-200 overflow-hidden group">
-          <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-medium text-gray-800 hover:bg-gray-50">
-            <span>How many pages can the crawler discover?</span>
-            <svg class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="px-6 pb-4 text-gray-600 text-sm">There is no hard page limit. The crawler uses a breadth-first approach scoped to the root domain and will continue discovering pages until the entire site is mapped.</div>
-        </details>
-
-        <details class="bg-white rounded-xl border border-gray-200 overflow-hidden group">
-          <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-medium text-gray-800 hover:bg-gray-50">
-            <span>Do I need to create an account?</span>
-            <svg class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="px-6 pb-4 text-gray-600 text-sm">No. You can start a crawl immediately without signing up. You only provide an email if you want to be notified when a large crawl finishes.</div>
-        </details>
-
-        <details class="bg-white rounded-xl border border-gray-200 overflow-hidden group">
-          <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-medium text-gray-800 hover:bg-gray-50">
-            <span>How long does a crawl take?</span>
-            <svg class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="px-6 pb-4 text-gray-600 text-sm">Small sites (under 100 pages) usually finish in under a minute. Larger sites may take several minutes. You get a tracking link so you can close the tab and come back later.</div>
-        </details>
-
-        <details class="bg-white rounded-xl border border-gray-200 overflow-hidden group">
-          <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-medium text-gray-800 hover:bg-gray-50">
-            <span>What data does the crawler collect for each page?</span>
-            <svg class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="px-6 pb-4 text-gray-600 text-sm">For every page discovered, the crawler records the URL, page title, meta description, HTTP status code, response time, content type, word count, and indexability status (noindex, canonical).</div>
-        </details>
-
-        <details class="bg-white rounded-xl border border-gray-200 overflow-hidden group">
-          <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-medium text-gray-800 hover:bg-gray-50">
-            <span>Can I export the results?</span>
-            <svg class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="px-6 pb-4 text-gray-600 text-sm">Yes. After a crawl completes you can export the full report as a CSV spreadsheet. The file is generated and delivered to your email.</div>
-        </details>
-
-        <details class="bg-white rounded-xl border border-gray-200 overflow-hidden group">
-          <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-medium text-gray-800 hover:bg-gray-50">
-            <span>Does the crawler respect robots.txt?</span>
-            <svg class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="px-6 pb-4 text-gray-600 text-sm">Yes. WebCrawler.buzz respects robots.txt directives and will not crawl pages that are disallowed by the site owner.</div>
-        </details>
-
-        <details class="bg-white rounded-xl border border-gray-200 overflow-hidden group">
-          <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-medium text-gray-800 hover:bg-gray-50">
-            <span>Can I crawl password-protected or private sites?</span>
-            <svg class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </summary>
-          <div class="px-6 pb-4 text-gray-600 text-sm">No. The crawler only accesses publicly available pages. It cannot log in or bypass authentication.</div>
-        </details>
+    <!-- How it works -->
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">How it works</span>
+          <h2>Three steps to a full site audit</h2>
+          <p>Paste a URL. Watch it scan. Get the report. Nothing to install.</p>
+        </div>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-icon">01</div>
+            <h3>Paste any URL</h3>
+            <p>Enter a URL and hit start. The crawler does a breadth-first walk of the whole root domain, with no depth limit.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">02</div>
+            <h3>Watch live progress</h3>
+            <p>Watch the crawl in real time. You get a bookmark link, so you can close the tab and come back later.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">03</div>
+            <h3>Get your report</h3>
+            <p>Read the results in the browser or export the whole crawl as a CSV. You can also get an email when it finishes.</p>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CTA Section -->
-  <section class="py-20 px-6 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white relative overflow-hidden">
-    <div class="absolute top-[-60px] right-[-60px] w-72 h-72 bg-blue-400 opacity-15 rounded-full blur-3xl" aria-hidden="true"></div>
-    <div class="max-w-3xl mx-auto text-center relative z-10">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Crawl a Website Online?</h2>
-      <p class="text-blue-100 text-lg mb-8 max-w-xl mx-auto">Start your free web crawl online now, no signup, no page limits, no credit card. See what search engines see with this domain crawler online.</p>
-      <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});document.getElementById('url-input').focus();return false;" class="inline-block bg-white text-blue-700 hover:bg-blue-50 font-bold px-10 py-4 rounded-xl text-lg transition-colors shadow-lg">
-        Crawl Website Online Free →
-      </a>
-    </div>
-  </section>
+    <!-- Features -->
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Features</span>
+          <h2>What you get</h2>
+          <p>One free crawler. No signup, no page limits, nothing to install.</p>
+        </div>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-icon"><i data-lucide="network"></i></div>
+            <h3>Full domain discovery</h3>
+            <p>Breadth-first crawl scoped to the root domain. Every internal page gets found, with no depth limit.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="list-tree"></i></div>
+            <h3>SEO data per page</h3>
+            <p>Page titles, meta descriptions, H1 tags, and word counts, in one view.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="activity"></i></div>
+            <h3>HTTP status codes</h3>
+            <p>Spot 404s, 301 redirects, 500s, and any other status code across the site.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="gauge"></i></div>
+            <h3>Response time tracking</h3>
+            <p>See how fast each page responds. Find slow pages that hurt user experience and search rankings.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="search"></i></div>
+            <h3>Indexability detection</h3>
+            <p>Detect noindex tags, canonical URLs, and robots directives so you know exactly what search engines see.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="download"></i></div>
+            <h3>CSV export via email</h3>
+            <p>Download your full crawl report as a spreadsheet. The CSV file is generated and delivered to your inbox.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="bookmark"></i></div>
+            <h3>Bookmark &amp; resume</h3>
+            <p>Every crawl gets a unique tracking link. Close your browser, come back later, your results are waiting.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="shield-check"></i></div>
+            <h3>robots.txt compliant</h3>
+            <p>The crawler respects robots.txt rules. Pages disallowed by the site owner are never crawled.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="check"></i></div>
+            <h3>No signup required</h3>
+            <p>No account, no credit card, no trial. Paste a URL and go.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Who it's for -->
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Who it's for</span>
+          <h2>Built for anyone who audits websites</h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>SEO professionals</h3>
+            <p>Run a full site audit in minutes. Find broken pages, missing titles, duplicate meta descriptions, and indexation problems from one crawl.</p>
+          </div>
+          <div class="card">
+            <h3>Web developers</h3>
+            <p>Debug site migrations, verify redirects, and catch 500s before your users do. Test any staging or production URL.</p>
+          </div>
+          <div class="card">
+            <h3>Content managers</h3>
+            <p>Find orphan pages, spot content that isn't indexed, and export a full URL inventory as CSV.</p>
+          </div>
+          <div class="card">
+            <h3>Agency owners</h3>
+            <p>Run crawl reports for client sites. Share tracking links, export CSVs, and deliver findings without a paid tool.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">FAQ</span>
+          <h2>Frequently asked questions</h2>
+        </div>
+        <div class="faq">
+          <details open>
+            <summary>Is this web crawler really free?</summary>
+            <div class="body">Yes. No signup, no credit card, no hidden fees. Paste a URL and start.</div>
+          </details>
+          <details>
+            <summary>How many pages can the crawler discover?</summary>
+            <div class="body">There is no hard page limit. The crawler uses a breadth-first approach scoped to the root domain and will continue discovering pages until the entire site is mapped.</div>
+          </details>
+          <details>
+            <summary>Do I need to create an account?</summary>
+            <div class="body">No. You can start a crawl immediately without signing up. You only provide an email if you want to be notified when a large crawl finishes.</div>
+          </details>
+          <details>
+            <summary>How long does a crawl take?</summary>
+            <div class="body">Small sites (under 100 pages) usually finish in under a minute. Larger sites may take several minutes. You get a tracking link so you can close the tab and come back later.</div>
+          </details>
+          <details>
+            <summary>What data does the crawler collect for each page?</summary>
+            <div class="body">URL, page title, meta description, HTTP status code, response time, content type, word count, and indexability status (noindex, canonical).</div>
+          </details>
+          <details>
+            <summary>Can I export the results?</summary>
+            <div class="body">Yes. After a crawl completes you can export the full report as a CSV spreadsheet. The file is generated and delivered to your email.</div>
+          </details>
+          <details>
+            <summary>Does the crawler respect robots.txt?</summary>
+            <div class="body">Yes. WebCrawler.buzz respects robots.txt directives and will not crawl pages that are disallowed by the site owner.</div>
+          </details>
+          <details>
+            <summary>Can I crawl password-protected or private sites?</summary>
+            <div class="body">No. The crawler only accesses publicly available pages. It cannot log in or bypass authentication.</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="text-align:center;">
+      <div class="container-narrow">
+        <h2 style="margin-bottom:1rem;">Ready to crawl a website?</h2>
+        <p style="margin-bottom:2rem;font-size:1.05rem;">Start your free crawl now. No signup, no page limits, no credit card.</p>
+        <a href="#" id="cta-scroll-top" class="btn btn-lg">
+          Crawl a website free <i data-lucide="arrow-right" style="width:16px;height:16px;vertical-align:-2px;" aria-hidden="true"></i>
+        </a>
+      </div>
+    </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-white border-t border-gray-200 py-8 px-6">
-    <div class="max-w-5xl mx-auto">
-      <div class="flex flex-wrap justify-center items-center gap-4 mb-6">
-        <a href="https://www.producthunt.com/products/webcrawler-buzz/reviews/new?utm_source=badge-product_review&utm_medium=badge&utm_source=badge-webcrawler&#0045;buzz" target="_blank" rel="noopener noreferrer"><img src="/ph-product-review.svg" alt="Review WebCrawler.buzz on Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" loading="lazy" /></a>
-        <a href="https://www.producthunt.com/products/webcrawler-buzz?utm_source=badge-follow&utm_medium=badge&utm_source=badge-webcrawler&#0045;buzz" target="_blank" rel="noopener noreferrer"><img src="/ph-follow.svg" alt="Follow WebCrawler.buzz on Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" loading="lazy" /></a>
-        <a href="https://www.producthunt.com/products/webcrawler-buzz/launches/webcrawler-buzz?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-webcrawler-buzz" target="_blank" rel="noopener noreferrer"><img alt="WebCrawler.buzz: Featured on Product Hunt" width="250" height="54" src="/ph-featured.svg" loading="lazy" /></a>
-      </div>
-      <div class="text-center text-gray-500 text-xs">
-        &copy; 2026 Domain Crawler &middot;
-        <a href="/about" class="hover:text-gray-800">About</a> &middot;
-        <a href="/privacy-policy" class="hover:text-gray-800">Privacy Policy</a> &middot;
-        <a href="/terms-of-service" class="hover:text-gray-800">Terms of Service</a> &middot;
-        <a href="/cookie-policy" class="hover:text-gray-800">Cookie Policy</a>
-      </div>
-    </div>
-  </footer>
+  <footer></footer>
 
   <script>
     const form = document.getElementById('crawl-form');
@@ -505,7 +409,7 @@
     const submitBtn = document.getElementById('submit-btn');
     const errorMsg = document.getElementById('error-msg');
     const progressSection = document.getElementById('progress-section');
-    const crawlFormSection = document.getElementById('crawl-form-section');
+    const crawlFormSection = document.querySelector('.hero .inner');
     const trackingUrl = document.getElementById('tracking-url');
     const progressBar = document.getElementById('progress-bar');
     const progressText = document.getElementById('progress-text');
@@ -523,17 +427,25 @@
     let pollInterval = null;
     let notifyTimeout = null;
 
-    // Start Crawl
+    // Bottom CTA scrolls to top and focuses the input.
+    const scrollTopBtn = document.getElementById('cta-scroll-top');
+    if (scrollTopBtn) scrollTopBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      urlInput.focus();
+    });
+
+    function showError(msg) { errorMsg.textContent = msg; errorMsg.style.display = ''; }
+    function hideError() { errorMsg.style.display = 'none'; }
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      errorMsg.classList.add('hidden');
-      duplicateModal.classList.add('hidden');
-
+      hideError();
+      duplicateModal.style.display = 'none';
       const url = urlInput.value.trim();
       if (!url) return;
-
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Starting...';
+      submitBtn.textContent = 'Starting…';
 
       try {
         const res = await fetch('/api/crawl', {
@@ -542,140 +454,91 @@
           body: JSON.stringify({ url }),
         });
         const data = await res.json();
-
         if (!res.ok) {
-          errorMsg.textContent = data.error || 'Something went wrong. Please try again.';
-          errorMsg.classList.remove('hidden');
+          if (data.duplicate) {
+            dupDomain.textContent = data.duplicate.domain;
+            dupPages.textContent = data.duplicate.total_pages;
+            duplicateModal.style.display = '';
+            btnUseExisting.onclick = () => { location.href = '/results.html?jobId=' + data.duplicate.job_id; };
+            btnReCrawl.onclick = async () => {
+              duplicateModal.style.display = 'none';
+              try {
+                const r = await fetch('/api/crawl', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ url, force: true }),
+                });
+                const d = await r.json();
+                if (!r.ok) { showError(d.error || 'Something went wrong.'); return; }
+                startPolling(d.jobId, d.trackingUrl);
+              } catch (err) { showError('Network error. Please try again.'); }
+            };
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Start crawl';
+            return;
+          }
+          showError(data.error || 'Something went wrong. Please try again.');
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Start Crawl';
+          submitBtn.textContent = 'Start crawl';
           return;
         }
-
-        if (data.status === 'exists') {
-          // Show duplicate modal
-          dupDomain.textContent = data.domain;
-          dupPages.textContent = data.total_pages;
-          duplicateModal.classList.remove('hidden');
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Start Crawl';
-
-          // Wire up buttons
-          btnUseExisting.onclick = () => {
-            window.location.href = '/results?job_id=' + data.job_id;
-          };
-          btnReCrawl.onclick = async () => {
-            duplicateModal.classList.add('hidden');
-            const decideRes = await fetch('/api/crawl/decide', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ domain: data.domain, action: 're-crawl' }),
-            });
-            const decideData = await decideRes.json();
-            startTracking(decideData.job_id, decideData.tracking_url);
-          };
-          return;
-        }
-
-        // New crawl started
-        startTracking(data.job_id, data.tracking_url);
+        startPolling(data.jobId, data.trackingUrl);
       } catch (err) {
-        errorMsg.textContent = 'Something went wrong. Please try again.';
-        errorMsg.classList.remove('hidden');
+        showError('Network error. Please try again.');
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Start Crawl';
+        submitBtn.textContent = 'Start crawl';
       }
     });
 
-    function startTracking(jobId, trackUrl) {
+    function startPolling(jobId, trackingUrlValue) {
       currentJobId = jobId;
+      trackingUrl.href = trackingUrlValue;
+      trackingUrl.textContent = trackingUrlValue;
+      form.style.display = 'none';
+      progressSection.style.display = '';
+      notifyTimeout = setTimeout(() => { notifyCard.style.display = ''; }, 20000);
 
-      // Show progress UI
-      crawlFormSection.querySelector('form').classList.add('hidden');
-      progressSection.classList.remove('hidden');
-      trackingUrl.href = trackUrl;
-      trackingUrl.textContent = trackUrl;
-
-      // Start polling
-      pollInterval = setInterval(pollProgress, 5000);
-
-      // Start email notification timer (random 5-10s)
-      const delay = Math.floor(Math.random() * 5000) + 5000;
-      notifyTimeout = setTimeout(() => {
-        // Only show if still running
-        if (progressBar.style.width !== '100%') {
-          notifyCard.classList.remove('hidden');
-        }
-      }, delay);
-    }
-
-    async function pollProgress() {
-      if (!currentJobId) return;
-      try {
-        const res = await fetch(`/api/crawl/${currentJobId}/progress`);
-        if (!res.ok) return; // skip this poll on error
-        const data = await res.json();
-        if (data.progress_percent == null) return; // skip malformed response
-
-        progressBar.style.width = data.progress_percent + '%';
-        progressText.textContent = `${data.total_pages_found} of ${data.total_pages_queued} pages crawled (${data.progress_percent}%)`;
-
-        if (data.status === 'completed') {
-          clearInterval(pollInterval);
-          // Show notify card immediately if not already visible (so user can still request email)
-          if (notifyCard && notifyCard.classList.contains('hidden')) {
-            notifyCard.classList.remove('hidden');
+      pollInterval = setInterval(async () => {
+        try {
+          const res = await fetch('/api/crawl/status/' + jobId);
+          const data = await res.json();
+          if (data.status === 'completed') {
+            clearInterval(pollInterval);
+            clearTimeout(notifyTimeout);
+            progressBar.style.width = '100%';
+            progressText.textContent = 'Complete! Redirecting…';
+            setTimeout(() => { location.href = '/results.html?jobId=' + jobId; }, 800);
+          } else if (data.status === 'failed') {
+            clearInterval(pollInterval);
+            clearTimeout(notifyTimeout);
+            progressText.textContent = 'Crawl failed: ' + (data.error || 'unknown error');
+          } else {
+            const pct = data.progress || 0;
+            progressBar.style.width = pct + '%';
+            progressText.textContent = `Crawling… ${data.pagesFound || 0} pages found`;
           }
-          progressText.textContent = `✅ Crawl complete! ${data.total_pages_found} pages found. Redirecting...`;
-          setTimeout(() => {
-            window.location.href = `/results?job_id=${currentJobId}`;
-          }, 1500);
+        } catch (err) {
+          progressText.textContent = 'Lost connection. Retrying…';
         }
-
-        if (data.status === 'failed') {
-          clearInterval(pollInterval);
-          clearTimeout(notifyTimeout);
-          progressText.textContent = '❌ Crawl failed. Please try again.';
-          progressBar.classList.remove('bg-blue-600');
-          progressBar.classList.add('bg-red-500');
-        }
-      } catch (err) {
-        console.error('Poll error:', err);
-      }
+      }, 2000);
     }
 
-    // Email notification form
     notifyForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = emailInput.value.trim();
       if (!email || !currentJobId) return;
-
-      const notifyBtn = notifyForm.querySelector('button');
-      notifyBtn.disabled = true;
-      notifyBtn.textContent = 'Sending...';
-      notifyBtn.classList.add('opacity-60', 'cursor-not-allowed');
-      emailInput.disabled = true;
-
       try {
-        const res = await fetch(`/api/crawl/${currentJobId}/notify`, {
+        const res = await fetch('/api/crawl/' + currentJobId + '/notify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email }),
         });
         const data = await res.json();
-        notifyMsg.textContent = data.message;
-        notifyMsg.classList.remove('hidden');
-        // Remove the form entirely so no other email can be submitted
-        notifyForm.remove();
+        notifyMsg.textContent = res.ok ? 'You will be notified when done.' : (data.error || 'Failed. Try again.');
+        notifyMsg.style.display = '';
       } catch (err) {
-        notifyMsg.textContent = 'Failed to register email. Try again.';
-        notifyMsg.classList.remove('hidden');
-        notifyMsg.classList.remove('text-green-600');
-        notifyMsg.classList.add('text-red-500');
-        // Re-enable on failure so user can retry
-        notifyBtn.disabled = false;
-        notifyBtn.textContent = 'Notify Me';
-        notifyBtn.classList.remove('opacity-60', 'cursor-not-allowed');
-        emailInput.disabled = false;
+        notifyMsg.textContent = 'Network error.';
+        notifyMsg.style.display = '';
       }
     });
   </script>

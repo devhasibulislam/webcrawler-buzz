@@ -42,46 +42,123 @@
     body{font-family:"Google Sans",system-ui,-apple-system,sans-serif}
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-  <!-- Header -->
-  <header class="bg-white shadow-sm">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/"><picture><source type="image/webp" srcset="/webcrawler-logo-192.webp 1x, /webcrawler-logo-384.webp 2x"><img src="/webcrawler-logo-192.png" srcset="/webcrawler-logo-384.png 2x" alt="WebCrawler.buzz: Free Online Web Crawler" class="h-10"></picture></a>
-      <nav class="text-sm text-gray-600 space-x-4" aria-label="Main navigation">
-        <a href="/" class="hover:text-gray-800">Home</a>
-        <a href="/blogs" class="hover:text-gray-800 font-semibold text-gray-800">Blog</a>
-        <a href="/about" class="hover:text-gray-800">About</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="flex-1 max-w-5xl mx-auto px-6 py-12 w-full">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold text-gray-800 mb-3">Blog</h1>
-      <p class="text-gray-600 text-lg max-w-2xl mx-auto">Guides on using our web crawler online, free website crawler tool, URL crawler, domain crawler online, and site crawler for SEO audits and web crawling online.</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {{BLOG_CARDS}}
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer class="text-center text-gray-600 text-xs py-6">
-    <div class="flex flex-wrap justify-center items-center gap-4 mb-6">
-        <a href="https://www.producthunt.com/products/webcrawler-buzz/reviews/new?utm_source=badge-product_review&utm_medium=badge&utm_source=badge-webcrawler&#0045;buzz" target="_blank" rel="noopener noreferrer"><img src="/ph-product-review.svg" alt="Review WebCrawler.buzz on Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" loading="lazy" /></a>
-        <a href="https://www.producthunt.com/products/webcrawler-buzz?utm_source=badge-follow&utm_medium=badge&utm_source=badge-webcrawler&#0045;buzz" target="_blank" rel="noopener noreferrer"><img src="/ph-follow.svg" alt="Follow WebCrawler.buzz on Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" loading="lazy" /></a>
-        <a href="https://www.producthunt.com/products/webcrawler-buzz/launches/webcrawler-buzz?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-webcrawler-buzz" target="_blank" rel="noopener noreferrer"><img alt="WebCrawler.buzz: Featured on Product Hunt" width="250" height="54" src="/ph-featured.svg" loading="lazy" /></a>
+<body>
+  <div id="wcb-preloader" aria-hidden="true">
+    <div class="wcb-spinner"></div>
+  </div>
+  <style>
+    #wcb-preloader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#ffffff;color:#0a0a0a;transition:opacity 320ms cubic-bezier(0.23,1,0.32,1);}
+    [data-theme='dark'] #wcb-preloader{background:#0a0a0a;color:#fafafa;}
+    @media (prefers-color-scheme: dark){html:not([data-theme='light']) #wcb-preloader{background:#0a0a0a;color:#fafafa;}}
+    #wcb-preloader.done{opacity:0;pointer-events:none;}
+    .wcb-spinner{width:28px;height:28px;border:2px solid rgba(0,0,0,0.12);border-top-color:#0a0a0a;border-radius:999px;animation:wcb-spin 720ms linear infinite;}
+    [data-theme='dark'] .wcb-spinner{border-color:rgba(255,255,255,0.15);border-top-color:#fafafa;}
+    @media (prefers-color-scheme: dark){html:not([data-theme='light']) .wcb-spinner{border-color:rgba(255,255,255,0.15);border-top-color:#fafafa;}}
+    @keyframes wcb-spin{to{transform:rotate(360deg);}}
+    @media (prefers-reduced-motion: reduce){.wcb-spinner{animation:none;border-top-color:transparent;}}
+  </style>
+  <script>
+    (function(){
+      // Sync theme init so preloader matches user's theme on first paint.
+      try{
+        var t=localStorage.getItem('theme');
+        if(t!=='light'&&t!=='dark') t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+        document.documentElement.setAttribute('data-theme',t);
+      }catch(e){}
+      function hide(){var el=document.getElementById('wcb-preloader');if(!el)return;el.classList.add('done');setTimeout(function(){if(el&&el.parentNode)el.parentNode.removeChild(el);},380);}
+      if(document.readyState==='complete')hide();
+      else window.addEventListener('load',hide);
+      setTimeout(hide,6000);
+    })();
+  </script>
+  <header></header>
+  <main>
+    <section class="hero">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="inner">
+        <span class="pill"><span class="dot"></span>Blog</span>
+        <h1 class="headline">Notes on crawling,<br/>SEO, and the web.</h1>
+        <p class="subhead">Guides, tutorials, and occasional deep-dives on how to get more out of a site audit.</p>
       </div>
-    &copy; 2026 Domain Crawler &middot;
-    <a href="/" class="hover:text-gray-800">Home</a> &middot;
-    <a href="/about" class="hover:text-gray-800">About</a> &middot;
-    <a href="/blogs" class="hover:text-gray-800">Blog</a> &middot;
-    <a href="/privacy-policy" class="hover:text-gray-800">Privacy Policy</a> &middot;
-    <a href="/terms-of-service" class="hover:text-gray-800">Terms of Service</a> &middot;
-    <a href="/cookie-policy" class="hover:text-gray-800">Cookie Policy</a>
-  </footer>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div id="posts" class="grid grid-2">
+          <p style="color:var(--fg-muted);">Loading posts…</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer></footer>
+  <script>
+    // Format ISO date → "Jan 10, 2025".
+    function fmtDate(iso) {
+      if (!iso) return '';
+      try {
+        return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      } catch (e) { return iso; }
+    }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); }
+
+    fetch('/blogs.json').then(r => r.json()).then(posts => {
+      const container = document.getElementById('posts');
+      if (!posts || !posts.length) {
+        container.innerHTML = '<p style="color:var(--fg-muted);">No posts yet. Check back soon.</p>';
+        return;
+      }
+      // Sort newest first.
+      posts.sort((a, b) => (b.published_at || '').localeCompare(a.published_at || ''));
+
+      container.innerHTML = posts.map(p => `
+        <a href="/blogs/${encodeURIComponent(p.slug)}" class="card blog-card">
+          <div class="meta-row">
+            ${p.category ? `<span class="chip">${esc(p.category)}</span>` : ''}
+            ${p.read_time_minutes ? `<span class="muted"><i data-lucide="clock" style="width:12px;height:12px;"></i> ${p.read_time_minutes} min read</span>` : ''}
+          </div>
+          <h3>${esc(p.title)}</h3>
+          <p class="excerpt">${esc(p.excerpt || '')}</p>
+          <div class="foot">
+            <span class="muted">${esc(p.author || '')}</span>
+            <span class="muted">${fmtDate(p.published_at)}</span>
+          </div>
+        </a>
+      `).join('');
+
+      if (window.lucide) window.lucide.createIcons();
+    }).catch(err => {
+      document.getElementById('posts').innerHTML = '<p style="color:var(--fg-muted);">Could not load posts.</p>';
+    });
+  </script>
+  <style>
+    #posts { align-items: stretch; }
+    .blog-card {
+      display: flex; flex-direction: column; gap: 0.75rem;
+      text-decoration: none; height: 100%;
+    }
+    .blog-card h3 { font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.25; margin: 0; }
+    .blog-card .excerpt { color: var(--fg-muted); font-size: 0.95rem; line-height: 1.55; margin: 0; flex: 1; }
+    .blog-card .meta-row {
+      display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;
+    }
+    .blog-card .chip {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.2rem 0.6rem; font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      background: var(--bg-subtle); border: 1px solid var(--border);
+      border-radius: 999px; color: var(--fg);
+    }
+    .blog-card .muted {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.8rem; color: var(--fg-subtle);
+      font-family: 'Geist Mono', monospace;
+    }
+    .blog-card .foot {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 0.75rem; border-top: 1px solid var(--border); margin-top: auto;
+    }
+    .blog-card:hover h3 { color: var(--fg); }
+  </style>
   <script src="/layout.js" defer></script>
   <script src="/cookie-consent.js" defer></script>
 </body>

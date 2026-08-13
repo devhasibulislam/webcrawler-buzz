@@ -28,108 +28,166 @@
     .url-pill { user-select:all; word-break: break-all; }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-  <header class="bg-white shadow-sm">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
-      <a href="/" class="flex-shrink-0"><picture><source type="image/webp" srcset="/webcrawler-logo-192.webp 1x, /webcrawler-logo-384.webp 2x"><img src="/webcrawler-logo-192.png" srcset="/webcrawler-logo-384.png 2x" alt="WebCrawler.buzz: Free Online Web Crawler" class="h-8 sm:h-10"></picture></a>
-      <nav class="text-xs sm:text-sm text-gray-600 space-x-2 sm:space-x-4" aria-label="Main navigation">
-        <a href="/" class="hover:text-gray-800">Home</a>
-        <a href="/blogs" class="hover:text-gray-800">Blog</a>
-        <a href="/about" class="hover:text-gray-800">About</a>
-        <a href="/mcp" class="text-blue-600 font-medium">MCP</a>
-      </nav>
-    </div>
-  </header>
-
-  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full">
-    <div class="text-center mb-10">
-      <p class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-4 uppercase tracking-wide">🤖 AI Integration</p>
-      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4">WebCrawler.buzz: MCP Server</h1>
-      <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">Public <a href="https://modelcontextprotocol.io" class="text-blue-600 underline" target="_blank" rel="noopener">Model Context Protocol</a> server. No auth, no API key. Plug the URL below into any MCP-compatible client and your AI can crawl any website for you.</p>
-    </div>
-
-    <section class="bg-white rounded-2xl shadow border border-gray-200 p-4 sm:p-8 mb-6 sm:mb-8 text-center">
-      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Endpoint</h2>
-      <p class="url-pill inline-block max-w-full bg-gray-100 text-gray-900 font-mono px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base md:text-lg">https://webcrawler.buzz/mcp</p>
-      <p class="text-gray-500 text-xs sm:text-sm mt-4">Transport: <strong>Streamable HTTP</strong> · Rate limit: 300 req / 15 min / IP</p>
-    </section>
-
-    <section class="bg-white rounded-2xl shadow border border-gray-200 p-4 sm:p-8 mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Install snippets</h2>
-
-      <h3 class="text-lg font-semibold text-gray-800 mb-2">Claude Desktop / Claude.ai</h3>
-      <p class="text-gray-600 text-sm mb-3">Settings → <em>Connectors</em> → <em>Add custom connector</em>. Paste:</p>
-      <pre>Name: webcrawler.buzz
-URL:  https://webcrawler.buzz/mcp</pre>
-
-      <h3 class="text-lg font-semibold text-gray-800 mt-8 mb-2">Cursor</h3>
-      <p class="text-gray-600 text-sm mb-3">Add to <code class="bg-gray-100 px-1.5 py-0.5 rounded">~/.cursor/mcp.json</code>:</p>
-      <pre>{
-  "mcpServers": {
-    "webcrawler-buzz": {
-      "type": "http",
-      "url": "https://webcrawler.buzz/mcp"
-    }
-  }
-}</pre>
-
-      <h3 class="text-lg font-semibold text-gray-800 mt-8 mb-2">VS Code (GitHub Copilot Chat)</h3>
-      <p class="text-gray-600 text-sm mb-3">Add to <code class="bg-gray-100 px-1.5 py-0.5 rounded">.vscode/mcp.json</code> in your workspace:</p>
-      <pre>{
-  "servers": {
-    "webcrawler-buzz": {
-      "type": "http",
-      "url": "https://webcrawler.buzz/mcp"
-    }
-  }
-}</pre>
-
-      <h3 class="text-lg font-semibold text-gray-800 mt-8 mb-2">Codex &amp; other clients</h3>
-      <p class="text-gray-600 text-sm">Any client that supports remote Streamable-HTTP MCP servers works with the same URL.</p>
-    </section>
-
-    <section class="bg-white rounded-2xl shadow border border-gray-200 p-4 sm:p-8 mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Tools exposed</h2>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="text-left border-b border-gray-200">
-              <th class="py-2 pr-4 font-semibold text-gray-700">Tool</th>
-              <th class="py-2 font-semibold text-gray-700">Purpose</th>
-            </tr>
-          </thead>
-          <tbody class="text-gray-700">
-            <tr class="border-b border-gray-100"><td class="py-2 pr-4"><code>start_crawl</code></td><td class="py-2">Kick off a crawl of a URL. Returns <code>job_id</code> immediately.</td></tr>
-            <tr class="border-b border-gray-100"><td class="py-2 pr-4"><code>decide_duplicate</code></td><td class="py-2">Choose <code>re-crawl</code> or <code>use-existing</code> when a domain was previously crawled.</td></tr>
-            <tr class="border-b border-gray-100"><td class="py-2 pr-4"><code>get_crawl_progress</code></td><td class="py-2">Poll progress. Non-blocking.</td></tr>
-            <tr class="border-b border-gray-100"><td class="py-2 pr-4"><code>get_crawl_results</code></td><td class="py-2">Fetch paginated page results (URL, title, meta, status, etc.).</td></tr>
-            <tr class="border-b border-gray-100"><td class="py-2 pr-4"><code>set_notify_email</code></td><td class="py-2">Register email so the user gets a notification when a slow crawl finishes.</td></tr>
-            <tr class="border-b border-gray-100"><td class="py-2 pr-4"><code>request_csv_export</code></td><td class="py-2">Generate CSV of results. Email is optional, download URL is always returned.</td></tr>
-            <tr><td class="py-2 pr-4"><code>get_csv_export</code></td><td class="py-2">Poll export status; returns download URL when ready.</td></tr>
-          </tbody>
-        </table>
+<body>
+  <div id="wcb-preloader" aria-hidden="true">
+    <div class="wcb-spinner"></div>
+  </div>
+  <style>
+    #wcb-preloader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#ffffff;color:#0a0a0a;transition:opacity 320ms cubic-bezier(0.23,1,0.32,1);}
+    [data-theme='dark'] #wcb-preloader{background:#0a0a0a;color:#fafafa;}
+    @media (prefers-color-scheme: dark){html:not([data-theme='light']) #wcb-preloader{background:#0a0a0a;color:#fafafa;}}
+    #wcb-preloader.done{opacity:0;pointer-events:none;}
+    .wcb-spinner{width:28px;height:28px;border:2px solid rgba(0,0,0,0.12);border-top-color:#0a0a0a;border-radius:999px;animation:wcb-spin 720ms linear infinite;}
+    [data-theme='dark'] .wcb-spinner{border-color:rgba(255,255,255,0.15);border-top-color:#fafafa;}
+    @media (prefers-color-scheme: dark){html:not([data-theme='light']) .wcb-spinner{border-color:rgba(255,255,255,0.15);border-top-color:#fafafa;}}
+    @keyframes wcb-spin{to{transform:rotate(360deg);}}
+    @media (prefers-reduced-motion: reduce){.wcb-spinner{animation:none;border-top-color:transparent;}}
+  </style>
+  <script>
+    (function(){
+      // Sync theme init so preloader matches user's theme on first paint.
+      try{
+        var t=localStorage.getItem('theme');
+        if(t!=='light'&&t!=='dark') t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+        document.documentElement.setAttribute('data-theme',t);
+      }catch(e){}
+      function hide(){var el=document.getElementById('wcb-preloader');if(!el)return;el.classList.add('done');setTimeout(function(){if(el&&el.parentNode)el.parentNode.removeChild(el);},380);}
+      if(document.readyState==='complete')hide();
+      else window.addEventListener('load',hide);
+      setTimeout(hide,6000);
+    })();
+  </script>
+  <header></header>
+  <main>
+    <section class="hero">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="inner">
+        <span class="pill"><span class="dot"></span>Model Context Protocol</span>
+        <h1 class="headline">Crawl any site<br/>from your coding agent.</h1>
+        <p class="subhead">WebCrawler.buzz ships an MCP server. Trigger crawls and read results from Claude Code, Codex, Cursor, GitHub Copilot, Claude Desktop, and any other MCP-compatible client.</p>
+        <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;">
+          <a href="#install" class="btn">Install</a>
+          <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">About MCP</a>
+        </div>
+        <div style="display:flex;gap:0.4rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;">
+          <span class="pill" style="font-size:0.75rem;padding:0.3rem 0.75rem;">Claude Code</span>
+          <span class="pill" style="font-size:0.75rem;padding:0.3rem 0.75rem;">Codex</span>
+          <span class="pill" style="font-size:0.75rem;padding:0.3rem 0.75rem;">Cursor</span>
+          <span class="pill" style="font-size:0.75rem;padding:0.3rem 0.75rem;">GitHub Copilot</span>
+          <span class="pill" style="font-size:0.75rem;padding:0.3rem 0.75rem;">Claude Desktop</span>
+          <span class="pill" style="font-size:0.75rem;padding:0.3rem 0.75rem;">VS Code</span>
+          <span class="pill" style="font-size:0.75rem;padding:0.3rem 0.75rem;">Windsurf</span>
+          <span class="pill" style="font-size:0.75rem;padding:0.3rem 0.75rem;">Zed</span>
+        </div>
       </div>
     </section>
 
-    <section class="bg-white rounded-2xl shadow border border-gray-200 p-4 sm:p-8 mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Try it in Claude</h2>
-      <p class="text-gray-600 mb-4">After connecting, try prompts like:</p>
-      <ul class="list-disc list-inside space-y-2 text-gray-700">
-        <li><em>"Crawl https://example.com and give me a summary of every page."</em></li>
-        <li><em>"Export the crawl for job xxxxx as CSV and give me the download link."</em></li>
-        <li><em>"Notify me at me@example.com when the crawl for job xxxxx finishes."</em></li>
-      </ul>
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Setup</span>
+          <h2 id="install">Point your client at the endpoint</h2>
+          <p>The MCP server runs at <code>https://webcrawler.buzz/mcp</code> over streamable HTTP. No install, no API key. Add it once and every agent that speaks MCP can use it.</p>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-icon"><i data-lucide="sparkles"></i></div>
+            <h3>Claude Desktop / Claude Code</h3>
+            <p>Add to <code>claude_desktop_config.json</code> (or <code>~/.claude/mcp.json</code> for Claude Code):</p>
+            <pre style="background:var(--bg-code);border:1px solid var(--border);border-radius:8px;padding:0.85rem;overflow-x:auto;margin-top:0.75rem;font-size:0.85rem;color:var(--fg);"><code>{
+  "mcpServers": {
+    "webcrawler": {
+      "url": "https://webcrawler.buzz/mcp"
+    }
+  }
+}</code></pre>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="code-2"></i></div>
+            <h3>Cursor / VS Code / Copilot</h3>
+            <p>Drop into your workspace <code>.cursor/mcp.json</code>, <code>.vscode/mcp.json</code>, or GitHub Copilot's MCP settings:</p>
+            <pre style="background:var(--bg-code);border:1px solid var(--border);border-radius:8px;padding:0.85rem;overflow-x:auto;margin-top:0.75rem;font-size:0.85rem;color:var(--fg);"><code>{
+  "servers": {
+    "webcrawler": {
+      "type": "http",
+      "url": "https://webcrawler.buzz/mcp"
+    }
+  }
+}</code></pre>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="terminal"></i></div>
+            <h3>Codex / CLI agents</h3>
+            <p>For OpenAI Codex, Continue.dev, and other CLI-based MCP clients, register the HTTP endpoint:</p>
+            <pre style="background:var(--bg-code);border:1px solid var(--border);border-radius:8px;padding:0.85rem;overflow-x:auto;margin-top:0.75rem;font-size:0.85rem;color:var(--fg);"><code>codex mcp add webcrawler \
+  --url https://webcrawler.buzz/mcp</code></pre>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="wind"></i></div>
+            <h3>Windsurf / Zed / others</h3>
+            <p>Any client that supports MCP over streamable HTTP will work. Point it at the same endpoint:</p>
+            <pre style="background:var(--bg-code);border:1px solid var(--border);border-radius:8px;padding:0.85rem;overflow-x:auto;margin-top:0.75rem;font-size:0.85rem;color:var(--fg);"><code>https://webcrawler.buzz/mcp</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Tools</span>
+          <h2>Seven tools your agent can call</h2>
+          <p>A full lifecycle: start a crawl, watch progress, get results, register an email, and export a CSV.</p>
+        </div>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-icon"><i data-lucide="play"></i></div>
+            <h3>start_crawl</h3>
+            <p>Start crawling a URL. Non-blocking. Returns a <code>job_id</code>, root domain, and a tracking URL. If the domain was crawled before, returns <code>already_crawled</code>.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="git-fork"></i></div>
+            <h3>decide_duplicate</h3>
+            <p>When a domain was crawled recently, choose <code>use-existing</code> to reuse the old results or <code>re-crawl</code> to start a fresh run.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="activity"></i></div>
+            <h3>get_crawl_progress</h3>
+            <p>Poll a running crawl. Returns pages found, pages queued, status, and a completion percentage. Polling capped at 3 attempts.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="list-tree"></i></div>
+            <h3>get_crawl_results</h3>
+            <p>Fetch the discovered pages with SEO data. Paginated: <code>page</code>, <code>limit</code> up to 500.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="mail"></i></div>
+            <h3>set_notify_email</h3>
+            <p>Register the user's email so they get notified when a large crawl finishes. Agent must ask permission first. Rate-limited.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="file-spreadsheet"></i></div>
+            <h3>request_csv_export</h3>
+            <p>Kick off a CSV export of the full crawl. Email is optional. Returns an <code>export_id</code> to poll.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i data-lucide="download"></i></div>
+            <h3>get_csv_export</h3>
+            <p>Poll for CSV status. When it's ready, returns a <code>download_url</code> your agent (or the user) can hit directly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="text-align:center;">
+      <div class="container-narrow">
+        <h2 style="margin-bottom:1rem;">Ready to hook it up?</h2>
+        <p style="margin-bottom:2rem;">Add the endpoint to your client and ask your agent to crawl any site.</p>
+        <a href="/" class="btn btn-lg">Try the web version <i data-lucide="arrow-right" style="width:16px;height:16px;vertical-align:-2px;" aria-hidden="true"></i></a>
+      </div>
     </section>
   </main>
-
-  <footer class="text-center text-gray-600 text-xs py-6">
-    &copy; 2026 Domain Crawler &middot;
-    <a href="/" class="hover:text-gray-800">Home</a> &middot;
-    <a href="/about" class="hover:text-gray-800">About</a> &middot;
-    <a href="/privacy-policy" class="hover:text-gray-800">Privacy Policy</a> &middot;
-    <a href="/terms-of-service" class="hover:text-gray-800">Terms of Service</a> &middot;
-    <a href="/cookie-policy" class="hover:text-gray-800">Cookie Policy</a>
-  </footer>
+  <footer></footer>
   <script src="/layout.js" defer></script>
   <script src="/cookie-consent.js" defer></script>
 </body>

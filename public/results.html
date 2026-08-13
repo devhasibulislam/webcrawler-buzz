@@ -58,6 +58,34 @@
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
+  <div id="wcb-preloader" aria-hidden="true">
+    <div class="wcb-spinner"></div>
+  </div>
+  <style>
+    #wcb-preloader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#ffffff;color:#0a0a0a;transition:opacity 320ms cubic-bezier(0.23,1,0.32,1);}
+    [data-theme='dark'] #wcb-preloader{background:#0a0a0a;color:#fafafa;}
+    @media (prefers-color-scheme: dark){html:not([data-theme='light']) #wcb-preloader{background:#0a0a0a;color:#fafafa;}}
+    #wcb-preloader.done{opacity:0;pointer-events:none;}
+    .wcb-spinner{width:28px;height:28px;border:2px solid rgba(0,0,0,0.12);border-top-color:#0a0a0a;border-radius:999px;animation:wcb-spin 720ms linear infinite;}
+    [data-theme='dark'] .wcb-spinner{border-color:rgba(255,255,255,0.15);border-top-color:#fafafa;}
+    @media (prefers-color-scheme: dark){html:not([data-theme='light']) .wcb-spinner{border-color:rgba(255,255,255,0.15);border-top-color:#fafafa;}}
+    @keyframes wcb-spin{to{transform:rotate(360deg);}}
+    @media (prefers-reduced-motion: reduce){.wcb-spinner{animation:none;border-top-color:transparent;}}
+  </style>
+  <script>
+    (function(){
+      // Sync theme init so preloader matches user's theme on first paint.
+      try{
+        var t=localStorage.getItem('theme');
+        if(t!=='light'&&t!=='dark') t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+        document.documentElement.setAttribute('data-theme',t);
+      }catch(e){}
+      function hide(){var el=document.getElementById('wcb-preloader');if(!el)return;el.classList.add('done');setTimeout(function(){if(el&&el.parentNode)el.parentNode.removeChild(el);},380);}
+      if(document.readyState==='complete')hide();
+      else window.addEventListener('load',hide);
+      setTimeout(hide,6000);
+    })();
+  </script>
   <!-- Header -->
   <header class="bg-white shadow-sm">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -78,7 +106,7 @@
 
     <div id="error-section" class="hidden text-center py-20">
       <p class="text-red-500 text-lg" id="error-text"></p>
-      <a href="/" class="mt-4 inline-block text-blue-600 underline">← Back to Home</a>
+      <a href="/" class="mt-4 inline-block text-blue-600 underline"><i data-lucide="arrow-left" style="width:14px;height:14px;vertical-align:-2px;" aria-hidden="true"></i> Back to Home</a>
     </div>
 
     <!-- Progress Section (if crawl not done yet) -->
@@ -109,10 +137,10 @@
             <option value="1000">1000</option>
           </select>
           <button id="export-csv-btn" class="bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-xl transition-colors text-sm">
-            📥 Export CSV
+            <i data-lucide="download" style="width:14px;height:14px;vertical-align:-2px;" aria-hidden="true"></i> Export CSV
           </button>
           <a href="/" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium px-5 py-2 rounded-xl transition-colors text-sm">
-            ← New Crawl
+            <i data-lucide="arrow-left" style="width:14px;height:14px;vertical-align:-2px;" aria-hidden="true"></i> New Crawl
           </a>
         </div>
       </div>
@@ -148,7 +176,7 @@
     <!-- Export Modal -->
     <div id="export-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 items-center justify-center z-50">
       <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md mx-4">
-        <h3 class="text-lg font-bold text-gray-800 mb-2">📥 Export CSV</h3>
+        <h3 class="text-lg font-bold text-gray-800 mb-2"><i data-lucide="download" style="width:16px;height:16px;vertical-align:-2px;" aria-hidden="true"></i> Export CSV</h3>
         <p class="text-sm text-gray-500 mb-4">Enter your email. We'll send you a download link (valid for 5 minutes).</p>
         <input id="export-email" type="email" placeholder="you@example.com"
           class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" />
@@ -442,7 +470,8 @@
       exportCsvBtn.disabled = false;
       exportCsvBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
       exportCsvBtn.classList.add('bg-green-600', 'hover:bg-green-700');
-      exportCsvBtn.textContent = '📥 Export CSV';
+      exportCsvBtn.innerHTML = '<i data-lucide="download" style="width:14px;height:14px;vertical-align:-2px;" aria-hidden="true"></i> Export CSV';
+      if (window.lucide) window.lucide.createIcons();
     }
 
     // Open modal

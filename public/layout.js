@@ -1,131 +1,136 @@
-// Global header & footer — single source of truth for all pages.
-// Include on every page:  <script src="/layout.js" defer></script>
-// Any existing <header> or <footer> content is replaced.
+// WebCrawler.buzz — global layout + theme system.
+// Injects theme.css, sets data-theme before paint, wires the toggle,
+// and paints the site header + footer into every page.
 (function () {
-  // ── Global polish CSS (tokens, feedback, entry, focus, reduced-motion) ──
-  // Injected as a <style> so no extra network hop and no FOUC risk.
-  var POLISH_CSS = [
-    ':root{',
-      '--ease-out:cubic-bezier(0.23,1,0.32,1);',
-      '--ease-in-out:cubic-bezier(0.77,0,0.175,1);',
-      '--ease-drawer:cubic-bezier(0.32,0.72,0,1);',
-    '}',
-    /* Press feedback: any button or button-like link. Subtle, GPU-only. */
-    'button:not(:disabled),',
-    'a[href][class*="rounded"]{',
-      'transition:transform 160ms var(--ease-out),background-color 160ms var(--ease-out),box-shadow 160ms var(--ease-out),color 160ms var(--ease-out);',
-    '}',
-    'button:not(:disabled):active,',
-    'a[href][class*="rounded"]:active{transform:scale(0.97);}',
-    /* Focus-visible: consistent, high-contrast, keyboard only. */
-    ':where(a,button,input,textarea,select,summary):focus-visible{',
-      'outline:2px solid #2563eb;outline-offset:2px;border-radius:6px;',
-    '}',
-    /* Nav link underline sweep — subtle, hover-gated (desktop only). */
-    '@media (hover:hover) and (pointer:fine){',
-      'header nav a{position:relative;}',
-      'header nav a::after{',
-        'content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;',
-        'background:currentColor;transform:scaleX(0);transform-origin:left center;',
-        'transition:transform 200ms var(--ease-out);opacity:.6;',
-      '}',
-      'header nav a:hover::after{transform:scaleX(1);}',
-    '}',
-    /* Entry animation for progress/notify cards using @starting-style.
-       Uses opacity + translate only — GPU-friendly, no layout thrash. */
-    '#progress-section:not(.hidden),',
-    '#duplicate-modal:not(.hidden){',
-      'transition:opacity 260ms var(--ease-out),transform 260ms var(--ease-out);',
-    '}',
-    '@starting-style{',
-      '#progress-section:not(.hidden),',
-      '#duplicate-modal:not(.hidden){opacity:0;transform:translateY(8px);}',
-    '}',
-    /* Cookie banner slide-up entry (script sets it immediately, so a class-based
-       entry works better than @starting-style here). */
-    '#cookie-consent-banner{',
-      'animation:cc-in 320ms var(--ease-out) both;',
-    '}',
-    '@keyframes cc-in{from{opacity:0;transform:translateY(100%);}to{opacity:1;transform:translateY(0);}}',
-    /* Reduced motion: keep opacity/color hints, drop movement. */
-    '@media (prefers-reduced-motion:reduce){',
-      '*,*::before,*::after{',
-        'animation-duration:.001ms!important;animation-iteration-count:1!important;',
-        'transition-duration:200ms!important;',
-      '}',
-      'button:active,a:active{transform:none!important;}',
-      '.float-anim,.pulse-ring:focus-within{animation:none!important;}',
-    '}'
-  ].join('');
-  var style = document.createElement('style');
-  style.id = 'polish-css';
-  style.textContent = POLISH_CSS;
-  (document.head || document.documentElement).appendChild(style);
+  // ── 1. Theme init (must happen before paint). ───────────────
+  var THEME_KEY = 'theme';
+  function currentTheme() {
+    var saved = localStorage.getItem(THEME_KEY);
+    if (saved === 'light' || saved === 'dark') return saved;
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); }
+  applyTheme(currentTheme());
 
+  // Load theme.css if not already present.
+  if (!document.querySelector('link[data-theme-css]')) {
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/theme.css';
+    link.setAttribute('data-theme-css', '');
+    document.head.appendChild(link);
+  }
+
+  // Load Lucide icon library (once, deferred).
+  if (!document.querySelector('script[data-lucide-cdn]')) {
+    var lucide = document.createElement('script');
+    lucide.src = 'https://unpkg.com/lucide@latest/dist/umd/lucide.min.js';
+    lucide.defer = true;
+    lucide.setAttribute('data-lucide-cdn', '');
+    lucide.onload = function () { if (window.lucide) window.lucide.createIcons(); };
+    document.head.appendChild(lucide);
+  }
+
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+      if (!localStorage.getItem(THEME_KEY)) applyTheme(e.matches ? 'dark' : 'light');
+    });
+  }
+
+  window.ThemeToggle = {
+    set: function (t) { localStorage.setItem(THEME_KEY, t); applyTheme(t); },
+    toggle: function () {
+      var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      this.set(next);
+    }
+  };
+
+  // ── 2. Header + footer. ─────────────────────────────────────
   var path = (location.pathname || '/').replace(/\/+$/, '') || '/';
   function isActive(href) {
     if (href === '/') return path === '/';
     return path === href || path.indexOf(href + '/') === 0;
   }
   function navLink(href, label) {
-    var cls = isActive(href) ? 'text-blue-600 font-medium' : 'hover:text-gray-800';
-    return '<a href="' + href + '" class="' + cls + '">' + label + '</a>';
+    return '<a href="' + href + '"' + (isActive(href) ? ' class="active"' : '') + '>' + label + '</a>';
   }
 
+  // Brand mark uses Lucide `radar` — matches the crawler concept.
+  var BRAND_MARK = '<i data-lucide="radar" class="brand-mark"></i>';
+
+  var SUN_SVG = '<i data-lucide="sun" class="icon-sun"></i>';
+  var MOON_SVG = '<i data-lucide="moon" class="icon-moon"></i>';
+
   var headerHTML =
-    '<div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">' +
-      '<a href="/" class="flex-shrink-0" aria-label="WebCrawler.buzz home">' +
-        '<picture>' +
-          '<source type="image/webp" srcset="/webcrawler-logo-192.webp 1x, /webcrawler-logo-384.webp 2x">' +
-          '<img src="/webcrawler-logo-192.png" srcset="/webcrawler-logo-384.png 2x" alt="WebCrawler.buzz — Free Online Web Crawler" class="h-8 sm:h-10">' +
-        '</picture>' +
+    '<div class="inner">' +
+      '<a href="/" class="brand" aria-label="WebCrawler.buzz home">' +
+        BRAND_MARK +
+        '<span>webcrawler</span>' +
       '</a>' +
-      '<nav class="text-sm text-gray-600 space-x-4" aria-label="Main navigation">' +
+      '<nav aria-label="Main navigation">' +
+        navLink('/', 'Home') +
         navLink('/blogs', 'Blog') +
         navLink('/mcp', 'MCP') +
+        navLink('/about', 'About') +
       '</nav>' +
+      '<div class="actions">' +
+        '<button id="theme-toggle" type="button" aria-label="Toggle theme">' +
+          MOON_SVG + SUN_SVG +
+        '</button>' +
+      '</div>' +
     '</div>';
 
   var footerHTML =
-    '<div class="flex flex-wrap justify-center items-center gap-4 mb-6">' +
-      '<a href="https://www.producthunt.com/products/webcrawler-buzz/reviews/new?utm_source=badge-product_review&utm_medium=badge&utm_source=badge-webcrawler&#0045;buzz" target="_blank" rel="noopener noreferrer">' +
-        '<img src="/ph-product-review.svg" alt="Review WebCrawler.buzz on Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" loading="lazy" />' +
-      '</a>' +
-      '<a href="https://www.producthunt.com/products/webcrawler-buzz?utm_source=badge-follow&utm_medium=badge&utm_source=badge-webcrawler&#0045;buzz" target="_blank" rel="noopener noreferrer">' +
-        '<img src="/ph-follow.svg" alt="Follow WebCrawler.buzz on Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" loading="lazy" />' +
-      '</a>' +
-      '<a href="https://www.producthunt.com/products/webcrawler-buzz/launches/webcrawler-buzz?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-webcrawler-buzz" target="_blank" rel="noopener noreferrer">' +
-        '<img alt="WebCrawler.buzz — Featured on Product Hunt" width="250" height="54" src="/ph-featured.svg" loading="lazy" />' +
-      '</a>' +
-    '</div>' +
-    '&copy; 2026 Domain Crawler &middot; ' +
-    '<a href="/about" class="hover:text-gray-800">About</a> &middot; ' +
-    '<a href="/privacy-policy" class="hover:text-gray-800">Privacy Policy</a> &middot; ' +
-    '<a href="/terms-of-service" class="hover:text-gray-800">Terms of Service</a> &middot; ' +
-    '<a href="/cookie-policy" class="hover:text-gray-800">Cookie Policy</a>';
+    '<div class="inner">' +
+      '<div class="badges">' +
+        '<a href="https://www.producthunt.com/products/webcrawler-buzz/reviews/new?utm_source=badge-product_review&utm_medium=badge&utm_source=badge-webcrawler&#0045;buzz" target="_blank" rel="noopener noreferrer">' +
+          '<img src="/ph-product-review.svg" alt="Review WebCrawler.buzz on Product Hunt" width="180" height="39" loading="lazy" />' +
+        '</a>' +
+        '<a href="https://www.producthunt.com/products/webcrawler-buzz?utm_source=badge-follow&utm_medium=badge&utm_source=badge-webcrawler&#0045;buzz" target="_blank" rel="noopener noreferrer">' +
+          '<img src="/ph-follow.svg" alt="Follow WebCrawler.buzz on Product Hunt" width="180" height="39" loading="lazy" />' +
+        '</a>' +
+        '<a href="https://www.producthunt.com/products/webcrawler-buzz/launches/webcrawler-buzz?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-webcrawler-buzz" target="_blank" rel="noopener noreferrer">' +
+          '<img src="/ph-featured.svg" alt="WebCrawler.buzz — Featured on Product Hunt" width="180" height="39" loading="lazy" />' +
+        '</a>' +
+      '</div>' +
+      '<div class="links">' +
+        '<span>&copy; 2026 WebCrawler.buzz</span>' +
+        '<span aria-hidden="true">·</span>' +
+        '<a href="/about">About</a>' +
+        '<a href="/blogs">Blog</a>' +
+        '<a href="/mcp">MCP</a>' +
+        '<a href="/privacy-policy">Privacy</a>' +
+        '<a href="/terms-of-service">Terms</a>' +
+        '<a href="/cookie-policy">Cookies</a>' +
+      '</div>' +
+    '</div>';
 
   function paint() {
     var header = document.querySelector('header');
     if (header) {
-      header.className = 'bg-white shadow-sm';
+      header.className = 'site-header';
       header.innerHTML = headerHTML;
     } else {
       var h = document.createElement('header');
-      h.className = 'bg-white shadow-sm';
+      h.className = 'site-header';
       h.innerHTML = headerHTML;
       document.body.insertBefore(h, document.body.firstChild);
     }
-
     var footer = document.querySelector('footer');
     if (footer) {
-      footer.className = 'text-center text-gray-600 text-xs py-6';
+      footer.className = 'site-footer';
       footer.innerHTML = footerHTML;
     } else {
       var f = document.createElement('footer');
-      f.className = 'text-center text-gray-600 text-xs py-6';
+      f.className = 'site-footer';
       f.innerHTML = footerHTML;
       document.body.appendChild(f);
     }
+    // Wire the theme toggle (CSP blocks inline onclick handlers).
+    var toggleBtn = document.getElementById('theme-toggle');
+    if (toggleBtn) toggleBtn.addEventListener('click', function () { window.ThemeToggle.toggle(); });
+    // Re-render Lucide icons if the script is already loaded (in case paint runs late).
+    if (window.lucide) window.lucide.createIcons();
   }
 
   if (document.readyState === 'loading') {
