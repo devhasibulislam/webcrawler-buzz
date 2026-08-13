@@ -308,19 +308,6 @@ footer.site-footer .badges { display: flex; flex-wrap: wrap; gap: 1rem; justify-
 .progress { height: 4px; background: var(--bg-code); border-radius: 999px; overflow: hidden; }
 .progress > div { height: 100%; background: var(--fg); transition: width 0.4s cubic-bezier(0.23,1,0.32,1); }
 
-/* Cookie banner recolor. */
-#cookie-consent-banner {
-  background: var(--fg) !important; color: var(--bg) !important;
-  border-top: 1px solid var(--border-strong);
-}
-#cookie-consent-banner a { color: var(--bg) !important; text-decoration: underline; }
-#cookie-consent-banner #cc-reject {
-  background: transparent !important; border: 1px solid var(--fg-muted) !important; color: var(--bg) !important;
-}
-#cookie-consent-banner #cc-accept {
-  background: var(--bg) !important; color: var(--fg) !important; border: none !important;
-}
-
 /* Reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
