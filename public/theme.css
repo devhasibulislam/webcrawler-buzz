@@ -89,6 +89,10 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .section { padding: clamp(4rem, 8vw, 7rem) 0; }
 .section + .section { border-top: 1px solid var(--border); }
 .grid { display: grid; gap: 1rem; }
+/* Let grid children shrink below their intrinsic (content) width instead of
+   pushing the row wider — same trick for flex. Prevents horizontal overflow
+   from long code blocks, tables, or URLs inside cards. */
+.grid > *, .grid-3 > *, .grid-2 > * { min-width: 0; }
 .grid-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 /* If the last card is orphaned in a 3-col row (positions 4, 7, 10...), stretch it across. */
 .grid-3 > :last-child:nth-child(3n+1):not(:first-child) { grid-column: 1 / -1; }
@@ -201,7 +205,13 @@ footer.site-footer .badges { display: flex; flex-wrap: wrap; gap: 1rem; justify-
   border: 1px solid var(--border);
   border-radius: 12px;
   transition: border-color 200ms;
+  min-width: 0;
 }
+.card > pre, .card > * pre { max-width: 100%; overflow-x: auto; }
+/* Inline code shouldn't force horizontal overflow — allow it to wrap. */
+:not(pre) > code { overflow-wrap: anywhere; word-break: break-word; }
+/* Any block-level media should scale down instead of pushing width. */
+video, iframe, embed { max-width: 100%; }
 .card:hover { border-color: var(--border-strong); }
 .card .card-icon {
   display: inline-flex; align-items: center; justify-content: center;
