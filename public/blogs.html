@@ -163,7 +163,7 @@
             ${p.category ? `<span class="chip">${esc(p.category)}</span>` : ''}
             ${p.read_time_minutes ? `<span class="muted"><i data-lucide="clock" style="width:12px;height:12px;"></i> ${p.read_time_minutes} min read</span>` : ''}
           </div>
-          <h3>${esc(p.title)}</h3>
+          <h2>${esc(p.title)}</h2>
           <p class="excerpt">${esc(p.excerpt || '')}</p>
           <div class="foot">
             <span class="muted">${esc(p.author || '')}</span>

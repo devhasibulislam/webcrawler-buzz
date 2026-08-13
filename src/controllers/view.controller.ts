@@ -47,10 +47,24 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
+// Convert a section body into HTML: paragraphs, with runs of "N. ..." lines
+// grouped into <ol>. Blank lines split blocks. Mirrors the client-side rule.
 function textToParagraphs(text: string): string {
   return text
-    .split('\n\n')
-    .map((p) => `<p>${escHtml(p.trim())}</p>`)
+    .split(/\n\n+/)
+    .map((block) => {
+      const trimmed = block.trim();
+      if (!trimmed) return '';
+      const lines = trimmed.split('\n').map((l) => l.trim()).filter(Boolean);
+      const allNumbered = lines.length > 1 && lines.every((l) => /^\d+\.\s+/.test(l));
+      if (allNumbered) {
+        return `<ol>${lines
+          .map((l) => `<li>${escHtml(l.replace(/^\d+\.\s+/, ''))}</li>`)
+          .join('')}</ol>`;
+      }
+      return `<p>${escHtml(trimmed).replace(/\n/g, '<br/>')}</p>`;
+    })
+    .filter(Boolean)
     .join('\n        ');
 }
 
@@ -194,11 +208,11 @@ export const viewController = {
       const templatePath = path.join(__dirname, '../../public/blog-post.html');
       let html = fs.readFileSync(templatePath, 'utf-8');
 
-      // Build sections HTML
+      // Build sections HTML (bare tags — `.prose` styles them).
       const sectionsHtml = post.content.sections
         .map(
           (s) => `
-        <h2 class="text-2xl font-bold text-gray-800">${escHtml(s.heading)}</h2>
+        <h2>${escHtml(s.heading)}</h2>
         ${textToParagraphs(s.body)}`
         )
         .join('\n');
@@ -208,12 +222,9 @@ export const viewController = {
         .map((t) => `<meta property="article:tag" content="${escHtml(t)}" />`)
         .join('\n  ');
 
-      // Build tag badges
+      // Tag badges use the shared `.chip` class from theme.css.
       const tagBadges = post.tags
-        .map(
-          (t) =>
-            `<span class="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full">${escHtml(t)}</span>`
-        )
+        .map((t) => `<span class="chip">${escHtml(t)}</span>`)
         .join('\n          ');
 
       // Build JSON-LD (Article)

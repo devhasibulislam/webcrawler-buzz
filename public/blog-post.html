@@ -107,7 +107,27 @@
         <i data-lucide="arrow-left" style="width:16px;height:16px;vertical-align:-2px;" aria-hidden="true"></i> All posts
       </a>
       <article class="prose" id="post-content">
-        <p style="color:var(--fg-muted);">Loading…</p>
+        <div class="post-meta">
+          <span class="chip">{{CATEGORY}}</span>
+          <span class="mono">{{PUBLISHED_DATE_DISPLAY}}</span>
+          <span class="mono">·</span>
+          <span class="mono">{{READ_TIME}} min read</span>
+          <span class="mono">·</span>
+          <span class="mono">{{AUTHOR}}</span>
+        </div>
+        <h1>{{TITLE}}</h1>
+        <p class="lede">{{INTRO}}</p>
+        {{SECTIONS}}
+        <h2>Conclusion</h2>
+        <p>{{CONCLUSION}}</p>
+        <div class="post-tags">
+          {{TAG_BADGES}}
+        </div>
+        <hr/>
+        <p style="text-align:center;">
+          <a href="/" class="btn">Try the crawler</a>
+          <a href="/blogs" class="btn btn-secondary" style="margin-left:0.5rem;">Read more posts</a>
+        </p>
       </article>
     </div>
   </main>
@@ -136,81 +156,6 @@
     </div>
   </div>
 </footer>
-  <script>
-    function fmtDate(iso) {
-      if (!iso) return '';
-      try { return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); }
-      catch (e) { return iso; }
-    }
-    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); }
-
-    // Convert a section body into HTML paragraphs / numbered lists.
-    // Splits on blank lines, and groups consecutive `\d.` lines into an <ol>.
-    function bodyToHtml(text) {
-      if (!text) return '';
-      const blocks = text.split(/\n\n+/);
-      return blocks.map(block => {
-        const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
-        const numbered = lines.every(l => /^\d+\.\s+/.test(l));
-        if (numbered && lines.length > 1) {
-          return '<ol>' + lines.map(l => '<li>' + esc(l.replace(/^\d+\.\s+/, '')) + '</li>').join('') + '</ol>';
-        }
-        return '<p>' + esc(block).replace(/\n/g, '<br/>') + '</p>';
-      }).join('');
-    }
-
-    const params = new URLSearchParams(location.search);
-    const slug = params.get('slug') || (location.pathname.match(/\/blogs\/([^\/]+)$/) || [])[1];
-    const el = document.getElementById('post-content');
-
-    if (!slug) {
-      el.innerHTML = '<h1>Missing post slug</h1><p>Try browsing from the <a href="/blogs">blog index</a>.</p>';
-    } else {
-      fetch('/blogs.json').then(r => r.json()).then(posts => {
-        const post = (posts || []).find(p => p.slug === slug);
-        if (!post) {
-          el.innerHTML = '<h1>Post not found</h1><p>The post you\'re looking for doesn\'t exist. See <a href="/blogs">all posts</a>.</p>';
-          document.title = 'Post not found | WebCrawler.buzz';
-          return;
-        }
-        document.title = post.title + ' | WebCrawler.buzz';
-
-        const c = post.content || {};
-        const sections = (c.sections || []).map(s => `
-          <h2>${esc(s.heading)}</h2>
-          ${bodyToHtml(s.body)}
-        `).join('');
-
-        const tags = (post.tags || []).length
-          ? `<div class="post-tags">${post.tags.map(t => `<span class="chip">${esc(t)}</span>`).join('')}</div>`
-          : '';
-
-        el.innerHTML = `
-          <div class="post-meta">
-            ${post.category ? `<span class="chip">${esc(post.category)}</span>` : ''}
-            <span class="mono">${fmtDate(post.published_at)}</span>
-            <span class="mono">·</span>
-            <span class="mono">${post.read_time_minutes || 0} min read</span>
-            <span class="mono">·</span>
-            <span class="mono">${esc(post.author || 'WebCrawler Team')}</span>
-          </div>
-          <h1>${esc(post.title)}</h1>
-          ${c.intro ? `<p class="lede">${esc(c.intro)}</p>` : (post.excerpt ? `<p class="lede">${esc(post.excerpt)}</p>` : '')}
-          ${sections}
-          ${c.conclusion ? `<h2>Conclusion</h2><p>${esc(c.conclusion)}</p>` : ''}
-          ${tags}
-          <hr/>
-          <p style="text-align:center;">
-            <a href="/" class="btn">Try the crawler</a>
-            <a href="/blogs" class="btn btn-secondary" style="margin-left:0.5rem;">Read more posts</a>
-          </p>
-        `;
-        if (window.lucide) window.lucide.createIcons();
-      }).catch(() => {
-        el.innerHTML = '<h1>Something went wrong</h1><p>Could not load this post.</p>';
-      });
-    }
-  </script>
   <style>
     #post-content .post-meta {
       display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; align-items: center;
