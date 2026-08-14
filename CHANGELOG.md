@@ -12,21 +12,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `theme-color` meta tags per light/dark scheme so the mobile browser chrome matches the active theme.
 - Preloader on every HTML page that sets `data-theme` synchronously from `localStorage` or `prefers-color-scheme` before first paint, then fades out on `load`.
 - Lucide icon library CDN wired through `layout.js` and used in every card grid, brand mark, back-link, and export button.
-- Live `cookieconsentchange` custom event so the "Current: accepted / rejected / no choice yet" label on the cookie policy page updates the moment consent changes (no page reload).
-- CSS rule that stretches an orphaned last card across the whole row in `.grid-3` layouts, so the MCP tools grid no longer leaves an empty cell in the last row.
+- Live `cookieconsentchange` custom event so the cookie-policy page's status label updates the moment consent changes.
+- CSS rule that stretches an orphaned last card across the whole row in `.grid-3` layouts.
+- Mobile hamburger menu with a popover-style dropdown, anchored to the toggle, `min(60vw, 240px)` wide.
+- Sticky footer via a body-level flex column so short pages (progress, empty results, 404) keep the footer at the viewport bottom.
+- OG social preview image and full `og:image` / `twitter:card` meta on every page.
+- Blog post section bodies now render as full Markdown via `marked` (fenced code blocks, tables, task lists, autolinks, hard breaks), with an auto-fence pass so legacy plain-text bodies containing raw JSON still render as `<pre><code>`.
+- Scroll-spy on the `/api-docs-public` sidebar TOC so the endpoint currently in view stays highlighted and the URL hash follows.
+- MCP server now advertises `serverInfo.icons[]`, `title`, `websiteUrl`, and the correct `version`, so Claude Connectors and other MCP clients pick up the new radar mark instead of a stale scraped favicon.
+- Public-repo prep: `.env.example`, `.github/dependabot.yml`, `.github/workflows/codeql.yml`, structured issue templates, PR template, `FUNDING.yml` scaffold, 1280x640 social preview image, and [`deploy/scrub-secrets.sh`](deploy/scrub-secrets.sh) — a ready-to-run `git filter-repo` runbook that strips secret files and literal password/token strings from every commit.
 
 ### Changed
-- Full monochrome, Vercel-style redesign of every public page: new design tokens, cards, hero, `.prose` typography, and consistent spacing across index, about, mcp, blogs, blog-post, results, 404, and legal pages.
+- Full monochrome, Vercel-style redesign of every public page: new design tokens, cards, hero, `.prose` typography, and consistent spacing across index, about, mcp, blogs, blog-post, results, 404, legal pages, `/api-docs-public`, and `/results`.
 - Header brand mark and every card icon now render via Lucide instead of ad-hoc SVGs or emoji glyphs.
-- Every unicode arrow (`<-`, `->`) and emoji glyph (`download`) in link and button labels replaced with proper Lucide icons.
-- `.prose` back-links and CTA buttons no longer inherit the underline / muted color from `.prose a`, so buttons inside blog posts render with the correct button colors.
-- Cookie consent banner code fires `cookieconsentchange` on accept, reject, and reset, so any listener (including the cookie-policy page's status label) stays in sync across tabs and after `CookieConsent.reset()`.
-- `.prose ul` and `.prose ol` restore `list-style: disc` / `list-style: decimal` after Tailwind Preflight's global `list-style: none`, so the legal pages (privacy policy, cookie policy, terms of service) show proper bullets and numbers again.
+- Every unicode arrow (`<-`, `->`) and emoji glyph in link and button labels replaced with proper Lucide icons.
+- `.prose` back-links and CTA buttons no longer inherit the underline / muted color from `.prose a`.
+- `.prose ul` and `.prose ol` restore `list-style: disc` / `list-style: decimal` after Tailwind Preflight's global `list-style: none`, so the legal pages show proper bullets and numbers again.
+- `.env.production` is no longer tracked in the repo. The deploy workflow materialises it from the `ENV_PRODUCTION` GitHub Actions secret at build time.
+- `<link rel="stylesheet" href="/theme.css">` is baked directly into every HTML `<head>` (no longer injected by `layout.js`), so first paint is fully styled — Lighthouse CLS dropped from ~1.0 to 0.00.
+- Header + footer HTML baked into every page for the same reason (no runtime injection = no layout shift).
+- Static assets versioned with `?v=` query strings so a version bump busts every browser cache automatically; Express sends `Cache-Control: no-cache` on `.html` so browsers always revalidate.
+- CSP allowed sources tightened but expanded to cover `fonts.googleapis.com` / `fonts.gstatic.com` (Geist), `unpkg.com` (Lucide), and Cloudflare Insights.
+- Blog post server-render pipeline: intro, sections, and conclusion all go through `marked` rendering. Section bodies pass through `autoFenceCodeBlocks()` first so legacy JSON snippets get wrapped in ` ```json ` fences before being rendered.
+- Cookie consent banner id renamed to `#wcb-notice-bar` so Brave shields and uBlock Origin's `easylist-cookie` stop hiding it. Banner redesigned as a floating card that uses theme tokens.
+- Homepage MCP pill kept on one line on mobile: hides the long trailing "for Claude, Cursor & VS Code" segment below 640px so the pill shape stays pill-shaped.
+- Hero form on mobile no longer balloons: the input's `flex: 1 1 240px` was interpreted as a 240px *height basis* under the column-direction media query; overridden to `flex: 0 0 auto; width: 100%`.
+- Notify form on the homepage is now a single-column grid (input and Notify me both stretch to `max-width: 320px`), with a stricter email pattern than the plain `type="email"`.
+- Notify form disables the input and locks the button label to "Notification set" after a successful subscribe, so the user cannot spam the endpoint.
+- Cookie consent banner strong tags and paragraph get explicit `background-color: #1f2937`; theme.css `#cookie-consent-banner` overrides removed. Axe now reads correct contrast and the banner clears WCAG AA.
+- Dark theme `--fg-muted` bumped from `#a1a1aa` to `#d4d4d8` and `--fg-subtle` from `#71717a` to `#a1a1aa` so kicker text, footer copyright, and every muted-tone span satisfy WCAG AA contrast.
+- `/api-docs-public` fully rewritten to the monochrome design with an endpoint-anchored sidebar TOC, sticky above `1000px`, method chips using oklab color-mix, `<pre>` code blocks that scroll internally on narrow screens, a table of query params that also scrolls internally. Sample values use realistic UUIDs and `https://devhasibulislam.vercel.app` instead of `example.com` / `abc-123-def`.
+- `/results` fully rewritten while preserving every existing flow: same `?job_id=` query, same 3 API calls, same 5 UI states, monochrome table with sticky monospace header, coloured status badges, Lucide check/x for indexability, compact numbered pagination, `role="dialog"` export modal with Esc-to-close and backdrop-click-to-close.
+- Deploy job now sources `.env.production` from the `ENV_PRODUCTION` GitHub Actions secret at every run instead of copying a tracked file.
 
 ### Fixed
 - Theme toggle no longer breaks under Helmet's CSP: moved from inline `onclick` to `addEventListener` in `layout.js`.
-- Blog list and blog post pages now read the correct JSON fields (`published_at`, `content.intro`, `content.sections`, `content.conclusion`) instead of the outdated `date` / `body` names, so posts render their full body.
-- `<!-- {{OG_ARTICLE_TAGS}} -->` placeholder no longer leaks into the rendered HTML when hitting `/blog-post.html?slug=` directly.
+- Blog list and blog post pages read the correct JSON fields (`published_at`, `content.intro`, `content.sections`, `content.conclusion`).
+- `<!-- {{OG_ARTICLE_TAGS}} -->` placeholder no longer leaks into the rendered HTML.
+- Homepage crawl-progress polling: the API returns snake_case (`job_id`, `tracking_url`, `progress_percent`, `total_pages_found`) but the JS was reading camelCase, so the tracking link stayed blank, progress polled `/api/crawl/status/undefined`, and the UI showed "Lost connection. Retrying…" forever. Rewired to the actual server field names + endpoint path.
+- Redirect from homepage-complete to `/results.html` used `?jobId=` but `results.html` reads `?job_id=`.
+- Card-heavy pages (`/mcp`, `/api-docs-public`) no longer overflow horizontally on narrow viewports: grid children get `min-width: 0`, `<pre>` inside cards gets `max-width: 100%` + `overflow-x: auto`, inline `<code>` gets `overflow-wrap: anywhere`. No `overflow: hidden` used anywhere.
+- Duplicate deployment of `/robots.txt` and `/sitemap.xml` handlers in `src/index.ts` and `src/routes/view.routes.ts` — the view.controller versions are unreachable dead code (not removed yet, flagged in ponytail audit).
+- Hero headline balance: mobile `<h1>` floor lowered to `2rem` and `text-wrap: balance` added so "Crawl any website." and "Audit every page." both fit on one line without a 3-line wrap.
+
+### Security
+- Rotated every production credential: Postgres role password, Redis `default` requirepass, Redis `webcrawler` ACL user password, Swagger basic-auth password, Gmail app password, VPS SSH deploy key. Old passwords now return `password authentication failed` / `WRONGPASS`. New values live in the `ENV_PRODUCTION` GitHub Actions secret and the VPS filesystem only.
+- Redacted `webcrawler@123` plaintext from `COPILOT_CONTEXT.md` and `deploy/secrets/README.md` at HEAD.
+- `.gitignore` hardened to block `.env*` (except `.env.example`), `deploy/secrets/`, `*.key`, `*.pem`, editor state.
+
+### Note on git history
+- Previous tags (`v2.2.7`, `v2.2.8`, and the earlier `v2.3.8` at commit `ab7b135`) still reference commits that contained `.env`, `.env.production`, `.vscode/mcp.json`, and `deploy/secrets/*`. Every credential in those files has been rotated (see Security above), so the leaked values no longer authenticate anywhere. The staged history rewrite ([`deploy/scrub-secrets.sh`](deploy/scrub-secrets.sh)) will strip these files from every past commit; run it before flipping the repo to Public.
 
 ## [2.2.8] - 2026-08-04
 
