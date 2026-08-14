@@ -1,3 +1,1 @@
-# ads.txt — replace the placeholder below with the exact line from your Google AdSense account
-# Format from Google after approval:
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-1290437932026379, DIRECT, f08c47fec0942fa0

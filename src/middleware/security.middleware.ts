@@ -10,12 +10,39 @@ export function setupSecurity(app: Express): void {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com", "https://static.cloudflareinsights.com", "https://unpkg.com"],
+          // Google AdSense loader + gtag + Lucide + Cloudflare Insights.
+          scriptSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            "https://www.googletagmanager.com",
+            "https://static.cloudflareinsights.com",
+            "https://unpkg.com",
+            "https://pagead2.googlesyndication.com",
+            "https://tpc.googlesyndication.com",
+          ],
           styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-          imgSrc: ["'self'", "data:", "https://www.googletagmanager.com"],
-          connectSrc: ["'self'", "https://www.google-analytics.com", "https://www.googletagmanager.com", "https://cloudflareinsights.com"],
+          imgSrc: [
+            "'self'",
+            "data:",
+            "https://www.googletagmanager.com",
+            // AdSense creative + tracking pixels come from these hosts.
+            "https://pagead2.googlesyndication.com",
+            "https://googleads.g.doubleclick.net",
+            "https://www.google.com",
+          ],
+          connectSrc: [
+            "'self'",
+            "https://www.google-analytics.com",
+            "https://www.googletagmanager.com",
+            "https://cloudflareinsights.com",
+            "https://pagead2.googlesyndication.com",
+          ],
           fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
-          frameSrc: ["'none'"],
+          // AdSense renders each ad in a sandboxed iframe from these origins.
+          frameSrc: [
+            "https://googleads.g.doubleclick.net",
+            "https://tpc.googlesyndication.com",
+          ],
           objectSrc: ["'none'"],
           baseUri: ["'self'"],
           formAction: ["'self'"],

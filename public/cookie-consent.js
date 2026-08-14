@@ -2,8 +2,7 @@
   'use strict';
 
   var GA_ID = 'G-NE3SYMYFJF';
-  // TODO: replace with your real AdSense publisher ID once approved (format: ca-pub-XXXXXXXXXXXXXXXX)
-  var ADSENSE_ID = 'ca-pub-XXXXXXXXXXXXXXXX';
+  var ADSENSE_ID = 'ca-pub-1290437932026379';
   var CONSENT_KEY = 'cookie_consent';
 
   // ── Consent state ──────────────────────────────────────────────
