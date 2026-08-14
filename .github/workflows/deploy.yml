@@ -43,6 +43,15 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Materialise production env from repo secret
+        run: |
+          if [ -z "${{ secrets.ENV_PRODUCTION }}" ]; then
+            echo "::error::ENV_PRODUCTION repo secret is not set. Add it under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          printf '%s' "${{ secrets.ENV_PRODUCTION }}" > .env.production
+          chmod 600 .env.production
+
       - name: Preflight — required files present
         run: |
           set -e
