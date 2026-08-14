@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────
-   WebCrawler.buzz — design system
+   WebCrawler.buzz design system
    Monochrome. Light + dark. Vercel-inspired. No hacks.
    ───────────────────────────────────────────────────────────── */
 
@@ -99,7 +99,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .section + .section { border-top: 1px solid var(--border); }
 .grid { display: grid; gap: 1rem; }
 /* Let grid children shrink below their intrinsic (content) width instead of
-   pushing the row wider — same trick for flex. Prevents horizontal overflow
+   pushing the row wider. Same trick for flex. Prevents horizontal overflow
    from long code blocks, tables, or URLs inside cards. */
 .grid > *, .grid-3 > *, .grid-2 > * { min-width: 0; }
 .grid-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
@@ -133,7 +133,7 @@ header.site-header nav a:hover { color: var(--fg); background: var(--bg-subtle);
 header.site-header nav a.active { color: var(--fg); }
 header.site-header .actions { display: flex; align-items: center; gap: 0.5rem; }
 
-/* Mobile menu button — hidden by default, revealed on narrow screens. */
+/* Mobile menu button, hidden by default, revealed on narrow screens. */
 #menu-toggle {
   display: none;
   align-items: center; justify-content: center;
@@ -217,7 +217,7 @@ footer.site-footer .badges { display: flex; flex-wrap: wrap; gap: 1rem; justify-
   min-width: 0;
 }
 .card > pre, .card > * pre { max-width: 100%; overflow-x: auto; }
-/* Inline code shouldn't force horizontal overflow — allow it to wrap. */
+/* Inline code shouldn't force horizontal overflow, allow it to wrap. */
 :not(pre) > code { overflow-wrap: anywhere; word-break: break-word; }
 /* Any block-level media should scale down instead of pushing width. */
 video, iframe, embed { max-width: 100%; }
@@ -335,7 +335,7 @@ video, iframe, embed { max-width: 100%; }
 /* GitHub-style task lists (marked emits <input type="checkbox">). */
 .prose ul:has(> li > input[type="checkbox"]) { list-style: none; padding-left: 0; }
 .prose li input[type="checkbox"] { margin-right: 0.5rem; }
-/* Heading anchor links (marked emits <h2 id="..."> — allow smooth scroll from TOC). */
+/* Heading anchor links (marked emits <h2 id="..."> for smooth scroll from TOC). */
 .prose h2, .prose h3 { scroll-margin-top: 5rem; }
 
 /* FAQ (details/summary). */

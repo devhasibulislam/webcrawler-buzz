@@ -50,7 +50,7 @@
 
   <link rel="stylesheet" href="/theme.css?v=2.3.8-l" data-theme-css />
   <style>
-    /* Endpoint block — used only on this page. */
+    /* Endpoint block, used only on this page. */
     .endpoint { padding: 1.5rem; }
     .endpoint + .endpoint { margin-top: 1rem; }
     .endpoint-head { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
@@ -221,14 +221,14 @@
               <pre><code>{
   "url": "https://devhasibulislam.vercel.app"
 }</code></pre>
-              <h4>Response — new crawl (201)</h4>
+              <h4>Response, new crawl (201)</h4>
               <pre><code>{
   "status": "started",
   "job_id": "9c8b4d20-1a5e-4f2c-b7a1-3e8d9c0f5a11",
   "tracking_url": "https://webcrawler.buzz/results?job_id=9c8b4d20-1a5e-4f2c-b7a1-3e8d9c0f5a11",
   "message": "Crawl started! Use tracking_url to follow progress."
 }</code></pre>
-              <h4>Response — domain already crawled (200)</h4>
+              <h4>Response, domain already crawled (200)</h4>
               <pre><code>{
   "status": "exists",
   "job_id": "5f2a1c8d-9e3b-4a72-8f1c-2b6d4e0a9c73",
@@ -353,7 +353,7 @@
                 <span class="method method-get">GET</span>
                 <code>/api/stats</code>
               </div>
-              <p>Public usage statistics — completed jobs, active jobs, failed jobs, and a running page count. Handy for a status widget.</p>
+              <p>Public usage statistics: completed jobs, active jobs, failed jobs, and a running page count. Handy for a status widget.</p>
             </section>
 
             <section id="rate-limits" class="callout" style="margin-top: 1.5rem;">
@@ -379,7 +379,7 @@
           <img src="/ph-follow.svg" alt="Follow WebCrawler.buzz on Product Hunt" width="180" height="39" loading="lazy" />
         </a>
         <a href="https://www.producthunt.com/products/webcrawler-buzz/launches/webcrawler-buzz?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-webcrawler-buzz" target="_blank" rel="noopener noreferrer">
-          <img src="/ph-featured.svg" alt="WebCrawler.buzz — Featured on Product Hunt" width="180" height="39" loading="lazy" />
+          <img src="/ph-featured.svg" alt="WebCrawler.buzz, Featured on Product Hunt" width="180" height="39" loading="lazy" />
         </a>
       </div>
       <div class="links">
@@ -398,7 +398,7 @@
   <script src="/layout.js?v=2.3.8-e" defer></script>
   <script src="/cookie-consent.js?v=2.3.8-f" defer></script>
   <script>
-    // Scroll-spy for the TOC — highlights the endpoint currently in view,
+    // Scroll-spy for the TOC: highlights the endpoint currently in view,
     // and syncs the URL hash so a copy-link points at the right anchor.
     (function () {
       var links = Array.from(document.querySelectorAll('.toc a[href^="#"]'));
@@ -415,7 +415,7 @@
         if (history.replaceState) history.replaceState(null, '', '#' + id);
       }
 
-      // Only one section can be "active" at a time — the one closest to the
+      // Only one section can be "active" at a time, the one closest to the
       // top of the viewport (below the sticky header offset).
       var io = new IntersectionObserver(function (entries) {
         var visible = entries

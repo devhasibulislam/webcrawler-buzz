@@ -17,7 +17,7 @@ Software: VS Code, Git
 
 /* THANKS */
 
-Neon (https://neon.tech) — Serverless PostgreSQL
-Redis Cloud (https://redis.com) — Managed Redis
-BullMQ (https://bullmq.io) — Job Queue
-Product Hunt — Launch platform
+Neon (https://neon.tech), Serverless PostgreSQL
+Redis Cloud (https://redis.com), Managed Redis
+BullMQ (https://bullmq.io), Job Queue
+Product Hunt, Launch platform

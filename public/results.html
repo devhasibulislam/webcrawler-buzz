@@ -337,7 +337,7 @@
           <img src="/ph-follow.svg" alt="Follow WebCrawler.buzz on Product Hunt" width="180" height="39" loading="lazy" />
         </a>
         <a href="https://www.producthunt.com/products/webcrawler-buzz/launches/webcrawler-buzz?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-webcrawler-buzz" target="_blank" rel="noopener noreferrer">
-          <img src="/ph-featured.svg" alt="WebCrawler.buzz — Featured on Product Hunt" width="180" height="39" loading="lazy" />
+          <img src="/ph-featured.svg" alt="WebCrawler.buzz, Featured on Product Hunt" width="180" height="39" loading="lazy" />
         </a>
       </div>
       <div class="links">
@@ -474,25 +474,25 @@
       resultsTbody.innerHTML = '';
       const frag = document.createDocumentFragment();
       pages.forEach((page, idx) => {
-        const sizeKB = page.page_size_bytes ? (page.page_size_bytes / 1024).toFixed(1) + ' KB' : '—';
+        const sizeKB = page.page_size_bytes ? (page.page_size_bytes / 1024).toFixed(1) + ' KB' : '-';
         const statusCls = statusClass(page.status_code);
         const indexable = page.is_indexable
           ? '<i data-lucide="check" style="width:16px;height:16px;color:#10b981;" aria-label="Indexable"></i>'
           : '<i data-lucide="x" style="width:16px;height:16px;color:#ef4444;" aria-label="Not indexable"></i>';
-        const discoveredAt = page.discovered_at ? new Date(page.discovered_at).toLocaleString() : '—';
+        const discoveredAt = page.discovered_at ? new Date(page.discovered_at).toLocaleString() : '-';
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="mono" style="color:var(--fg-subtle);">${startIndex + idx + 1}</td>
           <td><a href="${escHtml(page.url)}" target="_blank" rel="noopener" class="mono">${escHtml(truncate(page.url, 60))}</a></td>
-          <td title="${escHtml(page.page_title || '')}">${escHtml(truncate(page.page_title || '—', 40))}</td>
-          <td title="${escHtml(page.meta_description || '')}" style="color:var(--fg-muted);">${escHtml(truncate(page.meta_description || '—', 50))}</td>
-          <td><span class="status-badge ${statusCls}">${page.status_code || '—'}</span></td>
-          <td class="mono">${page.response_time_ms != null ? page.response_time_ms + ' ms' : '—'}</td>
-          <td class="mono" style="color:var(--fg-muted);">${escHtml(page.content_type || '—')}</td>
+          <td title="${escHtml(page.page_title || '')}">${escHtml(truncate(page.page_title || '-', 40))}</td>
+          <td title="${escHtml(page.meta_description || '')}" style="color:var(--fg-muted);">${escHtml(truncate(page.meta_description || '-', 50))}</td>
+          <td><span class="status-badge ${statusCls}">${page.status_code || '-'}</span></td>
+          <td class="mono">${page.response_time_ms != null ? page.response_time_ms + ' ms' : '-'}</td>
+          <td class="mono" style="color:var(--fg-muted);">${escHtml(page.content_type || '-')}</td>
           <td class="mono">${sizeKB}</td>
           <td class="mono" style="text-align:center;">${page.internal_links_count ?? 0}</td>
           <td class="mono" style="text-align:center;">${page.external_links_count ?? 0}</td>
-          <td class="mono">${page.redirect_url ? `<a href="${escHtml(page.redirect_url)}" target="_blank" rel="noopener">${escHtml(truncate(page.redirect_url, 40))}</a>` : '—'}</td>
+          <td class="mono">${page.redirect_url ? `<a href="${escHtml(page.redirect_url)}" target="_blank" rel="noopener">${escHtml(truncate(page.redirect_url, 40))}</a>` : '-'}</td>
           <td style="text-align:center;">${indexable}</td>
           <td class="mono" style="color:var(--fg-subtle);">${discoveredAt}</td>
         `;

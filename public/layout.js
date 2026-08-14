@@ -1,6 +1,6 @@
-// WebCrawler.buzz — theme + toggle + active-nav + Lucide bootstrap.
+// WebCrawler.buzz theme + toggle + active-nav + Lucide bootstrap.
 // Header + footer + theme.css link are baked into every HTML page,
-// so this script does NOT rearrange any layout — it only wires interactions.
+// so this script does NOT rearrange any layout. It only wires interactions.
 (function () {
   // ── 1. Theme init (must happen before paint). ───────────────
   var THEME_KEY = 'theme';
