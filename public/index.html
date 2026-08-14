@@ -146,7 +146,7 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/theme.css?v=2.3.8-j" data-theme-css />
+  <link rel="stylesheet" href="/theme.css?v=2.3.8-k" data-theme-css />
 
 
 </head>
@@ -507,34 +507,35 @@
         });
         const data = await res.json();
         if (!res.ok) {
-          if (data.duplicate) {
-            dupDomain.textContent = data.duplicate.domain;
-            dupPages.textContent = data.duplicate.total_pages;
-            duplicateModal.style.display = '';
-            btnUseExisting.onclick = () => { location.href = '/results.html?jobId=' + data.duplicate.job_id; };
-            btnReCrawl.onclick = async () => {
-              duplicateModal.style.display = 'none';
-              try {
-                const r = await fetch('/api/crawl', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ url, force: true }),
-                });
-                const d = await r.json();
-                if (!r.ok) { showError(d.error || 'Something went wrong.'); return; }
-                startPolling(d.jobId, d.trackingUrl);
-              } catch (err) { showError('Network error. Please try again.'); }
-            };
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Start crawl';
-            return;
-          }
           showError(data.error || 'Something went wrong. Please try again.');
           submitBtn.disabled = false;
           submitBtn.textContent = 'Start crawl';
           return;
         }
-        startPolling(data.jobId, data.trackingUrl);
+        // API returns { status: 'exists' } with 200 when the domain was crawled recently.
+        if (data.status === 'exists') {
+          dupDomain.textContent = data.domain;
+          dupPages.textContent = data.total_pages;
+          duplicateModal.style.display = '';
+          btnUseExisting.onclick = () => { location.href = '/results.html?job_id=' + data.job_id; };
+          btnReCrawl.onclick = async () => {
+            duplicateModal.style.display = 'none';
+            try {
+              const r = await fetch('/api/crawl/decide', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ domain: data.domain, action: 're-crawl' }),
+              });
+              const d = await r.json();
+              if (!r.ok) { showError(d.error || 'Something went wrong.'); return; }
+              startPolling(d.job_id, d.tracking_url);
+            } catch (err) { showError('Network error. Please try again.'); }
+          };
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Start crawl';
+          return;
+        }
+        startPolling(data.job_id, data.tracking_url);
       } catch (err) {
         showError('Network error. Please try again.');
         submitBtn.disabled = false;
@@ -552,22 +553,23 @@
 
       pollInterval = setInterval(async () => {
         try {
-          const res = await fetch('/api/crawl/status/' + jobId);
+          const res = await fetch('/api/crawl/' + jobId + '/progress');
+          if (!res.ok) throw new Error('http ' + res.status);
           const data = await res.json();
           if (data.status === 'completed') {
             clearInterval(pollInterval);
             clearTimeout(notifyTimeout);
             progressBar.style.width = '100%';
             progressText.textContent = 'Complete! Redirecting…';
-            setTimeout(() => { location.href = '/results.html?jobId=' + jobId; }, 800);
+            setTimeout(() => { location.href = '/results.html?job_id=' + jobId; }, 800);
           } else if (data.status === 'failed') {
             clearInterval(pollInterval);
             clearTimeout(notifyTimeout);
             progressText.textContent = 'Crawl failed: ' + (data.error || 'unknown error');
           } else {
-            const pct = data.progress || 0;
+            const pct = data.progress_percent || 0;
             progressBar.style.width = pct + '%';
-            progressText.textContent = `Crawling… ${data.pagesFound || 0} pages found`;
+            progressText.textContent = `Crawling… ${data.total_pages_found || 0} pages found`;
           }
         } catch (err) {
           progressText.textContent = 'Lost connection. Retrying…';
