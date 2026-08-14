@@ -23,7 +23,7 @@ transporter.verify()
 const BRAND_URL = process.env.APP_BASE_URL || 'https://webcrawler.buzz';
 const LOGO_URL = `${BRAND_URL}/icon-192x192.png`;
 
-// Shared shell — mirrors the site's monochrome tokens (see public/theme.css).
+// Shared shell, mirrors the site's monochrome tokens (see public/theme.css).
 // Email clients strip <style> unreliably, so every rule is inlined.
 function renderEmail(opts: {
   preheader: string;
@@ -108,19 +108,19 @@ export const emailService = {
     const pageWord = totalPages === 1 ? 'page' : 'pages';
 
     const html = renderEmail({
-      preheader: `Your crawl for ${domain} finished — ${totalPages} ${pageWord} indexed.`,
+      preheader: `Your crawl of ${domain} is done. ${totalPages} ${pageWord} indexed.`,
       headline: `Crawl finished for ${safeDomain}`,
-      intro: `We indexed <strong style="color:#0a0a0a;font-weight:600;">${totalPages.toLocaleString()}</strong> ${pageWord} across <strong style="color:#0a0a0a;font-weight:600;">${safeDomain}</strong>. Open the results to browse the pages, filter by status, or export a CSV.`,
+      intro: `We indexed <strong style="color:#0a0a0a;font-weight:600;">${totalPages.toLocaleString()}</strong> ${pageWord} from <strong style="color:#0a0a0a;font-weight:600;">${safeDomain}</strong>. Open the results to browse them or download the CSV.`,
       ctaLabel: 'View results',
       ctaUrl: trackingUrl,
-      noticeHtml: 'Results are kept for <strong style="color:#0a0a0a;font-weight:600;">1 hour</strong>, then automatically deleted. Export a CSV before then if you want to keep them.',
+      noticeHtml: 'Results stick around for <strong style="color:#0a0a0a;font-weight:600;">1 hour</strong>, then we delete them. Grab the CSV first if you want to keep a copy.',
       fallbackUrl: trackingUrl,
     });
 
     await transporter.sendMail({
       from: `"WebCrawler.buzz" <${process.env.GMAIL_USER}>`,
       to: toEmail,
-      subject: `Crawl finished for ${domain} — ${totalPages} ${pageWord}`,
+      subject: `Your crawl of ${domain} is done`,
       html,
     });
 
@@ -142,10 +142,10 @@ export const emailService = {
     const html = renderEmail({
       preheader: `Your CSV export for ${domain} is ready.`,
       headline: `CSV export ready for ${safeDomain}`,
-      intro: `Your CSV contains <strong style="color:#0a0a0a;font-weight:600;">${totalPages.toLocaleString()}</strong> ${pageWord} from <strong style="color:#0a0a0a;font-weight:600;">${safeDomain}</strong>, including status codes, response times, and link counts.`,
+      intro: `The CSV covers <strong style="color:#0a0a0a;font-weight:600;">${totalPages.toLocaleString()}</strong> ${pageWord} from <strong style="color:#0a0a0a;font-weight:600;">${safeDomain}</strong>, with status codes, response times, and link counts.`,
       ctaLabel: 'Download CSV',
       ctaUrl: downloadUrl,
-      noticeHtml: 'This download link expires in <strong style="color:#0a0a0a;font-weight:600;">5 minutes</strong> for security.',
+      noticeHtml: 'The download link works for <strong style="color:#0a0a0a;font-weight:600;">5 minutes</strong> before it expires.',
       fallbackUrl: downloadUrl,
     });
 
