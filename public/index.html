@@ -592,6 +592,10 @@
       e.preventDefault();
       const email = emailInput.value.trim();
       if (!email || !currentJobId) return;
+      const submitBtn = notifyForm.querySelector('button[type="submit"]');
+      const originalLabel = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
       try {
         const res = await fetch('/api/crawl/' + currentJobId + '/notify', {
           method: 'POST',
@@ -599,11 +603,23 @@
           body: JSON.stringify({ email }),
         });
         const data = await res.json();
-        notifyMsg.textContent = res.ok ? 'You will be notified when done.' : (data.error || 'Failed. Try again.');
-        notifyMsg.style.display = '';
+        if (res.ok) {
+          notifyMsg.textContent = 'You will be notified when done.';
+          notifyMsg.style.display = '';
+          // Lock the whole form: sending twice would just spam the user.
+          emailInput.disabled = true;
+          submitBtn.textContent = 'Notification set';
+        } else {
+          notifyMsg.textContent = data.error || 'Failed. Try again.';
+          notifyMsg.style.display = '';
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalLabel;
+        }
       } catch (err) {
         notifyMsg.textContent = 'Network error.';
         notifyMsg.style.display = '';
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
       }
     });
   </script>
