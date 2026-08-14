@@ -193,6 +193,22 @@ export const jobService = {
   },
 
   /**
+   * Mark any `running` jobs whose updated_at hasn't advanced in >3 minutes as failed.
+   * Catches jobs orphaned by a worker crash or a mid-run redeploy.
+   */
+  async markStalledJobsFailed(): Promise<number> {
+    const result = await pool.query(
+      `UPDATE crawl_jobs
+         SET status = 'failed',
+             error_message = COALESCE(error_message, 'Crawl stalled (no progress for 3+ minutes)'),
+             updated_at = NOW()
+       WHERE status = 'running'
+         AND updated_at <= NOW() - INTERVAL '3 minutes'`
+    );
+    return result.rowCount || 0;
+  },
+
+  /**
    * Delete a crawl job by ID (cascade removes crawled_pages + csv_exports).
    */
   async deleteJob(jobId: string): Promise<void> {

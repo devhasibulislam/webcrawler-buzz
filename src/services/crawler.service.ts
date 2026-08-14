@@ -14,6 +14,8 @@ const SKIP_EXTENSIONS = /\.(pdf|zip|rar|7z|tar|gz|mp3|mp4|mov|avi|mkv|webm|jpg|j
 
 const MAX_RESPONSE_BYTES = 10 * 1024 * 1024;
 const HARD_REQUEST_TIMEOUT_MS = 20000;
+// Hard safety cap — protects against pagination bombs and infinite calendar / session-id URLs.
+const MAX_PAGES_PER_CRAWL = Number(process.env.MAX_PAGES_PER_CRAWL || 2000);
 
 export const crawlerService = {
   /**
@@ -37,6 +39,11 @@ export const crawlerService = {
 
     try {
       while (queue.length > 0) {
+        if (visited.size >= MAX_PAGES_PER_CRAWL) {
+          console.log(`[Crawler] Job ${jobId} hit MAX_PAGES_PER_CRAWL (${MAX_PAGES_PER_CRAWL}), stopping.`);
+          break;
+        }
+
         const currentUrl = queue.shift()!;
 
         // Skip if already visited

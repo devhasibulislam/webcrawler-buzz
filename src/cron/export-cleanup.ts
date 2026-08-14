@@ -43,6 +43,13 @@ export function startExportCleanupCron(): void {
 export function startJobCleanupCron(): void {
   cron.schedule('* * * * *', async () => {
     try {
+      // Reap stalled `running` jobs first so users see failure instead of
+      // an eternal spinner when a worker crashes mid-crawl.
+      const stalled = await jobService.markStalledJobsFailed();
+      if (stalled > 0) {
+        console.log(`[Cron] Marked ${stalled} stalled job(s) as failed.`);
+      }
+
       const expiredJobs = await jobService.getExpiredJobs();
 
       if (expiredJobs.length === 0) return;
