@@ -2,43 +2,40 @@
 
 ## Supported Versions
 
-| Version | Supported          |
-|---------|--------------------|
-| 1.2.x   | ✅ Yes             |
-| 1.1.x   | ✅ Yes             |
-| < 1.0   | ❌ No              |
+Only the latest `2.3.x` release line receives security fixes. Older tags are archived.
+
+| Version | Supported |
+|---------|-----------|
+| 2.3.x   | ✅ Yes    |
+| < 2.3   | ❌ No     |
 
 ## Reporting a Vulnerability
 
-**Please do NOT open a public GitHub issue for security vulnerabilities.**
+**Please do NOT open a public GitHub issue for security problems.**
 
-Instead, report security issues responsibly by emailing:
+Preferred:
 
-📧 **devhasibulislam@gmail.com**
+- Open a **private security advisory** at
+  <https://github.com/devhasibulislam/webcrawler-buzz/security/advisories/new>.
 
-### What to Include
+Fallback:
+
+- Email <devhasibulislam@gmail.com>.
+
+### What to include
 
 - Description of the vulnerability
 - Steps to reproduce
-- Potential impact
-- Suggested fix (if any)
+- Impact you observed
+- Suggested fix if you have one
 
-### Response Timeline
+### Response timeline
 
-- **Acknowledgment**: Within 48 hours
-- **Initial assessment**: Within 1 week
-- **Fix/patch**: Depends on severity, but we aim for:
-  - Critical: 24-48 hours
-  - High: 1 week
-  - Medium: 2 weeks
-  - Low: Next release cycle
+- Acknowledgement within 48 hours
+- Initial assessment within 1 week
+- Fix targets: critical 24–48 h, high 1 week, medium 2 weeks, low next release
 
-### What Happens Next
-
-1. We'll confirm receipt of your report
-2. We'll investigate and assess the severity
-3. We'll develop and test a fix
-4. We'll release the fix and credit you (unless you prefer anonymity)
+I'll credit you in the release notes unless you prefer to stay anonymous.
 
 ## Security Measures in Place
 

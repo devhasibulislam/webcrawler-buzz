@@ -39,23 +39,23 @@ gh secret set VPS_DEPLOY_KEY -R devhasibulislam/webcrawler-buzz < deploy/secrets
 
 ### PostgreSQL 16 — listening on `127.0.0.1:5432`
 - Root user: `postgres` / `19691`
-- App user: `webcrawler` / `webcrawler@123`
+- App user: `webcrawler` / `<REDACTED>`
 - App database: `webcrawler` (owned by `webcrawler`)
 
 Manual access:
 ```
-ssh hamzen "PGPASSWORD='webcrawler@123' psql -h 127.0.0.1 -U webcrawler -d webcrawler"
+ssh hamzen "PGPASSWORD='<REDACTED>' psql -h 127.0.0.1 -U webcrawler -d webcrawler"
 ```
 
 ### Redis 7 — listening on `127.0.0.1:6379`
 - `requirepass`: `19691` (default user)
-- ACL user: `webcrawler` / `webcrawler@123`, keyspace `~webcrawler:*`, categories `+@all`
+- ACL user: `webcrawler` / `<REDACTED>`, keyspace `~webcrawler:*`, categories `+@all`
 - BullMQ prefix in code: `webcrawler` (matches ACL)
 
 Manual access:
 ```
 ssh hamzen "redis-cli -a 19691 --no-auth-warning ACL LIST"
-ssh hamzen "redis-cli --user webcrawler -a 'webcrawler@123' --no-auth-warning KEYS 'webcrawler:*' | head"
+ssh hamzen "redis-cli --user webcrawler -a '<REDACTED>' --no-auth-warning KEYS 'webcrawler:*' | head"
 ```
 
 ## App runtime credentials

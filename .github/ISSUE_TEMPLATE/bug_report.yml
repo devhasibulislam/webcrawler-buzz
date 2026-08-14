@@ -1,0 +1,48 @@
+name: Bug report
+description: Something is broken or behaves unexpectedly.
+title: '[bug] '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. Please give enough context that someone can reproduce it end-to-end.
+  - type: input
+    id: url-or-page
+    attributes:
+      label: URL or page
+      description: Where in webcrawler.buzz (or which endpoint / MCP tool) did this happen?
+      placeholder: e.g. `POST /api/crawl` or `/blogs/what-is-a-web-crawler`
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps. Include payloads / URLs if relevant.
+      placeholder: |
+        1. Start a crawl for https://example.com
+        2. Watch progress at ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual
+      placeholder: |
+        Expected: crawl completes and returns 200 pages
+        Actual: crawl hangs at 100 pages, status stays 'running'
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: 'Browser + OS, or Node version if self-hosted (e.g. Chrome 130 / macOS 14, or Node 22 on Ubuntu 24.04)'
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or error output
+      description: Paste anything from the browser console, network tab, or server logs. Redact secrets before pasting.
+      render: shell

@@ -56,10 +56,10 @@ PORT=5005
 APP_BASE_URL=http://your-vps-ip:5005
 
 # PostgreSQL (self-hosted on VPS, reached on 127.0.0.1 both in prod and dev)
-DATABASE_URL=postgresql://webcrawler:webcrawler%40123@127.0.0.1:5432/webcrawler
+DATABASE_URL=postgresql://webcrawler:<REDACTED>@127.0.0.1:5432/webcrawler
 
 # Redis (self-hosted on VPS with ACL user 'webcrawler' restricted to 'webcrawler:*' keys)
-REDIS_URL=redis://webcrawler:webcrawler%40123@127.0.0.1:6379
+REDIS_URL=redis://webcrawler:<REDACTED>@127.0.0.1:6379
 
 # Gmail (Nodemailer)
 GMAIL_USER=your_gmail@gmail.com

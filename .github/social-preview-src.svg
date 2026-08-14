@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640">
+  <defs>
+    <radialGradient id="fade" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#0a0a0a" stop-opacity="0"/>
+      <stop offset="80%" stop-color="#0a0a0a" stop-opacity="1"/>
+    </radialGradient>
+    <pattern id="grid" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#27272a"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="640" fill="#0a0a0a"/>
+  <rect width="1280" height="640" fill="url(#grid)"/>
+  <rect width="1280" height="640" fill="url(#fade)"/>
+
+  <g transform="translate(100 210)">
+    <rect x="0" y="0" width="150" height="150" rx="32" fill="#fafafa"/>
+    <g transform="translate(24 24) scale(4.4)" fill="none" stroke="#0a0a0a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/>
+      <path d="M4 6h.01"/>
+      <path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/>
+      <path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/>
+      <path d="M12 18h.01"/>
+      <path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/>
+      <circle cx="12" cy="12" r="2"/>
+      <path d="M13.41 10.59 19.07 4.93"/>
+    </g>
+  </g>
+
+  <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" fill="#fafafa">
+    <text x="290" y="252" font-size="40" font-weight="500" letter-spacing="-0.02em" fill="#a1a1aa">github.com/devhasibulislam/webcrawler-buzz</text>
+    <text x="290" y="346" font-size="88" font-weight="700" letter-spacing="-0.035em">WebCrawler.buzz</text>
+    <text x="290" y="440" font-size="42" font-weight="500" fill="#d4d4d8">Free web crawler + SEO auditor.</text>
+    <text x="290" y="492" font-size="42" font-weight="500" fill="#d4d4d8">Node + TypeScript + BullMQ. MIT.</text>
+  </g>
+
+  <g font-family="ui-monospace, 'SF Mono', Menlo, monospace" fill="#71717a">
+    <text x="640" y="588" text-anchor="middle" font-size="22" font-weight="500">Express · Postgres · Redis · MCP</text>
+  </g>
+</svg>
