@@ -249,9 +249,20 @@
           <div id="notify-card" class="card" style="display:none;margin-top:1.25rem;text-align:center;">
             <h3 style="margin-bottom:0.35rem;">This might take a while</h3>
             <p style="margin-bottom:1rem;">Want an email when it's done?</p>
-            <form id="notify-form" style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;">
-              <input type="email" id="email-input" class="input" style="max-width:240px;" placeholder="you@example.com" required />
-              <button type="submit" class="btn">Notify me</button>
+            <form id="notify-form" style="display:grid;gap:0.5rem;max-width:320px;margin:0 auto;">
+              <input
+                type="email"
+                id="email-input"
+                name="email"
+                class="input"
+                placeholder="you@example.com"
+                autocomplete="email"
+                inputmode="email"
+                pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                title="Please enter a valid email address (e.g. you@example.com)"
+                required
+              />
+              <button type="submit" class="btn" style="width:100%;">Notify me</button>
             </form>
             <p id="notify-msg" style="display:none;color:var(--fg-muted);font-size:0.85rem;margin-top:0.75rem;"></p>
           </div>
