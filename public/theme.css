@@ -66,7 +66,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-feature-settings: 'ss01', 'cv11';
+  /* Sticky-footer scaffold: body is a column that fills the viewport, and
+     the <main> in the middle takes any leftover space so the footer sits
+     at the bottom on short pages (progress, empty state, 404) instead of
+     hugging the content. */
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
+main { flex: 1 0 auto; }
+footer.site-footer { flex-shrink: 0; }
 code, pre, kbd, samp {
   font-family: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   font-size: 0.9em;
