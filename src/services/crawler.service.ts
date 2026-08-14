@@ -9,6 +9,12 @@ import {
   resolveUrl,
 } from '../utils/url.utils';
 
+// Non-HTML extensions we should never fetch — they hang the BFS on huge downloads.
+const SKIP_EXTENSIONS = /\.(pdf|zip|rar|7z|tar|gz|mp3|mp4|mov|avi|mkv|webm|jpg|jpeg|png|gif|webp|svg|ico|bmp|tiff|woff2?|ttf|otf|eot|dmg|exe|iso|apk|css|js|xml|json|csv|xlsx?|docx?|pptx?)(\?|$)/i;
+
+const MAX_RESPONSE_BYTES = 10 * 1024 * 1024;
+const HARD_REQUEST_TIMEOUT_MS = 20000;
+
 export const crawlerService = {
   /**
    * BFS crawl starting from startUrl, scoped to the given domain.
@@ -50,10 +56,35 @@ export const crawlerService = {
 
         const startTime = Date.now();
 
+        // Skip binary assets entirely — they're a common source of hangs and
+        // waste bandwidth. Record a synthetic entry so the count still moves.
+        if (SKIP_EXTENSIONS.test(currentUrl)) {
+          await jobService.insertPage({
+            job_id: jobId,
+            url: currentUrl,
+            status_code: 0,
+            response_time_ms: 0,
+            content_type: 'skipped/binary',
+            page_size_bytes: 0,
+            internal_links_count: 0,
+            external_links_count: 0,
+            is_indexable: false,
+          });
+          await jobService.incrementPagesFound(jobId);
+          await updateTotalQueued(jobId, queued.size);
+          continue;
+        }
+
         try {
           const response = await axios.get(currentUrl, {
             timeout: 15000,
+            // Hard cancellation — axios `timeout` only covers socket
+            // inactivity, so a slow-drip response can still hang forever.
+            signal: AbortSignal.timeout(HARD_REQUEST_TIMEOUT_MS),
             maxRedirects: 5,
+            maxContentLength: MAX_RESPONSE_BYTES,
+            maxBodyLength: MAX_RESPONSE_BYTES,
+            responseType: 'text',
             validateStatus: () => true, // accept all status codes
             headers: {
               'User-Agent':
