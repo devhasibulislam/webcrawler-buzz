@@ -31,7 +31,19 @@ export function checkAbuse(clientKey: string): boolean {
 export function createMcpServer(clientKey: string): McpServer {
   const server = new McpServer({
     name: 'webcrawler-buzz',
-    version: '1.0.0',
+    title: 'WebCrawler.buzz',
+    version: '2.3.8',
+    websiteUrl: 'https://webcrawler.buzz',
+    // Claude Connectors / Claude Desktop / Cursor / VS Code all render the
+    // first matching icon in the picker. Provide the SVG (scalable) and a
+    // few sized PNGs so every client gets a crisp radar mark on the current
+    // brand — no more stale scraped favicon from the old blue spider design.
+    icons: [
+      { src: 'https://webcrawler.buzz/favicon.svg', mimeType: 'image/svg+xml', sizes: ['any'] },
+      { src: 'https://webcrawler.buzz/icon-512x512.png', mimeType: 'image/png', sizes: ['512x512'] },
+      { src: 'https://webcrawler.buzz/icon-192x192.png', mimeType: 'image/png', sizes: ['192x192'] },
+      { src: 'https://webcrawler.buzz/apple-touch-icon.png', mimeType: 'image/png', sizes: ['180x180'] },
+    ],
   });
 
   // ── Tool 1: start_crawl ──────────────────────────────────────
