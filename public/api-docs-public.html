@@ -111,8 +111,14 @@
     }
     .toc h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-subtle); margin: 0 0 0.6rem; }
     .toc ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.25rem; }
-    .toc a { display: block; padding: 0.4rem 0.65rem; border-radius: 6px; color: var(--fg-muted); font-size: 0.875rem; text-decoration: none; }
+    .toc a { display: block; padding: 0.4rem 0.65rem; border-radius: 6px; color: var(--fg-muted); font-size: 0.875rem; text-decoration: none; border-left: 2px solid transparent; }
     .toc a:hover { color: var(--fg); background: var(--bg-subtle); }
+    .toc a.active {
+      color: var(--fg);
+      background: var(--bg-subtle);
+      border-left-color: var(--fg);
+      font-weight: 500;
+    }
     .endpoint { scroll-margin-top: 5rem; }
   </style>
 </head>
@@ -212,22 +218,22 @@
               <p>Start a new crawl. Validates the URL, creates a job, pushes it to the queue, and returns a tracking URL immediately. Non-blocking.</p>
               <h4>Request body</h4>
               <pre><code>{
-  "url": "https://example.com"
+  "url": "https://devhasibulislam.vercel.app"
 }</code></pre>
               <h4>Response — new crawl (201)</h4>
               <pre><code>{
   "status": "started",
-  "job_id": "abc-123-def",
-  "tracking_url": "https://webcrawler.buzz/results?job_id=abc-123-def",
+  "job_id": "9c8b4d20-1a5e-4f2c-b7a1-3e8d9c0f5a11",
+  "tracking_url": "https://webcrawler.buzz/results?job_id=9c8b4d20-1a5e-4f2c-b7a1-3e8d9c0f5a11",
   "message": "Crawl started! Use tracking_url to follow progress."
 }</code></pre>
               <h4>Response — domain already crawled (200)</h4>
               <pre><code>{
   "status": "exists",
-  "job_id": "xyz-789",
-  "domain": "example.com",
-  "total_pages": 42,
-  "tracking_url": "https://webcrawler.buzz/results?job_id=xyz-789",
+  "job_id": "5f2a1c8d-9e3b-4a72-8f1c-2b6d4e0a9c73",
+  "domain": "devhasibulislam.vercel.app",
+  "total_pages": 87,
+  "tracking_url": "https://webcrawler.buzz/results?job_id=5f2a1c8d-9e3b-4a72-8f1c-2b6d4e0a9c73",
   "prompt": "Send action 're-crawl' or 'use-existing' to POST /api/crawl/decide"
 }</code></pre>
             </section>
@@ -240,7 +246,7 @@
               <p>When a domain was crawled recently, decide whether to re-crawl or reuse the existing results.</p>
               <h4>Request body</h4>
               <pre><code>{
-  "domain": "example.com",
+  "domain": "devhasibulislam.vercel.app",
   "action": "re-crawl"
 }</code></pre>
               <p style="font-size: 0.85rem; color: var(--fg-subtle);"><code>action</code> is one of <code>re-crawl</code> or <code>use-existing</code>.</p>
@@ -254,11 +260,11 @@
               <p>Lightweight polling. Returns the current status and completion percentage.</p>
               <h4>Response</h4>
               <pre><code>{
-  "job_id": "abc-123-def",
+  "job_id": "9c8b4d20-1a5e-4f2c-b7a1-3e8d9c0f5a11",
   "status": "running",
-  "total_pages_found": 25,
-  "total_pages_queued": 100,
-  "progress_percent": 25
+  "total_pages_found": 34,
+  "total_pages_queued": 128,
+  "progress_percent": 27
 }</code></pre>
             </section>
 
@@ -298,7 +304,7 @@
               <p>Register an email address to be notified when this crawl completes.</p>
               <h4>Request body</h4>
               <pre><code>{
-  "email": "you@example.com"
+  "email": "you@yourdomain.com"
 }</code></pre>
             </section>
 
@@ -310,7 +316,7 @@
               <p>Kick off a CSV export of the full crawl. Email is optional; if you provide one, we send the download link when it's ready.</p>
               <h4>Request body</h4>
               <pre><code>{
-  "email": "you@example.com"
+  "email": "you@yourdomain.com"
 }</code></pre>
               <p style="font-size: 0.85rem; color: var(--fg-subtle);">Returns an <code>export_id</code> you can poll on the endpoint below.</p>
             </section>
@@ -390,5 +396,47 @@
 
   <script src="/layout.js?v=2.3.8-e" defer></script>
   <script src="/cookie-consent.js?v=2.3.8-e" defer></script>
+  <script>
+    // Scroll-spy for the TOC — highlights the endpoint currently in view,
+    // and syncs the URL hash so a copy-link points at the right anchor.
+    (function () {
+      var links = Array.from(document.querySelectorAll('.toc a[href^="#"]'));
+      if (!links.length) return;
+      var byId = Object.create(null);
+      links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+      var sections = links
+        .map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+        .filter(Boolean);
+      if (!sections.length) return;
+
+      function setActive(id) {
+        links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + id); });
+        if (history.replaceState) history.replaceState(null, '', '#' + id);
+      }
+
+      // Only one section can be "active" at a time — the one closest to the
+      // top of the viewport (below the sticky header offset).
+      var io = new IntersectionObserver(function (entries) {
+        var visible = entries
+          .filter(function (e) { return e.isIntersecting; })
+          .sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+        if (visible[0]) setActive(visible[0].target.id);
+      }, {
+        rootMargin: '-100px 0px -60% 0px',
+        threshold: 0,
+      });
+      sections.forEach(function (s) { io.observe(s); });
+
+      // Click also sets active immediately (visual feedback before scroll settles).
+      links.forEach(function (a) {
+        a.addEventListener('click', function () { setActive(a.getAttribute('href').slice(1)); });
+      });
+
+      // Initial state: hash if present, otherwise first section.
+      var initial = (location.hash || '').replace(/^#/, '');
+      if (initial && byId[initial]) setActive(initial);
+      else setActive(sections[0].id);
+    })();
+  </script>
 </body>
 </html>
