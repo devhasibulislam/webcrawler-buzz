@@ -54,7 +54,10 @@ export function createMcpServer(clientKey: string): McpServer {
       'spaced ~10s apart; (2) if status is "completed", call get_crawl_results; (3) if still ' +
       'running after ~30s, tell the user the crawl is large and offer them to either ' +
       '(a) provide an email via set_notify_email for a completion notification, or ' +
-      '(b) come back later with the job_id. Do not keep polling beyond 3 attempts.',
+      '(b) come back later with the job_id. Do not keep polling beyond 3 attempts. ' +
+      'IMPORTANT: if the user\'s original request ALREADY contains an email address ' +
+      '(e.g. "crawl X and email me the result at foo@bar.com"), call set_notify_email ' +
+      'immediately after start_crawl without asking again — that IS their consent.',
     { url: z.string().url().describe('Full URL to crawl, e.g. https://example.com') },
     async ({ url }) => {
       if (!isValidUrl(url)) {
@@ -173,8 +176,13 @@ export function createMcpServer(clientKey: string): McpServer {
   // ── Tool 5: set_notify_email ─────────────────────────────────
   server.tool(
     'set_notify_email',
-    'Register the user\'s email to be notified when a crawl completes. Use this ONLY when the ' +
-      'user explicitly agrees to provide their email after a long-running crawl. Ask permission first.',
+    'Register the user\'s email to be pinged with a link when their crawl finishes. ' +
+      'This is the RIGHT tool whenever the user says any of: "email me the result", ' +
+      '"send me the result at X", "notify me when done", "ping me at X". You do NOT need ' +
+      'a separate email-sending tool — this IS the email tool. It sends a fixed template ' +
+      'containing the domain, page count, and a results link (not the full page list inline). ' +
+      'Call it proactively as soon as the user\'s intent + an email address are both known; ' +
+      'do not ask a second time for permission you already have.',
     {
       job_id: z.string(),
       email: z.string().email(),
