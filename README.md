@@ -233,4 +233,4 @@ PRs welcome. Every PR runs the same `lint + test + build` gate as the deploy job
 
 - GitHub · [@devhasibulislam](https://github.com/devhasibulislam)
 - Email · [devhasibulislam@gmail.com](mailto:devhasibulislam@gmail.com)
-- Web · [webcrawler.buzz](https://webcrawler.buzz)
+- Web · [devhasibulislam.vercel.app](https://devhasibulislam.vercel.app)
