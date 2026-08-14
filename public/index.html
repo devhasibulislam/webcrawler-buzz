@@ -609,7 +609,12 @@
           notifyMsg.style.display = '';
           // Lock the whole form: sending twice would just spam the user.
           emailInput.disabled = true;
+          emailInput.setAttribute('readonly', 'readonly');
           submitBtn.textContent = 'Notification set';
+          submitBtn.disabled = true;
+          submitBtn.setAttribute('aria-disabled', 'true');
+          submitBtn.style.opacity = '0.55';
+          submitBtn.style.cursor = 'not-allowed';
         } else {
           notifyMsg.textContent = data.error || 'Failed. Try again.';
           notifyMsg.style.display = '';
