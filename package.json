@@ -36,7 +36,7 @@
     "@modelcontextprotocol/sdk": "^1.29.0",
     "axios": "^1.13.6",
     "baseline-browser-mapping": "^2.10.0",
-    "bullmq": "^5.70.4",
+    "bullmq": "^6.1.1",
     "caniuse-lite": "^1.0.30001777",
     "cheerio": "^1.2.0",
     "compression": "^1.8.1",
